@@ -11,9 +11,7 @@ let stock      = JSON.parse(JSON.stringify(db.stock));
 let pedidos    = JSON.parse(JSON.stringify(db.pedidos));
 let detalles   = JSON.parse(JSON.stringify(db.detalles_pedido));
 
-// ── HELPERS ───────────────────────────────────────────────────────────────────
 
-// Simula el delay de red para que el código no cambie al conectar un backend real
 const delay = (ms = 200) => new Promise(res => setTimeout(res, ms));
 
 // Genera el siguiente ID disponible, igual que SERIAL en PostgreSQL
