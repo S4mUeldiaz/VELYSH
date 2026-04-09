@@ -1,0 +1,248 @@
+{
+  "roles": [
+    {
+      "id": 1,
+      "id_rol": 1,
+      "nombre_rol": "admin",
+      "descripcion": "Acceso total al panel"
+    },
+    {
+      "id": 2,
+      "id_rol": 2,
+      "nombre_rol": "vendedor",
+      "descripcion": "Acceso a ventas e inventario"
+    },
+    {
+      "nombre_rol": "clientes",
+      "descripcion": "Acceso solo a tienda",
+      "id": 3
+    }
+  ],
+  "usuarios": [
+    {
+      "id": 1,
+      "id_usuario": 1,
+      "nombre": "Admin",
+      "apellido": "Velysh",
+      "correo": "admin@velysh.com",
+      "telefono": "3001234567",
+      "contraseña": "123456",
+      "id_rol": 1,
+      "estado": "activo"
+    }
+  ],
+  "categorias": [
+    {
+      "id": 1,
+      "id_categoria": 1,
+      "nombre_categoria": "Hombre",
+      "descripcion": "Zapatos para hombre",
+      "id_categoria_padre": null,
+      "estado": "activo"
+    },
+    {
+      "id": 2,
+      "id_categoria": 2,
+      "nombre_categoria": "Mujer",
+      "descripcion": "Zapatos para mujer",
+      "id_categoria_padre": null,
+      "estado": "activo"
+    },
+    {
+      "id": 3,
+      "id_categoria": 3,
+      "nombre_categoria": "Niño",
+      "descripcion": "Zapatos para niño",
+      "id_categoria_padre": null,
+      "estado": "activo"
+    }
+  ],
+  "productos": [
+    {
+      "id": 1,
+      "id_producto": 1,
+      "id_categoria": 1,
+      "referencia": "NK-AIR-001",
+      "nombre": "Air Classic",
+      "descripcion": "Zapatilla clásica para uso diario",
+      "marca": "Nike",
+      "precio": 280000,
+      "estado": "activo",
+      "total_ventas": 2
+    },
+    {
+      "id": 2,
+      "id_producto": 2,
+      "id_categoria": 2,
+      "referencia": "VJ-V10-001",
+      "nombre": "Veja V-10",
+      "descripcion": "Zapatilla ecológica estilo minimalista",
+      "marca": "Veja",
+      "precio": 320000,
+      "estado": "activo",
+      "total_ventas": 1
+    },
+    {
+      "id": 3,
+      "id_producto": 3,
+      "id_categoria": 3,
+      "referencia": "CV-CHK-001",
+      "nombre": "Chuck Taylor",
+      "descripcion": "Clásica zapatilla de lona",
+      "marca": "Converse",
+      "precio": 180000,
+      "estado": "activo",
+      "total_ventas": 0
+    }
+  ],
+  "tallas": [
+    {
+      "id": 1,
+      "id_talla": 1,
+      "talla": "35",
+      "orden": 1
+    },
+    {
+      "id": 2,
+      "id_talla": 2,
+      "talla": "36",
+      "orden": 2
+    },
+    {
+      "id": 3,
+      "id_talla": 3,
+      "talla": "37",
+      "orden": 3
+    },
+    {
+      "id": 4,
+      "id_talla": 4,
+      "talla": "38",
+      "orden": 4
+    },
+    {
+      "id": 5,
+      "id_talla": 5,
+      "talla": "39",
+      "orden": 5
+    },
+    {
+      "id": 6,
+      "id_talla": 6,
+      "talla": "40",
+      "orden": 6
+    },
+    {
+      "id": 7,
+      "id_talla": 7,
+      "talla": "41",
+      "orden": 7
+    },
+    {
+      "id": 8,
+      "id_talla": 8,
+      "talla": "42",
+      "orden": 8
+    },
+    {
+      "id": 9,
+      "id_talla": 9,
+      "talla": "43",
+      "orden": 9
+    }
+  ],
+  "stock": [
+    {
+      "id": 1,
+      "id_stock": 1,
+      "id_producto": 1,
+      "id_talla": 8,
+      "color": "Blanco",
+      "stock_actual": 12,
+      "stock_minimo": 5,
+      "stock_maximo": 100,
+      "estado": "disponible"
+    },
+    {
+      "id": 2,
+      "id_stock": 2,
+      "id_producto": 2,
+      "id_talla": 4,
+      "color": "Rojo",
+      "stock_actual": 3,
+      "stock_minimo": 5,
+      "stock_maximo": 100,
+      "estado": "bajo"
+    },
+    {
+      "id": 3,
+      "id_stock": 3,
+      "id_producto": 1,
+      "id_talla": 7,
+      "color": "Negro",
+      "stock_actual": 0,
+      "stock_minimo": 5,
+      "stock_maximo": 100,
+      "estado": "agotado"
+    },
+    {
+      "id": 4,
+      "id_stock": 4,
+      "id_producto": 3,
+      "id_talla": 2,
+      "color": "Blanco",
+      "stock_actual": 8,
+      "stock_minimo": 5,
+      "stock_maximo": 100,
+      "estado": "disponible"
+    }
+  ],
+  "pedidos": [
+    {
+      "id": 1,
+      "id_pedido": 1,
+      "referencia": "PED-2026-001",
+      "id_usuario": 1,
+      "id_direccion": 1,
+      "fecha_pedido": "2026-04-05T10:00:00",
+      "precio_total": 560000,
+      "costo_envio": 0,
+      "metodo_pago": "tarjeta",
+      "estado_pago": "pagado",
+      "estado_pedido": "entregado"
+    },
+    {
+      "id": 2,
+      "id_pedido": 2,
+      "referencia": "PED-2026-002",
+      "id_usuario": 1,
+      "id_direccion": 1,
+      "fecha_pedido": "2026-04-07T14:30:00",
+      "precio_total": 320000,
+      "costo_envio": 0,
+      "metodo_pago": "pse",
+      "estado_pago": "pagado",
+      "estado_pedido": "confirmado"
+    }
+  ],
+  "detalles_pedido": [
+    {
+      "id": 1,
+      "id_detalle": 1,
+      "id_pedido": 1,
+      "id_stock": 1,
+      "cantidad": 2,
+      "precio_unitario": 280000,
+      "subtotal": 560000
+    },
+    {
+      "id": 2,
+      "id_detalle": 2,
+      "id_pedido": 2,
+      "id_stock": 2,
+      "cantidad": 1,
+      "precio_unitario": 320000,
+      "subtotal": 320000
+    }
+  ]
+}
