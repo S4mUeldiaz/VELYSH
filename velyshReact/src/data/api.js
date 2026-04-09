@@ -1,6 +1,4 @@
 import db from "./db.json";
-// db.roles, db.usuarios, db.productos, etc.
-
 // ── ESTADO EN MEMORIA ─────────────────────────────────────────────────────────
 // Copiamos cada tabla en una variable mutable.
 // JSON.parse(JSON.stringify(...)) hace una copia profunda para no modificar el JSON original.
