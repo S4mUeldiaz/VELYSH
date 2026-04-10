@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getStock, getProductos, getTallas, crearStock, editarStock, eliminarStock } from "../data/api";
+import { getStock, getProductos, getTallas, crearStock, editarStock, eliminarStock } from "../api/api";
 
 export default function InventarioPage() {
   const [stock,      setStock]      = useState([]);

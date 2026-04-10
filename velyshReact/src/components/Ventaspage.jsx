@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getPedidos, getStock, crearPedido, eliminarPedido } from "../data/api";
+import { getPedidos, getStock, crearPedido, eliminarPedido } from "../api/api";
 
 export default function VentasPage() {
   const [pedidos,    setPedidos]    = useState([]);

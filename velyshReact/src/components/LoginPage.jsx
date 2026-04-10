@@ -3,7 +3,7 @@ import { useState } from 'react'
 // (el texto del input, si hay error, etc.)
 import { useNavigate } from 'react-router-dom'
 // useNavigate nos deja cambiar de página sin recargar el navegador
-import { login } from '../data/api'
+import { login } from '../api/api'
 // Importamos SOLO la función login desde tu api.js
 // El '../data/api' es la ruta relativa a tu archivo
 

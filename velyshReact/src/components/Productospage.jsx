@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getProductos, getCategorias, crearProducto, editarProducto, eliminarProducto } from "../data/api";
+import { getProductos, getCategorias, crearProducto, editarProducto, eliminarProducto } from "../api/api";
 
 export default function ProductosPage() {
   const [productos,  setProductos]  = useState([]);

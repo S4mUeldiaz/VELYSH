@@ -24,7 +24,7 @@
       "id_usuario": 1,
       "nombre": "Admin",
       "apellido": "Velysh",
-      "correo": "admin@velysh.com",
+      "correo": "usuario@gmail.com",
       "telefono": "3001234567",
       "contraseña": "123456",
       "id_rol": 1,

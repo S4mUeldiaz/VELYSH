@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { registrar } from "../data/api";
+import { registrar } from "../api/api";
 
 export default function RegisterPage() {
   const [form, setForm] = useState({ nombre:"", apellido:"", correo:"", telefono:"", contraseña:"" });
