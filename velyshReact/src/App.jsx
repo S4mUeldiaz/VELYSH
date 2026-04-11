@@ -1,48 +1,50 @@
-import { useState } from 'react'
-import './App.css'
+// src/App.jsx
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import LoginPage from "./components/LoginPage";
-import RegisterPage from "./components/RegisterPage";
-import ProductosPage from "./components/Productospage";
+import LoginPage      from "./components/LoginPage";
+import RegisterPage   from "./components/RegisterPage";
+import ProductosPage  from "./components/Productospage";
 import InventarioPage from "./components/Inventariopage";
-import VentasPage from './components/Ventaspage';
+import VentasPage     from "./components/Ventaspage";
+import Navbar         from "./components/Navbar";
+import { getUsuarioActual } from "./api/api";
 
+// ── RUTA PROTEGIDA ─────────────────────────────────────────────────────────────
+// Antes de mostrar la página verifica que exista un token en sessionStorage.
+// Si no hay sesión activa → redirige al login.
+// Si hay sesión → muestra el Navbar arriba y el componente pedido abajo.
 function RutaProtegida({ children }) {
-  const usuario = sessionStorage.getItem("usuario");
-  if (!usuario) return <Navigate to="/login" replace />;
-  return children;
+  const token   = sessionStorage.getItem("token");
+  const usuario = getUsuarioActual();
+  if (!token || !usuario) return <Navigate to="/login" replace />;
+  return (
+    <>
+      <Navbar usuario={usuario} />
+      {children}
+    </>
+  );
 }
 
 function App() {
-  return ( 
+  return (
     <BrowserRouter>
       <Routes>
-        {/* Ruta raíz → redirige al login directamente */}
+
+        {/* Ruta raíz → redirige al login */}
         <Route path="/" element={<Navigate to="/login" replace />} />
 
-        {/* Rutas públicas — cualquiera puede entrar */}
+        {/* Rutas públicas — sin protección */}
         <Route path="/login"    element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 
-        {/* Rutas protegidas — solo si hay sesión activa */}
-        <Route path="/productos" element={
-          <RutaProtegida><ProductosPage /></RutaProtegida>
-        } />
+        {/* Rutas protegidas — requieren token válido */}
+        <Route path="/productos"  element={<RutaProtegida><ProductosPage /></RutaProtegida>} />
+        <Route path="/inventario" element={<RutaProtegida><InventarioPage /></RutaProtegida>} />
+        <Route path="/ventas"     element={<RutaProtegida><VentasPage /></RutaProtegida>} />
 
-        <Route path="/inventario" element={
-          <RutaProtegida><InventarioPage /></RutaProtegida>
-        } />
-
-        <Route path="/ventas" element={
-          <RutaProtegida><VentasPage /></RutaProtegida>
-        } />
-
-        {/* Cualquier ruta desconocida */}
         <Route path="*" element={<h1>Página no encontrada</h1>} />
-
       </Routes>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;

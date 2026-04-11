@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import { getPedidos, getStock, crearPedido, eliminarPedido } from "../api/api";
+// src/components/Ventaspage.jsx
+import { useState, useEffect }  from "react";
+import { getPedidos, getStock, crearPedido, eliminarPedido, getUsuarioActual } from "../api/api";
 
 export default function VentasPage() {
   const [pedidos,    setPedidos]    = useState([]);
@@ -10,7 +11,6 @@ export default function VentasPage() {
 
   useEffect(() => {
     getPedidos().then(setPedidos);
-    // getStock ya viene con nombre_producto y talla desde api.js
     getStock().then(setStockItems);
   }, []);
 
@@ -18,15 +18,8 @@ export default function VentasPage() {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
-  // Cuando cambia el item de stock seleccionado, cargamos su precio automáticamente
-  function handleStockChange(e) {
-    const idStock = Number(e.target.value);
-    const item = stockItems.find(s => s.id_stock === idStock);
-    // Buscamos el precio del producto relacionado
-    setForm(prev => ({ ...prev, id_stock: idStock, precio_unitario: item ? "" : "" }));
-  }
-
   function cerrar() {
+    setForm({ id_stock: "", cantidad: 1, precio_unitario: "", metodo_pago: "tarjeta" });
     setAbierto(false);
     setError("");
   }
@@ -37,18 +30,22 @@ export default function VentasPage() {
       setError("Todos los campos son obligatorios");
       return;
     }
+    // Tomamos el id del usuario desde sessionStorage (guardado al hacer login)
+    const usuario = getUsuarioActual();
     try {
-      const nuevo = await crearPedido({
+      await crearPedido({
         id_stock:        Number(form.id_stock),
         cantidad:        Number(form.cantidad),
         precio_unitario: Number(form.precio_unitario),
         metodo_pago:     form.metodo_pago,
+        id_usuario:      usuario?.id_usuario ?? 1,
       });
-      // Recargamos pedidos para ver el nuevo con sus detalles completos
-      const actualizados = await getPedidos();
-      setPedidos(actualizados);
-      // También actualizamos el stock porque crearPedido descuenta unidades
-      const stockActualizado = await getStock();
+      // Recargamos pedidos y stock porque crearPedido descuenta unidades del stock
+      const [pedidosActualizados, stockActualizado] = await Promise.all([
+        getPedidos(),
+        getStock(),
+      ]);
+      setPedidos(pedidosActualizados);
       setStockItems(stockActualizado);
       cerrar();
     } catch (err) {
@@ -64,25 +61,21 @@ export default function VentasPage() {
 
   return (
     <div>
-      <h2>Ventas</h2>
-      <button onClick={() => { setForm({ id_stock: "", cantidad: 1, precio_unitario: "", metodo_pago: "tarjeta" }); setError(""); setAbierto(true); }}>
-        + Nuevo pedido
-      </button>
+      <h2>Ventas / Pedidos</h2>
+      <button onClick={() => setAbierto(true)}>+ Nuevo pedido</button>
 
       {abierto && (
         <form onSubmit={handleGuardar}>
           <h3>Nuevo pedido</h3>
-
           <div>
             <label>Producto / Talla / Color</label><br />
-            {/* Mostramos el stock disponible como opciones */}
-            <select name="id_stock" value={form.id_stock} onChange={handleStockChange}>
+            <select name="id_stock" value={form.id_stock} onChange={handleChange}>
               <option value="">-- Selecciona --</option>
               {stockItems
-                .filter(s => s.stock_actual > 0) // Solo los que tienen stock
+                .filter(s => s.stock_actual > 0)
                 .map(s => (
                   <option key={s.id_stock} value={s.id_stock}>
-                    {s.nombre_producto} — Talla {s.talla} — {s.color} (stock: {s.stock_actual})
+                    {s.nombre_producto} — T:{s.talla} — {s.color} (stock: {s.stock_actual})
                   </option>
                 ))
               }
@@ -104,25 +97,16 @@ export default function VentasPage() {
               <option value="efectivo">Efectivo</option>
             </select>
           </div>
-
           {error && <p style={{ color: "red" }}>{error}</p>}
-
           <button type="submit">Guardar pedido</button>
           <button type="button" onClick={cerrar}>Cancelar</button>
         </form>
       )}
 
-      {/* Lista de pedidos con sus detalles */}
       <table>
         <thead>
           <tr>
-            <th>Referencia</th>
-            <th>Fecha</th>
-            <th>Total</th>
-            <th>Pago</th>
-            <th>Estado</th>
-            <th>Productos</th>
-            <th>Acciones</th>
+            <th>Referencia</th><th>Fecha</th><th>Total</th><th>Pago</th><th>Estado</th><th>Productos</th><th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -134,7 +118,6 @@ export default function VentasPage() {
               <td>{p.metodo_pago}</td>
               <td>{p.estado_pedido}</td>
               <td>
-                {/* Mostramos los detalles del pedido en una celda */}
                 {p.detalles.map(d => (
                   <div key={d.id_detalle}>
                     {d.nombre_producto} x{d.cantidad} — T:{d.talla} — {d.color}

@@ -1,33 +1,62 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { registrar } from "../api/api";
+// src/components/RegisterPage.jsx
+import { useState }          from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { registrar }         from "../api/api";
 
 export default function RegisterPage() {
-  const [form, setForm] = useState({ nombre:"", apellido:"", correo:"", telefono:"", contraseña:"" });
+  const [form, setForm]       = useState({ nombre: "", apellido: "", correo: "", telefono: "", contraseña: "" });
+  const [error, setError]     = useState("");
+  const [cargando, setCargando] = useState(false);
   const navigate = useNavigate();
+
+  function handleChange(e) {
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setError("");
+    setCargando(true);
     try {
-      const result = await registrar(form);
-      alert("Usuario registrado correctamente");
-      navigate("/login");
+      await registrar(form);
+      navigate("/login"); // Tras registrarse va al login para iniciar sesión
     } catch (err) {
-      alert(err.message);
+      setError(err.message);
+    } finally {
+      setCargando(false);
     }
   }
 
   return (
     <div>
-      <h2>Registro</h2>
+      <h2>Crear cuenta — VELYSH</h2>
       <form onSubmit={handleSubmit}>
-        <input placeholder="Nombre" value={form.nombre} onChange={e=>setForm({...form,nombre:e.target.value})}/>
-        <input placeholder="Apellido" value={form.apellido} onChange={e=>setForm({...form,apellido:e.target.value})}/>
-        <input type="email" placeholder="Correo" value={form.correo} onChange={e=>setForm({...form,correo:e.target.value})}/>
-        <input placeholder="Teléfono" value={form.telefono} onChange={e=>setForm({...form,telefono:e.target.value})}/>
-        <input type="password" placeholder="Contraseña" value={form.contraseña} onChange={e=>setForm({...form,contraseña:e.target.value})}/>
-        <button type="submit">Registrarse</button>
+        <div>
+          <label>Nombre</label><br />
+          <input name="nombre"     value={form.nombre}     onChange={handleChange} />
+        </div>
+        <div>
+          <label>Apellido</label><br />
+          <input name="apellido"   value={form.apellido}   onChange={handleChange} />
+        </div>
+        <div>
+          <label>Correo</label><br />
+          <input name="correo"     type="email" value={form.correo}     onChange={handleChange} />
+        </div>
+        <div>
+          <label>Teléfono</label><br />
+          <input name="telefono"   value={form.telefono}   onChange={handleChange} />
+        </div>
+        <div>
+          <label>Contraseña</label><br />
+          <input name="contraseña" type="password" value={form.contraseña} onChange={handleChange} />
+        </div>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        <button type="submit" disabled={cargando}>
+          {cargando ? "Registrando..." : "Registrarse"}
+        </button>
       </form>
+      <p>¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link></p>
     </div>
   );
 }

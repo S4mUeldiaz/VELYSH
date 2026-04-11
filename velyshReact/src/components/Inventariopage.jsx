@@ -1,3 +1,4 @@
+// src/components/Inventariopage.jsx
 import { useState, useEffect } from "react";
 import { getStock, getProductos, getTallas, crearStock, editarStock, eliminarStock } from "../api/api";
 
@@ -56,14 +57,18 @@ export default function InventarioPage() {
     try {
       if (editandoId) {
         const actualizado = await editarStock(editandoId, datos);
-        // Necesitamos volver a poner nombre_producto y talla porque api.js no los agrega en editar
-        setStock(prev => prev.map(s => s.id_stock === editandoId
-          ? { ...actualizado, nombre_producto: productos.find(p => p.id_producto === actualizado.id_producto)?.nombre ?? "", talla: tallas.find(t => t.id_talla === actualizado.id_talla)?.talla ?? "" }
-          : s
+        setStock(prev => prev.map(s =>
+          s.id_stock === editandoId
+            ? { ...actualizado, nombre_producto: productos.find(p => p.id_producto === actualizado.id_producto)?.nombre ?? "", talla: tallas.find(t => t.id_talla === actualizado.id_talla)?.talla ?? "" }
+            : s
         ));
       } else {
         const nuevo = await crearStock(datos);
-        setStock(prev => [...prev, { ...nuevo, nombre_producto: productos.find(p => p.id_producto === nuevo.id_producto)?.nombre ?? "", talla: tallas.find(t => t.id_talla === nuevo.id_talla)?.talla ?? "" }]);
+        setStock(prev => [...prev, {
+          ...nuevo,
+          nombre_producto: productos.find(p => p.id_producto === nuevo.id_producto)?.nombre ?? "",
+          talla:           tallas.find(t => t.id_talla === nuevo.id_talla)?.talla ?? "",
+        }]);
       }
       cerrar();
     } catch (err) {
@@ -85,7 +90,6 @@ export default function InventarioPage() {
       {abierto && (
         <form onSubmit={handleGuardar}>
           <h3>{editandoId ? "Editar stock" : "Nuevo stock"}</h3>
-
           <div>
             <label>Producto</label><br />
             <select name="id_producto" value={form.id_producto} onChange={handleChange}>
@@ -116,9 +120,7 @@ export default function InventarioPage() {
             <label>Stock mínimo</label><br />
             <input name="stock_minimo" type="number" value={form.stock_minimo} onChange={handleChange} />
           </div>
-
           {error && <p style={{ color: "red" }}>{error}</p>}
-
           <button type="submit">{editandoId ? "Actualizar" : "Guardar"}</button>
           <button type="button" onClick={cerrar}>Cancelar</button>
         </form>
@@ -127,12 +129,7 @@ export default function InventarioPage() {
       <table>
         <thead>
           <tr>
-            <th>Producto</th>
-            <th>Talla</th>
-            <th>Color</th>
-            <th>Stock</th>
-            <th>Estado</th>
-            <th>Acciones</th>
+            <th>Producto</th><th>Talla</th><th>Color</th><th>Stock</th><th>Estado</th><th>Acciones</th>
           </tr>
         </thead>
         <tbody>
