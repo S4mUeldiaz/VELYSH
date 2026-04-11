@@ -114,3 +114,202 @@
   transition: background 0.15s, transform 0.1s;
   margin-top: 6px;
 }
+.productos-wrapper {
+  font-family: 'Inter', sans-serif;
+  padding: 2rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.productos-wrapper h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 20px;
+  text-align: center;
+}
+
+/* ── Botón nuevo producto ── */
+.productos-btn-nuevo {
+  display: block;
+  margin: 0 auto 24px;
+  padding: 10px 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  background: #e02424;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.productos-btn-nuevo:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+
+/* ── Modal / formulario ── */
+.productos-modal {
+  background: #fff;
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  padding: 2rem;
+  max-width: 400px;
+  margin: 0 auto 32px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+}
+
+.productos-modal h3 {
+  font-size: 17px;
+  font-weight: 900;
+  color: #111827;
+  margin: 0 0 0px;
+}
+
+/* ── Grupos label + input ── */
+.productos-form-group {
+  margin-bottom: 5px;
+}
+
+.productos-form-group label {
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+/* ── Inputs y select ── */
+.productos-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #111827;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.productos-input:focus {
+  border-color: #e02424;
+  box-shadow: 0 0 0 3px rgba(224, 36, 36, 0.12);
+}
+
+/* ── Botones del formulario ── */
+.productos-btn-guardar {
+  padding: 10px 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  background: #e02424;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  margin-right: 10px;
+}
+
+.productos-btn-guardar:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.productos-btn-cancelar {
+  padding: 10px 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  background: #f3f4f6;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.productos-btn-cancelar:hover {
+  background: #e5e7eb;
+}
+
+/* ── Tabla ── */
+.productos-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+}
+
+.productos-tabla thead tr {
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.productos-tabla th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.productos-tabla tbody tr {
+  border-bottom: 0.5px solid #f3f4f6;
+  transition: background 0.1s;
+}
+
+.productos-tabla tbody tr:hover {
+  background: #fef2f2;
+}
+
+.productos-tabla td {
+  padding: 12px 14px;
+  color: #111827;
+}
+
+/* ── Botones editar / eliminar ── */
+.productos-tabla .btn-editar {
+  padding: 6px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #e02424;
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-right: 8px;
+  transition: background 0.15s;
+}
+
+.productos-tabla .btn-editar:hover {
+  background: #fee2e2;
+}
+
+.productos-tabla .btn-eliminar {
+  padding: 6px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  background: #e02424;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.productos-tabla .btn-eliminar:hover {
+  background: #b91c1c;
+}
+.productos-input option {
+  font-family: 'Inter', sans-serif;
+  color: #111827;
+  background: #fff;
+}

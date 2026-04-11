@@ -73,32 +73,32 @@ export default function ProductosPage() {
   }
 
   return (
-    <div>
+    <div className="">
       <h2>Productos</h2>
-      <button onClick={abrirCrear}>+ Nuevo producto</button>
+      <button className="productos-btn-nuevo" onClick={abrirCrear}>+ Nuevo producto</button>
 
       {abierto && (
-        <form onSubmit={handleGuardar}>
+        <form className="productos-modal" onSubmit={handleGuardar}>
           <h3>{editandoId ? "Editar producto" : "Nuevo producto"}</h3>
-          <div>
-            <label>Nombre</label><br />
-            <input name="nombre" value={form.nombre} onChange={handleChange} />
+          <div className="productos-form-group">
+            <label>Nombre</label>
+            <input className="productos-input" name="nombre" value={form.nombre} onChange={handleChange} />
           </div>
-          <div>
-            <label>Descripción</label><br />
-            <input name="descripcion" value={form.descripcion} onChange={handleChange} />
+          <div className="productos-form-group">
+            <label>Descripción</label>
+            <input className="productos-input" name="descripcion" value={form.descripcion} onChange={handleChange} />
           </div>
-          <div>
-            <label>Marca</label><br />
-            <input name="marca" value={form.marca} onChange={handleChange} />
+          <div className="productos-form-group">
+            <label>Marca</label>
+            <input className="productos-input" name="marca" value={form.marca} onChange={handleChange} />
           </div>
-          <div>
-            <label>Precio</label><br />
-            <input name="precio" type="number" value={form.precio} onChange={handleChange} />
+          <div className="productos-form-group">
+            <label>Precio</label>
+            <input className="productos-input" name="precio" type="number" value={form.precio} onChange={handleChange} />
           </div>
-          <div>
-            <label>Categoría</label><br />
-            <select name="id_categoria" value={form.id_categoria} onChange={handleChange}>
+          <div className="productos-form-group">
+            <label>Categoría</label>
+            <select className="productos-input" name="id_categoria" value={form.id_categoria} onChange={handleChange}>
               <option value="">-- Selecciona --</option>
               {categorias.map(c => (
                 <option key={c.id_categoria} value={c.id_categoria}>{c.nombre_categoria}</option>
@@ -111,7 +111,7 @@ export default function ProductosPage() {
         </form>
       )}
 
-      <table>
+      <table className="productos-tabla">
         <thead>
           <tr>
             <th>Nombre</th><th>Marca</th><th>Categoría</th><th>Precio</th><th>Estado</th><th>Acciones</th>
@@ -126,8 +126,8 @@ export default function ProductosPage() {
               <td>${p.precio.toLocaleString()}</td>
               <td>{p.estado}</td>
               <td>
-                <button onClick={() => abrirEditar(p)}>Editar</button>
-                <button onClick={() => handleEliminar(p.id_producto)}>Eliminar</button>
+                <button className="btn-editar" onClick={() => abrirEditar(p)}>Editar</button>
+                <button className="btn-eliminar" onClick={() => handleEliminar(p.id_producto)}>Eliminar</button>
               </td>
             </tr>
           ))}
