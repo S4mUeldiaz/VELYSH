@@ -79,7 +79,7 @@ export default function InventarioPage() {
 
   return (
     <div>
-      <h2>Inventario</h2>
+      <h2 className="inventario">Inventario</h2>
       <button onClick={abrirCrear}>+ Agregar stock</button>
 
       {abierto && (
