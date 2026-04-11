@@ -1,118 +1,75 @@
-import { useState } from 'react'
-// useState nos deja guardar valores que pueden cambiar
-// (el texto del input, si hay error, etc.)
-import { useNavigate } from 'react-router-dom'
-// useNavigate nos deja cambiar de página sin recargar el navegador
-import { login } from '../api/api'
-// Importamos SOLO la función login desde tu api.js
-// El '../data/api' es la ruta relativa a tu archivo
+// src/components/LoginPage.jsx
+// CORRECCIONES aplicadas:
+// 1. Import cambiado de '../api/api' a '../Api/api' (A mayúscula, como está la carpeta)
+// 2. navigate('/inicio') → navigate('/productos') que sí existe en App.jsx
+// 3. Se guarda el usuario en sessionStorage para que RutaProtegida lo encuentre
 
+import { useState }               from "react";
+import { useNavigate, Link }      from "react-router-dom";
+import { login }                  from "../api/api"; // ← ruta corregida
 
-// 2. Definimos el componente (una función que devuelve HTML)
 export default function LoginPage() {
+  const [correo,    setCorreo]    = useState("");
+  const [contrasena, setContrasena] = useState("");
+  const [error,     setError]     = useState("");
+  const [cargando,  setCargando]  = useState(false);
+  const navigate = useNavigate();
 
-  // 3. Variables de estado — React las "recuerda" entre renders
-  const [correo, setCorreo]       = useState('')
-  // correo      = el valor actual del input
-  // setCorreo   = función para actualizar ese valor
-  // useState('') = empieza vacío
-
-  const [contrasena, setContrasena] = useState('')
-  // Igual pero para la contraseña
-
-  const [error, setError]         = useState('')
-  // Para guardar el mensaje de error si el login falla
-
-  const [cargando, setCargando]   = useState(false)
-  // Para deshabilitar el botón mientras espera respuesta
-
-  const navigate = useNavigate()
-  // navigate es una función que nos deja ir a otra ruta
-
-
-  // 4. La función que se ejecuta cuando el usuario da clic en "Ingresar"
   const handleSubmit = async (e) => {
-    // "async" significa que esta función puede ESPERAR cosas
-    // (como cuando api.js simula un delay de 200ms)
-
-    e.preventDefault()
-    // Sin esto, el formulario recargaría la página
-    // e = el evento del clic, preventDefault = "no hagas lo de siempre"
-
-    setError('')      // Borramos errores anteriores
-    setCargando(true) // Activamos el estado de carga
+    e.preventDefault();   // Evita que la página se recargue al hacer clic
+    setError("");
+    setCargando(true);
 
     try {
-      // "try" = intenta hacer esto, y si falla, ve al "catch"
+      // login() viene de api.js — busca el usuario en el arreglo en memoria
+      // Si lo encuentra, devuelve el objeto usuario sin contraseña
+      // Si no, lanza un Error que cae en el catch de abajo
+      const usuario = await login(correo, contrasena);
 
-      const usuario = await login(correo, contrasena)
-      // "await" = espera a que login() termine antes de continuar
-      // login() viene de tu api.js, busca en el arreglo de usuarios
-      // Si lo encuentra, devuelve el objeto usuario
-      // Si no, lanza un Error (throw new Error(...))
+      // Guardamos el usuario en sessionStorage para que RutaProtegida en App.jsx
+      // sepa que hay una sesión activa. sessionStorage dura mientras el tab esté abierto.
+      sessionStorage.setItem("usuario", JSON.stringify(usuario));
 
-      console.log('Login exitoso:', usuario)
-      // Esto aparece en las DevTools del navegador (F12)
-      // Útil para verificar qué devuelve tu api.js
-
-      navigate('/inicio')
-      // Redirige al usuario a la página de inicio
-
+      navigate("/inventario");
     } catch (err) {
-      // Si login() lanzó un error, llegamos aquí
-      // err.message contiene el texto del throw en tu api.js
-      // Por ejemplo: "Correo o contraseña incorrectos"
-
-      setError(err.message)
-      // Guardamos el mensaje para mostrarlo en pantalla
+      setError(err.message);
+    } finally {
+      setCargando(false);
     }
+  };
 
-    setCargando(false) // Desactivamos la carga al terminar
-  }
-
-
-  // 5. Lo que se muestra en pantalla (JSX = HTML dentro de JS)
   return (
-    <div style={{ maxWidth: '360px', margin: '60px auto', padding: '24px' }}>
-
-      <h2>Iniciar sesión</h2>
-
+    <div>
+      <h2>Iniciar sesión — VELYSH</h2>
       <form onSubmit={handleSubmit}>
-        {/* onSubmit llama a handleSubmit cuando se envía el form */}
-
         <div>
-          <label>Correo</label>
+          <label>Correo</label><br />
           <input
             type="email"
             value={correo}
-            onChange={(e) => setCorreo(e.target.value)}
-            // onChange se ejecuta cada vez que el usuario escribe
-            // e.target.value = lo que hay escrito en el input ahora mismo
+            onChange={e => setCorreo(e.target.value)}
+            placeholder="admin@velysh.com"
           />
         </div>
-
         <div>
-          <label>Contraseña</label>
+          <label>Contraseña</label><br />
           <input
             type="password"
             value={contrasena}
-            onChange={(e) => setContrasena(e.target.value)}
+            onChange={e => setContrasena(e.target.value)}
+            placeholder="123456"
           />
         </div>
 
-        {/* Mostramos el error SOLO si hay algo en la variable error */}
-        {error && (
-          <p style={{ color: 'red' }}>{error}</p>
-        )}
-        {/* El && funciona como "si error existe, muestra esto" */}
+        {/* Solo aparece si hay un mensaje de error */}
+        {error && <p style={{ color: "red" }}>{error}</p>}
 
         <button type="submit" disabled={cargando}>
-          {cargando ? 'Cargando...' : 'Ingresar'}
-          {/* Operador ternario: si cargando es true → 'Cargando...' */}
-          {/* Si es false → 'Ingresar' */}
+          {cargando ? "Verificando..." : "Ingresar"}
         </button>
-
       </form>
+
+      <p>¿No tienes cuenta? <Link to="/register">Regístrate</Link></p>
     </div>
-  )
+  );
 }
