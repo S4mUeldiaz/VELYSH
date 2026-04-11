@@ -28,21 +28,21 @@ export default function LoginPage() {
   }
 
   return (
-    <div>
-      <h2>Iniciar sesión — VELYSH</h2>
+    <div className="login-wrapper">
+      <h2>Iniciar Sesión-VELYSH</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Correo</label><br />
-          <input
+        <div  className="login-group">
+          <label>Correo</label>
+          <input className="login-input"
             type="email"
             value={correo}
             onChange={e => setCorreo(e.target.value)}
             placeholder="admin@velysh.com"
           />
         </div>
-        <div>
-          <label>Contraseña</label><br />
-          <input
+        <div className="login-group">
+          <label>Contraseña</label>
+          <input className="login-input"
             type="password"
             value={contrasena}
             onChange={e => setContrasena(e.target.value)}
@@ -50,7 +50,7 @@ export default function LoginPage() {
           />
         </div>
         {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit" disabled={cargando}>
+        <button className="login-button" type="submit" disabled={cargando}>
           {cargando ? "Verificando..." : "Ingresar"}
         </button>
       </form>
