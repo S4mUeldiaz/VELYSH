@@ -15,8 +15,20 @@ export default function PedidosPage() {
   }, []);
 
   function handleChange(e) {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+
+  if (name === "id_stock") {
+    const item = stockItems.find(s => s.id_stock === Number(value));
+    console.log("item encontrado:", item);
+    setForm(prev => ({
+      ...prev,
+      id_stock: value,
+      precio_unitario: item ? item.precio : "",
+    }));
+  } else {
+    setForm(prev => ({ ...prev, [name]: value }));
   }
+}
 
   function cerrar() {
     setForm({ id_stock: "", cantidad: 1, precio_unitario: "", metodo_pago: "tarjeta" });

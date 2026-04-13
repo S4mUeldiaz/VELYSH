@@ -175,11 +175,14 @@ export async function getTallas() {
 
 export async function getStock() {
   await delay();
-  return stock.map(s => ({
+  const result = stock.map(s => ({
     ...s,
     nombre_producto: productos.find(p => p.id_producto === s.id_producto)?.nombre ?? "",
     talla:           tallas.find(t => t.id_talla === s.id_talla)?.talla ?? "",
+    precio:          productos.find(p => p.id_producto === s.id_producto)?.precio ?? 0,
   }));
+  console.log("STOCK RESULT:", result);
+  return result;
 }
 
 export async function crearStock(datos) {
