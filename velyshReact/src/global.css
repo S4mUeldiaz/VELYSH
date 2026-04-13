@@ -18,12 +18,11 @@
  
 .login-wrapper form {
   background: #fff;
-  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid grey;
   border-radius: 16px;
   padding: 2rem;
   width: 100%;
   max-width: 360px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
 }
  
 .login-group {
@@ -118,6 +117,7 @@
   font-family: 'Inter', sans-serif;
   padding: 2rem;
   max-width: 1200px;
+  align-self: center;
 }
 
 .productos-wrapper h2 {
@@ -358,6 +358,7 @@
   font-family: 'Inter', sans-serif;
   padding: 2rem;
   max-width: 1200px;
+  align-self: center;
 }
 .inventario-wrapper h2 {
   font-size: 27px;
@@ -509,6 +510,7 @@
   font-family: 'Inter', sans-serif;
   padding: 2rem;
   max-width: 1200px;
+  align-self: center;
 }
 .pedidos-wrapper h2 {
   font-size: 27px;
@@ -654,4 +656,119 @@
   border-radius: 10px;
   cursor: pointer;
   transition: background 0.15s, transform 0.1;
+}
+.register-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter', sans-serif;
+  padding: 2rem 1rem;
+}
+ 
+.register-wrapper h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 24px;
+  font-family: georgia;
+}
+ 
+.register-wrapper form {
+  background: #fff;
+  border: 1px solid grey;
+  border-radius: 16px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 360px;
+}
+ 
+.register-group {
+  margin-bottom: 19px;
+}
+ 
+.register-group label {
+  display:inline-block ;
+  font-size: 15px;
+  font-weight: 500;
+  color: #6b7280;
+  margin-bottom: 3px;
+}
+ 
+.register-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 9px 13px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: #111827;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+ 
+.register-input:focus {
+  border-color: #807ce2;
+}
+ 
+.register-btn {
+  width: 100%;
+  padding: 11px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+  background: #4f46e5;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  margin-top: 6px;
+}
+ 
+.register-btn:hover:not(:disabled) {
+  background: #4338ca;
+  transform: translateY(-1px);
+}
+ 
+.register-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+ 
+.register-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+ 
+.register-wrapper > p {
+  font-size: 13px;
+  color: #000000;
+  margin-top: 16px;
+}
+ 
+.register-wrapper > p a {
+  color: #5b78d8;
+  font-weight: 500;
+  text-decoration: none;
+}
+ 
+.register-wrapper > p a:hover {
+  text-decoration: underline;
+}
+.register-button {
+  width: 100%;
+  padding: 11px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+  background: #c92f4e;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  margin-top: 6px;
 }

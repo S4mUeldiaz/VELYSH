@@ -28,31 +28,31 @@ export default function RegisterPage() {
   }
 
   return (
-    <div>
+    <div className="register-wrapper">
       <h2>Crear cuenta — VELYSH</h2>
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className="register-group">
           <label>Nombre</label><br />
-          <input name="nombre"     value={form.nombre}     onChange={handleChange} />
+          <input className="register-input" name="nombre"     value={form.nombre}     onChange={handleChange} />
         </div>
-        <div>
+        <div className="register-group">
           <label>Apellido</label><br />
-          <input name="apellido"   value={form.apellido}   onChange={handleChange} />
+          <input className="register-input" name="apellido"   value={form.apellido}   onChange={handleChange} />
         </div>
-        <div>
+        <div className="register-group">
           <label>Correo</label><br />
-          <input name="correo"     type="email" value={form.correo}     onChange={handleChange} />
+          <input className="register-input" name="correo"     type="email" value={form.correo}     onChange={handleChange} />
         </div>
-        <div>
+        <div className="register-group">
           <label>Teléfono</label><br />
-          <input name="telefono"   value={form.telefono}   onChange={handleChange} />
+          <input className="register-input" name="telefono"   value={form.telefono}   onChange={handleChange} />
         </div>
-        <div>
+        <div className="register-group">
           <label>Contraseña</label><br />
-          <input name="contraseña" type="password" value={form.contraseña} onChange={handleChange} />
+          <input className="register-input" name="contraseña" type="password" value={form.contraseña} onChange={handleChange} />
         </div>
         {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit" disabled={cargando}>
+        <button className="register-button" type="submit" disabled={cargando}>
           {cargando ? "Registrando..." : "Registrarse"}
         </button>
       </form>
