@@ -1,8 +1,8 @@
-// src/components/Ventaspage.jsx
+// src/components/Pedidospage.jsx
 import { useState, useEffect }  from "react";
 import { getPedidos, getStock, crearPedido, eliminarPedido, getUsuarioActual } from "../api/api";
 
-export default function VentasPage() {
+export default function PedidosPage() {
   const [pedidos,    setPedidos]    = useState([]);
   const [stockItems, setStockItems] = useState([]);
   const [abierto,    setAbierto]    = useState(false);
@@ -60,16 +60,16 @@ export default function VentasPage() {
   }
 
   return (
-    <div>
-      <h2>Ventas / Pedidos</h2>
-      <button onClick={() => setAbierto(true)}>+ Nuevo pedido</button>
+    <div className="pedidos-wrapper">
+      <h2>Pedidos</h2>
+      <button className="pedidos-btn-nuevo" onClick={() => setAbierto(true)}>+ Nuevo pedido</button>
 
       {abierto && (
-        <form onSubmit={handleGuardar}>
+        <form className="pedidos-modal" onSubmit={handleGuardar}>
           <h3>Nuevo pedido</h3>
-          <div>
+          <div className="pedidos-form-group">
             <label>Producto / Talla / Color</label><br />
-            <select name="id_stock" value={form.id_stock} onChange={handleChange}>
+            <select className="pedidos-input" name="id_stock" value={form.id_stock} onChange={handleChange}>
               <option value="">-- Selecciona --</option>
               {stockItems
                 .filter(s => s.stock_actual > 0)
@@ -81,29 +81,29 @@ export default function VentasPage() {
               }
             </select>
           </div>
-          <div>
+          <div className="pedidos-form-group">
             <label>Cantidad</label><br />
-            <input name="cantidad" type="number" min="1" value={form.cantidad} onChange={handleChange} />
+            <input className="pedidos-input" name="cantidad" type="number" min="1" value={form.cantidad} onChange={handleChange} />
           </div>
-          <div>
+          <div className="pedidos-form-group">
             <label>Precio unitario</label><br />
-            <input name="precio_unitario" type="number" value={form.precio_unitario} onChange={handleChange} />
+            <input className="pedidos-input" name="precio_unitario" type="number" value={form.precio_unitario} onChange={handleChange} />
           </div>
-          <div>
+          <div className="pedidos-form-group">
             <label>Método de pago</label><br />
-            <select name="metodo_pago" value={form.metodo_pago} onChange={handleChange}>
+            <select className="pedidos-input" name="metodo_pago" value={form.metodo_pago} onChange={handleChange}>
               <option value="tarjeta">Tarjeta</option>
               <option value="pse">PSE</option>
               <option value="efectivo">Efectivo</option>
             </select>
           </div>
           {error && <p style={{ color: "red" }}>{error}</p>}
-          <button type="submit">Guardar pedido</button>
-          <button type="button" onClick={cerrar}>Cancelar</button>
+          <button className="btn" type="submit">Guardar pedido</button>
+          <button className="btn" type="button" onClick={cerrar}>Cancelar</button>
         </form>
       )}
 
-      <table>
+      <table className="pedidos-tabla">
         <thead>
           <tr>
             <th>Referencia</th><th>Fecha</th><th>Total</th><th>Pago</th><th>Estado</th><th>Productos</th><th>Acciones</th>
@@ -125,7 +125,7 @@ export default function VentasPage() {
                 ))}
               </td>
               <td>
-                <button onClick={() => handleEliminar(p.id_pedido)}>Eliminar</button>
+                <button className="btn-eliminar"onClick={() => handleEliminar(p.id_pedido)}>Eliminar</button>
               </td>
             </tr>
           ))}

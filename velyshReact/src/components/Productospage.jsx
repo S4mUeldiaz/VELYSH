@@ -73,7 +73,7 @@ export default function ProductosPage() {
   }
 
   return (
-    <div className="">
+    <div className="productos-wrapper">
       <h2>Productos</h2>
       <button className="productos-btn-nuevo" onClick={abrirCrear}>+ Nuevo producto</button>
 
@@ -106,8 +106,8 @@ export default function ProductosPage() {
             </select>
           </div>
           {error && <p style={{ color: "red" }}>{error}</p>}
-          <button type="submit">{editandoId ? "Actualizar" : "Guardar"}</button>
-          <button type="button" onClick={cerrar}>Cancelar</button>
+          <button className="btn" type="submit">{editandoId ? "Actualizar" : "Guardar"}</button>
+          <button className="btn" type="button" onClick={cerrar}>Cancelar</button>
         </form>
       )}
 

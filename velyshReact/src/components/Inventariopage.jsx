@@ -83,50 +83,54 @@ export default function InventarioPage() {
   }
 
   return (
-    <div>
+    <div className="inventario-wrapper">
       <h2>Inventario</h2>
-      <button onClick={abrirCrear}>+ Agregar stock</button>
+      <button className="inventario-btn-nuevo" onClick={abrirCrear}>+ Agregar stock</button>
 
       {abierto && (
-        <form onSubmit={handleGuardar}>
+        <form className="inventario-modal" onSubmit={handleGuardar}>
           <h3>{editandoId ? "Editar stock" : "Nuevo stock"}</h3>
-          <div>
+          <div className="inventario-form-group">
             <label>Producto</label><br />
-            <select name="id_producto" value={form.id_producto} onChange={handleChange}>
+            <select className="inventario-input" name="id_producto" value={form.id_producto} onChange={handleChange}>
               <option value="">-- Selecciona --</option>
               {productos.map(p => (
                 <option key={p.id_producto} value={p.id_producto}>{p.nombre}</option>
               ))}
             </select>
           </div>
-          <div>
+          <div className="inventario-form-group">
             <label>Talla</label><br />
-            <select name="id_talla" value={form.id_talla} onChange={handleChange}>
+            <select className="inventario-input" name="id_talla" value={form.id_talla} onChange={handleChange}>
               <option value="">-- Selecciona --</option>
               {tallas.map(t => (
                 <option key={t.id_talla} value={t.id_talla}>{t.talla}</option>
               ))}
             </select>
           </div>
-          <div>
+          <div className="inventario-form-group">
             <label>Color</label><br />
-            <input name="color" value={form.color} onChange={handleChange} />
+            <input className="inventario-input" name="color" value={form.color} onChange={handleChange} />
           </div>
-          <div>
+          <div className="inventario-form-group">
             <label>Stock actual</label><br />
-            <input name="stock_actual" type="number" value={form.stock_actual} onChange={handleChange} />
+            <input className="inventario-input" name="stock_actual" type="number" value={form.stock_actual} onChange={handleChange} />
           </div>
-          <div>
+          <div className="inventario-form-group">
             <label>Stock mínimo</label><br />
-            <input name="stock_minimo" type="number" value={form.stock_minimo} onChange={handleChange} />
+            <input className="inventario-input" name="stock_minimo" type="number" value={form.stock_minimo} onChange={handleChange} />
+          </div>
+          <div className="inventario-form-group">
+            <label>Stock máximo</label><br />
+            <input className="inventario-input" name="stock_maximo" type="number" value={form.stock_maximo} onChange={handleChange} />
           </div>
           {error && <p style={{ color: "red" }}>{error}</p>}
-          <button type="submit">{editandoId ? "Actualizar" : "Guardar"}</button>
-          <button type="button" onClick={cerrar}>Cancelar</button>
+          <button className="btn" type="submit">{editandoId ? "Actualizar" : "Guardar"}</button>
+          <button className="btn" type="button" onClick={cerrar}>Cancelar</button>
         </form>
       )}
 
-      <table>
+      <table className="inventario-tabla">
         <thead>
           <tr>
             <th>Producto</th><th>Talla</th><th>Color</th><th>Stock</th><th>Estado</th><th>Acciones</th>
@@ -141,8 +145,8 @@ export default function InventarioPage() {
               <td>{s.stock_actual}</td>
               <td>{s.estado}</td>
               <td>
-                <button onClick={() => abrirEditar(s)}>Editar</button>
-                <button onClick={() => handleEliminar(s.id_stock)}>Eliminar</button>
+                <button className="btn-editar" onClick={() => abrirEditar(s)}>Editar</button>
+                <button className="btn-eliminar" onClick={() => handleEliminar(s.id_stock)}>Eliminar</button>
               </td>
             </tr>
           ))}

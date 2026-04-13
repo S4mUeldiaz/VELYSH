@@ -117,16 +117,16 @@
 .productos-wrapper {
   font-family: 'Inter', sans-serif;
   padding: 2rem;
-  max-width: 960px;
-  margin: 0 auto;
+  max-width: 1200px;
 }
 
 .productos-wrapper h2 {
-  font-size: 24px;
+  font-size: 27px;
   font-weight: 600;
-  color: #111827;
-  margin: 0 0 20px;
+  color: #0c0e12;
+  margin: 9 1 20px;
   text-align: center;
+  font-family: georgia;
 }
 
 /* ── Botón nuevo producto ── */
@@ -241,8 +241,9 @@
 .productos-tabla {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 16px;
   font-family: 'Inter', sans-serif;
+
 }
 
 .productos-tabla thead tr {
@@ -250,8 +251,8 @@
 }
 
 .productos-tabla th {
-  text-align: left;
-  padding: 10px 14px;
+  text-align: center;
+  padding: 11px 14px;
   font-size: 13px;
   font-weight: 600;
   color: #6b7280;
@@ -281,17 +282,15 @@
   font-weight: 500;
   color: #e02424;
   background: #fef2f2;
-  border: 1px solid #fca5a5;
+  border: 1px solid #dfa5a5;
   border-radius: 8px;
   cursor: pointer;
   margin-right: 8px;
   transition: background 0.15s;
 }
-
 .productos-tabla .btn-editar:hover {
-  background: #fee2e2;
+  background: #d2c7c7;
 }
-
 .productos-tabla .btn-eliminar {
   padding: 6px 14px;
   font-family: 'Inter', sans-serif;
@@ -305,11 +304,354 @@
   transition: background 0.15s;
 }
 
-.productos-tabla .btn-eliminar:hover {
-  background: #b91c1c;
-}
 .productos-input option {
   font-family: 'Inter', sans-serif;
   color: #111827;
   background: #fff;
+}
+.navbar-cerrar
+{
+  padding: 7px 18px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: white;
+  background:  #e02424; ;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.navbar
+{
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  height: 56px;
+  background: white;
+  border-bottom: 5px solid #e02424;
+  gap: 1.5rem;
+}
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.navbar-brand {
+  color: #000000;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+.navbar-links {
+  display: flex;
+  gap: 1.5rem;
+  margin-left: 1rem;
+}
+
+.navbar-link {
+  color: #6b7280;
+  text-decoration: none;
+  font-size: 17px;
+  cursor: pointer;
+}
+
+.inventario-wrapper {
+  font-family: 'Inter', sans-serif;
+  padding: 2rem;
+  max-width: 1200px;
+}
+.inventario-wrapper h2 {
+  font-size: 27px;
+  font-weight: 600;
+  color: #0c0e12;
+  margin: 9 1 20px;
+  text-align: center;
+  font-family: georgia;
+}
+.inventario-input {
+   width: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #111827;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.inventario-form-group {
+  margin-bottom: 5px;
+}
+
+.inventario-form-group label {
+  font-size: 15px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.inventario-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+
+}
+
+.inventario-tabla thead tr {
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.inventario-tabla th {
+  text-align: center;
+  padding: 11px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.inventario-tabla tbody tr {
+  border-bottom: 0.5px solid #f3f4f6;
+  transition: background 0.1s;
+}
+
+.inventario-tabla tbody tr:hover {
+  background: #fef2f2;
+}
+
+.inventario-tabla td {
+  padding: 12px 14px;
+  color: #111827;
+}
+.inventario-tabla .btn-editar {
+  padding: 6px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #e02424;
+  background: #fef2f2;
+  border: 1px solid #dfa5a5;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-right: 8px;
+  transition: background 0.15s;
+}
+.inventario-tabla .btn-editar:hover {
+  background: #d2c7c7;
+}
+.inventario-tabla .btn-eliminar {
+  padding: 6px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  background: #e02424;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.inventario-tabla .btn-eliminar:hover {
+  background: #b91c1c;
+}
+.inventario-btn-nuevo {
+  display: block;
+  margin: 0 auto 24px;
+  padding: 10px 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  background: #e02424;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.inventario-btn-nuevo:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+.inventario-modal {
+  background: #fff;
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  padding: 2rem;
+  max-width: 400px;
+  margin: 0 auto 32px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+}
+
+.inventario-modal h3 {
+  font-size: 17px;
+  font-weight: 900;
+  color: #111827;
+  margin: 0 0 0px;
+}
+.btn
+{
+  margin: 10px 8px 0px 8px;
+  padding: 9px 22px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: #fff;
+  background: #e02424;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1;
+}
+
+.pedidos-wrapper {
+  font-family: 'Inter', sans-serif;
+  padding: 2rem;
+  max-width: 1200px;
+}
+.pedidos-wrapper h2 {
+  font-size: 27px;
+  font-weight: 600;
+  color: #0c0e12;
+  margin: 9 1 20px;
+  text-align: center;
+  font-family: georgia;
+}
+.pedidos-input {
+   width: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #111827;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.pedidos-form-group {
+  margin-bottom: 5px;
+}
+
+.pedidos-form-group label {
+  font-size: 15px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.pedidos-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+
+}
+
+.pedidos-tabla thead tr {
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.pedidos-tabla th {
+  text-align: center;
+  padding: 11px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pedidos-tabla tbody tr {
+  border-bottom: 0.5px solid #f3f4f6;
+  transition: background 0.1s;
+}
+
+.pedidos-tabla tbody tr:hover {
+  background: #fef2f2;
+}
+
+.pedidos-tabla td {
+  padding: 12px 14px;
+  color: #111827;
+}
+.pedidos-tabla .btn-editar {
+  padding: 6px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #e02424;
+  background: #fef2f2;
+  border: 1px solid #dfa5a5;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-right: 8px;
+  transition: background 0.15s;
+}
+.pedidos-tabla .btn-editar:hover {
+  background: #d2c7c7;
+}
+.pedidos-tabla .btn-eliminar {
+  padding: 6px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  background: #e02424;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.pedidos-tabla .btn-eliminar:hover {
+  background: #b91c1c;
+}
+.pedidos-btn-nuevo {
+  display: block;
+  margin: 0 auto 24px;
+  padding: 10px 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  background: #e02424;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.pedidos-btn-nuevo:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+.pedidos-modal {
+  background: #fff;
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  padding: 2rem;
+  max-width: 400px;
+  margin: 0 auto 32px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+}
+
+.pedidos-modal h3 {
+  font-size: 17px;
+  font-weight: 900;
+  color: #111827;
+  margin: 0 0 0px;
+}
+.btn
+{
+  margin: 10px 8px 0px 8px;
+  padding: 9px 22px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: #fff;
+  background: #e02424;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1;
 }

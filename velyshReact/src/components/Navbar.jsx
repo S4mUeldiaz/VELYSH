@@ -12,12 +12,16 @@ export default function Navbar({ usuario }) {
   }
 
   return (
-    <nav style={{ padding: "10px", borderBottom: "1px solid #ccc", display: "flex", gap: "16px", alignItems: "center" }}>
-      <span><strong>VELYSH</strong> — {usuario.nombre} ({usuario.nombre_rol})</span>
-      <Link to="/productos">Productos</Link>
-      <Link to="/inventario">Inventario</Link>
-      <Link to="/ventas">Ventas</Link>
-      <button onClick={handleLogout} style={{ marginLeft: "auto" }}>Cerrar sesión</button>
+    <nav className="navbar">
+      <div className="navbar-left">
+        <span className="navbar-brand">VELYSH -{usuario.nombre} ({usuario.nombre_rol})</span>
+      </div>
+      <div className="navbar-links">
+      <Link className="navbar-link" to="/productos">Productos</Link>
+      <Link className="navbar-link" to="/inventario">Inventario</Link>
+      <Link className="navbar-link" to="/pedidos">Pedidos</Link>
+      </div>
+      <button className="navbar-cerrar" onClick={handleLogout} style={{ marginLeft: "auto" }}>Cerrar sesión</button>
     </nav>
   );
 }

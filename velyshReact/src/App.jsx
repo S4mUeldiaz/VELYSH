@@ -4,7 +4,7 @@ import LoginPage      from "./components/LoginPage";
 import RegisterPage   from "./components/RegisterPage";
 import ProductosPage  from "./components/Productospage";
 import InventarioPage from "./components/Inventariopage";
-import VentasPage     from "./components/Ventaspage";
+import PedidosPage     from "./components/Pedidospage";
 import Navbar         from "./components/Navbar";
 import { getUsuarioActual } from "./api/api";
 
@@ -39,7 +39,7 @@ function App() {
         {/* Rutas protegidas — requieren token válido */}
         <Route path="/productos"  element={<RutaProtegida><ProductosPage /></RutaProtegida>} />
         <Route path="/inventario" element={<RutaProtegida><InventarioPage /></RutaProtegida>} />
-        <Route path="/ventas"     element={<RutaProtegida><VentasPage /></RutaProtegida>} />
+        <Route path="/pedidos"     element={<RutaProtegida><PedidosPage /></RutaProtegida>} />
 
         <Route path="*" element={<h1>Página no encontrada</h1>} />
       </Routes>
