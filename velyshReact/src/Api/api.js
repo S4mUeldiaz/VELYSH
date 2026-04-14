@@ -61,7 +61,7 @@ export async function login(correo, contraseña) {
   await delay();
 
   const usuario = usuarios.find(
-    u => u.correo === correo && u.contraseña === contraseña
+    u => u.correo === correo && u.contraseña === contraseña // u = usuarios y toma los elemenos del array
   );
   if (!usuario)                      throw new Error("Correo o contraseña incorrectos");
   if (usuario.estado === "inactivo") throw new Error("Usuario inactivo");
@@ -226,16 +226,16 @@ export async function getPedidos() {
   await delay();
   return pedidos.map(p => ({
     ...p,
-    detalles: detalles
-      .filter(d => d.id_pedido === p.id_pedido)
+    detalles: detalles // se agrega el campo de detalles
+      .filter(d => d.id_pedido === p.id_pedido) // Toma los detalles que corresponden a este pedido
       .map(d => {
-        const itemStock = stock.find(s => s.id_stock === d.id_stock);
+        const itemStock = stock.find(s => s.id_stock === d.id_stock); //
         const itemTalla = tallas.find(t => t.id_talla === itemStock?.id_talla);
         const itemProd  = productos.find(pr => pr.id_producto === itemStock?.id_producto);
         return {
           ...d,
           color:           itemStock?.color ?? "",
-          talla:           itemTalla?.talla ?? "",
+          talla:           itemTalla?.talla ?? "",    //obtenemos color, talla y nombre del producto para mostrar en el detalle del pedido
           nombre_producto: itemProd?.nombre ?? "",
         };
       }),
@@ -274,15 +274,15 @@ export async function crearPedido(datos) {
   });
 
   // Descontamos del stock automáticamente
-  const idxStock = stock.findIndex(s => s.id_stock === datos.id_stock);
-  if (idxStock !== -1) {
-    stock[idxStock].stock_actual -= datos.cantidad;
-    stock[idxStock].estado = calcularEstadoStock(
-      stock[idxStock].stock_actual,
+  const idxStock = stock.findIndex(s => s.id_stock === datos.id_stock); // buscamos el stock que corresponde al detalle del pedido
+  if (idxStock !== -1) { // si encontramos el stock, descontamos la cantidad pedida y recalculamos el estado
+    stock[idxStock].stock_actual -= datos.cantidad; 
+    stock[idxStock].estado = calcularEstadoStock( 
+      stock[idxStock].stock_actual, 
       stock[idxStock].stock_minimo
     );
   }
-  return nuevoPedido;
+  return nuevoPedido; 
 }
 
 export async function eliminarPedido(id) {
