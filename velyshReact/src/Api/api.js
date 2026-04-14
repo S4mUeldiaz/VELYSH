@@ -1,4 +1,3 @@
-// src/Api/api.js
 import { SignJWT, jwtVerify } from "jose";
 import db from "./db.json";
 
@@ -19,10 +18,10 @@ let detalles  = JSON.parse(JSON.stringify(db.detalles_pedido));
 // TextEncoder la convierte a bytes, que es lo que necesita jose.
 // En un proyecto real esto vendría de una variable de entorno (.env).
 const SECRET_KEY    = new TextEncoder().encode("velysh-secret-key-2026");
-const TOKEN_DURACION = "2h"; // El token expira a las 2 horas
+const TOKEN_DURACION = "2h";
 
 // ── HELPERS ────────────────────────────────────────────────────────────────────
-const delay  = (ms = 200) => new Promise(res => setTimeout(res, ms));
+const delay  = (ms = 200) => new Promise(res => setTimeout(res, ms)); // Simula retraso de red / servidor
 const nextId = (arr, campo) => Math.max(0, ...arr.map(i => i[campo])) + 1;
 
 function calcularEstadoStock(actual, minimo) {
@@ -60,13 +59,13 @@ export async function verificarToken(token) {
 export async function login(correo, contraseña) {
   await delay();
 
-  const usuario = usuarios.find(
+  const usuario = usuarios.find( // buscar
     u => u.correo === correo && u.contraseña === contraseña // u = usuarios y toma los elemenos del array
   );
   if (!usuario)                      throw new Error("Correo o contraseña incorrectos");
   if (usuario.estado === "inactivo") throw new Error("Usuario inactivo");
 
-  const rol = roles.find(r => r.id_rol === usuario.id_rol);
+  const rol = roles.find(r => r.id_rol === usuario.id_rol); // obtener rol
   const { contraseña: _, ...usuarioSinPassword } = usuario;
   const usuarioConRol = { ...usuarioSinPassword, nombre_rol: rol?.nombre_rol ?? "" };
 
@@ -88,7 +87,7 @@ export async function registrar(datos) {
     id:         nextId(usuarios, "id"),
     id_usuario: nextId(usuarios, "id_usuario"),
     estado:     "activo",
-    id_rol:     3,
+    id_rol:     1,
     fecha_registro: new Date().toISOString(),
     ...datos,
   };
@@ -130,8 +129,8 @@ export async function getProductos() {
   return productos
     .filter(p => p.estado !== "descontinuado")
     .map(p => ({
-      ...p,
-      nombre_categoria: categorias.find(c => c.id_categoria === p.id_categoria)?.nombre_categoria ?? "",
+      ...p, 
+      nombre_categoria: categorias.find(c => c.id_categoria === p.id_categoria)?.nombre_categoria ?? "", // agregamos el nombre de la categoría al producto //?. es para evitar error si no encuentra el producto
     }));
 }
 
@@ -177,7 +176,7 @@ export async function getStock() {
   await delay();
   const result = stock.map(s => ({
     ...s,
-    nombre_producto: productos.find(p => p.id_producto === s.id_producto)?.nombre ?? "",
+    nombre_producto: productos.find(p => p.id_producto === s.id_producto)?.nombre ?? "", //?. es para evitar error si no encuentra el producto
     talla:           tallas.find(t => t.id_talla === s.id_talla)?.talla ?? "",
     precio:          productos.find(p => p.id_producto === s.id_producto)?.precio ?? 0,
   }));
@@ -207,17 +206,17 @@ export async function editarStock(id, datos) {
     ...stock[idx],
     ...datos,
     estado: calcularEstadoStock(
-      datos.stock_actual ?? stock[idx].stock_actual,
+      datos.stock_actual ?? stock[idx].stock_actual, // si no viene stock_actual en datos, usamos el que ya tiene el stock
       datos.stock_minimo ?? stock[idx].stock_minimo
     ),
   };
-  return stock[idx];
+  return stock[idx]; 
 }
 
 export async function eliminarStock(id) {
   await delay();
-  stock = stock.filter(s => s.id_stock !== id);
-  return { ok: true };
+  stock = stock.filter(s => s.id_stock !== id); 
+  return { ok: true }; 
 }
 
 // ── PEDIDOS / VENTAS ────────────────────────────────────────────────────────────

@@ -13,9 +13,10 @@
       "descripcion": "Acceso a ventas e inventario"
     },
     {
+      "id": 3,
+      "id_rol": 3,
       "nombre_rol": "clientes",
-      "descripcion": "Acceso solo a tienda",
-      "id": 3
+      "descripcion": "Acceso solo a tienda"
     }
   ],
   "usuarios": [
@@ -60,7 +61,7 @@
   "productos": [
     {
       "id": 1,
-      "id_producto": 1,
+      "id_producto": 1, 
       "id_categoria": 1,
       "referencia": "NK-AIR-001",
       "nombre": "Air Classic",
