@@ -16,7 +16,7 @@ let detalles  = JSON.parse(JSON.stringify(db.detalles_pedido));
 // ── CONFIGURACIÓN JWT ──────────────────────────────────────────────────────────
 // SECRET_KEY es la clave con la que firmamos y verificamos los tokens.
 // TextEncoder la convierte a bytes, que es lo que necesita jose.
-// En un proyecto real esto vendría de una variable de entorno (.env).
+
 const SECRET_KEY    = new TextEncoder().encode("velysh-secret-key-2026");
 const TOKEN_DURACION = "2h";
 
