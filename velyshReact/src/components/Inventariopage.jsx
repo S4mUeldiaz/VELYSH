@@ -1,6 +1,7 @@
 // src/components/Inventariopage.jsx
 import { useState, useEffect } from "react";
 import { getStock, getProductos, getTallas, crearStock, editarStock, eliminarStock } from "../api/api";
+import "./Inventariopage.css";
 
 export default function InventarioPage() {
   const [stock,      setStock]      = useState([]);

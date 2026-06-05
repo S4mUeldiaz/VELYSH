@@ -1,6 +1,7 @@
 // src/components/Productospage.jsx
 import { useState, useEffect } from "react";
 import { getProductos, getCategorias, crearProducto, editarProducto, eliminarProducto } from "../api/api";
+import "./Productospage.css";
 
 export default function ProductosPage() {
   const [productos,  setProductos]  = useState([]);

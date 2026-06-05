@@ -1,6 +1,7 @@
 // src/components/Pedidospage.jsx
 import { useState, useEffect }  from "react";
 import { getPedidos, getStock, crearPedido, eliminarPedido, getUsuarioActual } from "../api/api";
+import "./Pedidospage.css";
 
 export default function PedidosPage() {
   const [pedidos,    setPedidos]    = useState([]);

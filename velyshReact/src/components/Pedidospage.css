@@ -1,0 +1,101 @@
+.pedidos-wrapper {
+  font-family: 'Inter', sans-serif;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pedidos-wrapper h2 {
+  font-size: 27px;
+  font-weight: 600;
+  color: #0c0e12;
+  margin: 0 0 24px;
+  text-align: center;
+  font-family: georgia;
+}
+
+.pedidos-btn-nuevo {
+  display: block;
+  margin: 0 auto 24px;
+  padding: 10px 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  background: #2563eb;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.pedidos-btn-nuevo:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.pedidos-modal {
+  background: #fff;
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  padding: 2rem;
+  max-width: 500px;
+  margin: 0 auto 32px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+}
+
+.pedidos-modal h3 {
+  font-size: 20px;
+  font-weight: 900;
+  color: #111827;
+  margin: 0 0 16px;
+}
+
+.pedidos-form-group {
+  margin-bottom: 16px;
+}
+
+.pedidos-form-group label {
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.pedidos-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #111827;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.pedidos-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.pedidos-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 24px;
+}
+
+.pedidos-tabla th,
+.pedidos-tabla td {
+  padding: 12px 14px;
+  border: 1px solid #e5e7eb;
+  text-align: left;
+  vertical-align: top;
+}
+
+.pedidos-tabla th {
+  background: #f3f4f6;
+}

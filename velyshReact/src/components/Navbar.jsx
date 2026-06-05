@@ -1,6 +1,7 @@
 // src/components/Navbar.jsx
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../api/api";
+import "./Navbar.css";
 
 // Recibe el objeto usuario desde RutaProtegida en App.jsx
 export default function Navbar({ usuario }) {

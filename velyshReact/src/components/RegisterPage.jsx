@@ -2,6 +2,7 @@
 import { useState }          from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { registrar }         from "../api/api";
+import "./RegisterPage.css";
 
 export default function RegisterPage() {
   const [form, setForm]       = useState({ nombre: "", apellido: "", correo: "", telefono: "", contraseña: "" });
