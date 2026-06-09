@@ -6,8 +6,10 @@ import productosRoutes from './routes/productos.routes.js'
 import favoritosRoutes from './routes/favoritos.routes.js'
 import facturaRoutes from './routes/factura.routes.js'
 import tipoDocumentoRoutes from './routes/tipoDocumento.routes.js'
-
-
+import tallasRoutes from './routes/tallas.routes.js'
+import pedidosRoutes from './routes/pedidos.routes.js'
+import usuariosRoutes from './routes/usuarios.routes.js'
+import devolucionesRoutes from './routes/devoluciones.routes.js'
 const app = express()
 const PORT = process.env.PORT || 3001
 
@@ -23,4 +25,8 @@ app.use('/api/productos', productosRoutes)
 app.use('/api/favoritos', favoritosRoutes)
 app.use('/api/factura', facturaRoutes)
 app.use('/api/tipo-documento', tipoDocumentoRoutes)
+app.use('/api/tallas', tallasRoutes)
+app.use('/api/pedidos', pedidosRoutes)
+app.use('/api/usuarios', usuariosRoutes)
+app.use('/api/devoluciones', devolucionesRoutes)
 })
