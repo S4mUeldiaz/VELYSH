@@ -1,4 +1,5 @@
 import { supabase } from '../config/supabase.js'
+import jwt from 'jsonwebtoken'
 
 export const registro = async (req, res) => {
   const { numero_documento, id_tipo_documento, nombre, apellido, correo, telefono, password, id_rol } = req.body
@@ -23,15 +24,47 @@ export const registro = async (req, res) => {
 export const login = async (req, res) => {
   const { correo, password } = req.body
 
-  const { data, error } = await supabase.auth.signInWithPassword({ email: correo, password })
+  // 1. Autenticar con Supabase
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: correo,
+    password
+  })
 
   if (error) return res.status(401).json({ error: 'Credenciales incorrectas' })
 
-  const { data: usuario } = await supabase
+ const { data: usuario } = await supabase
     .from('usuarios')
-    .select('numero_documento, nombre, apellido, correo, telefono, estado, roles ( nombre_rol )')
+    .select(`
+      numero_documento,
+      nombre,
+      apellido,
+      correo,
+      telefono,
+      estado,
+      roles ( nombre_rol )
+    `)
     .eq('correo', correo)
     .single()
 
-  return res.status(200).json({ token: data.session.access_token, usuario })
+  if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado en la base de datos' })
+
+  if (usuario.estado === 'inactivo') {
+    return res.status(403).json({ error: 'Usuario inactivo, contacta al administrador' })
+  }
+  const token = jwt.sign(
+    {
+      numero_documento: usuario.numero_documento,
+      correo: usuario.correo,
+      rol: usuario.roles.nombre_rol
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: '8h' }
+  )
+
+  await supabase
+    .from('usuarios')
+    .update({ fecha_ultima_actividad: new Date().toISOString() })
+    .eq('correo', correo)
+
+  return res.status(200).json({ token, usuario })
 }
