@@ -12,14 +12,17 @@ api.interceptors.request.use((config) => {
   if (token) config.headers.Authorization = `Bearer ${token}`
   return config
 })
-
-// ── AUTH ───────────────────────────────────────────────────────────────────────
-
 export async function login(correo, password) {
   const { data } = await api.post('/auth/login', { correo, password })
+  console.log('data del login:', data)
+  const usuario = {
+    ...data.usuario,
+    nombre_rol: data.usuario.roles?.nombre_rol ?? ''
+  }
+  console.log('usuario mapeado:', usuario)
   sessionStorage.setItem('token', data.token)
-  sessionStorage.setItem('usuario', JSON.stringify(data.usuario))
-  return data.usuario
+  sessionStorage.setItem('usuario', JSON.stringify(usuario))
+  return usuario
 }
 
 export async function registrar(datos) {
@@ -39,8 +42,6 @@ export function getUsuarioActual() {
 export function getToken() {
   return sessionStorage.getItem('token')
 }
-
-// ── CATEGORÍAS ─────────────────────────────────────────────────────────────────
 
 export async function getCategorias() {
   const { data } = await api.get('/productos/categoria')

@@ -1,7 +1,7 @@
 // src/App.jsx
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import LoginPage      from "./components/LoginPage";
-import RegisterPage   from "./components/RegisterPage";
+import LoginPage from "./components/auth/LoginPage";
+import RegisterPage from "./components/auth/RegisterPage";
 import ProductosPage  from "./components/Productospage";
 import InventarioPage from "./components/Inventariopage";
 import PedidosPage     from "./components/Pedidospage";
