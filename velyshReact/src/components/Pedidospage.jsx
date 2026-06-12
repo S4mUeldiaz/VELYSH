@@ -1,14 +1,22 @@
-// src/components/Pedidospage.jsx
 import { useState, useEffect }  from "react";
-import { getPedidos, getStock, crearPedido, eliminarPedido, getUsuarioActual } from "../api/api";
+import { getPedidos, getStock, crearPedido, cancelarPedido, getUsuarioActual } from "../Api/api";
 import "./Pedidospage.css";
 
 export default function PedidosPage() {
   const [pedidos,    setPedidos]    = useState([]);
   const [stockItems, setStockItems] = useState([]);
   const [abierto,    setAbierto]    = useState(false);
-  const [form,       setForm]       = useState({ id_stock: "", cantidad: 1, precio_unitario: "", metodo_pago: "tarjeta" });
-  const [error,      setError]      = useState("");
+  const [form,       setForm]       = useState({ 
+    id_stock: "", 
+    cantidad: 1, 
+    precio_unitario: "", 
+    metodo_pago: "tarjeta",
+    direccion: "",
+    ciudad: "Bogotá",
+    departamento: "Cundinamarca",
+    codigo_postal: ""
+  });
+  const [error, setError] = useState("");
 
   useEffect(() => {
     getPedidos().then(setPedidos);
@@ -17,43 +25,50 @@ export default function PedidosPage() {
 
   function handleChange(e) {
     const { name, value } = e.target;
-
-  if (name === "id_stock") {
-    const item = stockItems.find(s => s.id_stock === Number(value));
-    console.log("item encontrado:", item);
-    setForm(prev => ({
-      ...prev,
-      id_stock: value,
-      precio_unitario: item ? item.precio : "",
-    }));
-  } else {
-    setForm(prev => ({ ...prev, [name]: value }));
+    if (name === "id_stock") {
+      const item = stockItems.find(s => s.id_stock === Number(value));
+      setForm(prev => ({
+        ...prev,
+        id_stock: value,
+        precio_unitario: item ? item.precio : "",
+      }));
+    } else {
+      setForm(prev => ({ ...prev, [name]: value }));
+    }
   }
-}
 
   function cerrar() {
-    setForm({ id_stock: "", cantidad: 1, precio_unitario: "", metodo_pago: "tarjeta" });
+    setForm({ 
+      id_stock: "", 
+      cantidad: 1, 
+      precio_unitario: "", 
+      metodo_pago: "tarjeta",
+      direccion: "",
+      ciudad: "Bogotá",
+      departamento: "Cundinamarca",
+      codigo_postal: ""
+    });
     setAbierto(false);
     setError("");
   }
 
   async function handleGuardar(e) {
     e.preventDefault();
-    if (!form.id_stock || !form.cantidad || !form.precio_unitario) {
+    if (!form.id_stock || !form.cantidad || !form.precio_unitario || !form.direccion) {
       setError("Todos los campos son obligatorios");
       return;
     }
-    // Tomamos el id del usuario desde sessionStorage (guardado al hacer login)
-    const usuario = getUsuarioActual();
     try {
       await crearPedido({
         id_stock:        Number(form.id_stock),
         cantidad:        Number(form.cantidad),
         precio_unitario: Number(form.precio_unitario),
         metodo_pago:     form.metodo_pago,
-        id_usuario:      usuario?.id_usuario ?? 1,
+        direccion:       form.direccion,
+        ciudad:          form.ciudad,
+        departamento:    form.departamento,
+        codigo_postal:   form.codigo_postal,
       });
-      // Recargamos pedidos y stock porque crearPedido descuenta unidades del stock
       const [pedidosActualizados, stockActualizado] = await Promise.all([
         getPedidos(),
         getStock(),
@@ -68,7 +83,7 @@ export default function PedidosPage() {
 
   async function handleEliminar(id) {
     if (!confirm("¿Eliminar este pedido?")) return;
-    await eliminarPedido(id);
+    await cancelarPedido(id);
     setPedidos(prev => prev.filter(p => p.id_pedido !== id));
   }
 
@@ -80,6 +95,7 @@ export default function PedidosPage() {
       {abierto && (
         <form className="pedidos-modal" onSubmit={handleGuardar}>
           <h3>Nuevo pedido</h3>
+
           <div className="pedidos-form-group">
             <label>Producto / Talla / Color</label><br />
             <select className="pedidos-input" name="id_stock" value={form.id_stock} onChange={handleChange}>
@@ -94,22 +110,47 @@ export default function PedidosPage() {
               }
             </select>
           </div>
+
           <div className="pedidos-form-group">
             <label>Cantidad</label><br />
             <input className="pedidos-input" name="cantidad" type="number" min="1" value={form.cantidad} onChange={handleChange} />
           </div>
+
           <div className="pedidos-form-group">
-            <label>Precio unitario</label><br />
-            <input className="pedidos-input" name="precio_unitario" type="number" value={form.precio_unitario} onChange={handleChange} />
+           <label>Precio unitario</label><br />
+           <input className="pedidos-input" name="precio_unitario" type="number" value={form.precio_unitario} onChange={handleChange}readOnlystyle={{ background: '#f0f0f0', cursor: 'not-allowed' }}/>
           </div>
+
           <div className="pedidos-form-group">
             <label>Método de pago</label><br />
             <select className="pedidos-input" name="metodo_pago" value={form.metodo_pago} onChange={handleChange}>
               <option value="tarjeta">Tarjeta</option>
               <option value="pse">PSE</option>
-              <option value="efectivo">Efectivo</option>
+              <option value="transferencia">Transferencia</option>
+              <option value="contraentrega">Contraentrega</option>
             </select>
           </div>
+
+          <div className="pedidos-form-group">
+            <label>Dirección de entrega</label><br />
+            <input className="pedidos-input" name="direccion" value={form.direccion} onChange={handleChange} placeholder="Calle 123 # 45-67" />
+          </div>
+
+          <div className="pedidos-form-group">
+            <label>Ciudad</label><br />
+            <input className="pedidos-input" name="ciudad" value={form.ciudad} onChange={handleChange} />
+          </div>
+
+          <div className="pedidos-form-group">
+            <label>Departamento</label><br />
+            <input className="pedidos-input" name="departamento" value={form.departamento} onChange={handleChange} />
+          </div>
+
+          <div className="pedidos-form-group">
+            <label>Código postal</label><br />
+            <input className="pedidos-input" name="codigo_postal" value={form.codigo_postal} onChange={handleChange} />
+          </div>
+
           {error && <p style={{ color: "red" }}>{error}</p>}
           <button className="btn" type="submit">Guardar pedido</button>
           <button className="btn" type="button" onClick={cerrar}>Cancelar</button>
@@ -138,7 +179,7 @@ export default function PedidosPage() {
                 ))}
               </td>
               <td>
-                <button className="btn-eliminar"onClick={() => handleEliminar(p.id_pedido)}>Eliminar</button>
+                <button className="btn-eliminar" onClick={() => handleEliminar(p.id_pedido)}>Eliminar</button>
               </td>
             </tr>
           ))}
