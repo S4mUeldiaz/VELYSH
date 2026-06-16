@@ -2,13 +2,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../api/api";
 import "./Navbar.css";
 
-// Recibe el objeto usuario desde RutaProtegida en App.jsx
 export default function Navbar({ usuario }) {
   const navigate = useNavigate();
 
   function handleLogout() {
-    logout();           // Borra token y usuario de sessionStorage
-    navigate("/login"); // Redirige al login
+    logout();      
+    navigate("/login"); 
   }
 
   return (

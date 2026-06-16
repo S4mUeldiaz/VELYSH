@@ -1,24 +1,28 @@
-// src/App.jsx
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import LoginPage from "./components/auth/LoginPage";
+import LoginPage    from "./components/auth/LoginPage";
 import RegisterPage from "./components/auth/RegisterPage";
-import ProductosPage  from "./components/Productospage";
 import InventarioPage from "./components/Inventariopage";
-import PedidosPage     from "./components/Pedidospage";
-import Navbar         from "./components/Navbar";
-import { getUsuarioActual } from "./api/api";
+import PedidosPage    from "./components/Pedidospage";
+import NavbarCliente  from "./components/shared/NavbarCliente";
+import NavbarAdmin    from "./components/shared/NavbarAdmin";
+import Home           from "./components/cliente/Home";
+import Catalogo from "./components/cliente/Catalogo";
+import Dashboard from "./components/admin/Dashboard"
+import ProductosAdmin from "./components/admin/Productos"
+import { getUsuarioActual } from "./Api/api";
 
-// ── RUTA PROTEGIDA ─────────────────────────────────────────────────────────────
-// Antes de mostrar la página verifica que exista un token en sessionStorage.
-// Si no hay sesión activa → redirige al login.
-// Si hay sesión → muestra el Navbar arriba y el componente pedido abajo.
 function RutaProtegida({ children }) {
   const token   = sessionStorage.getItem("token");
   const usuario = getUsuarioActual();
   if (!token || !usuario) return <Navigate to="/login" replace />;
+
+  const navbar = usuario.nombre_rol === "admin"
+    ? <NavbarAdmin usuario={usuario} />
+    : <NavbarCliente usuario={usuario} />
+
   return (
     <>
-      <Navbar usuario={usuario} />
+      {navbar}
       {children}
     </>
   );
@@ -28,18 +32,20 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-
-        {/* Ruta raíz → redirige al login */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
-
-        {/* Rutas públicas — sin protección */}
+        <Route path="/"         element={<Navigate to="/login" replace />} />
         <Route path="/login"    element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 
-        {/* Rutas protegidas — requieren token válido */}
-        <Route path="/productos"  element={<RutaProtegida><ProductosPage /></RutaProtegida>} />
-        <Route path="/inventario" element={<RutaProtegida><InventarioPage /></RutaProtegida>} />
-        <Route path="/pedidos"     element={<RutaProtegida><PedidosPage /></RutaProtegida>} />
+        {/* Rutas cliente */}
+        <Route path="/home"      element={<RutaProtegida><Home /></RutaProtegida>} />
+        <Route path="/catalogo" element={<RutaProtegida><Catalogo /></RutaProtegida>} />
+        
+
+        {/* Rutas admin */}
+        <Route path="/admin/inventario" element={<RutaProtegida><InventarioPage /></RutaProtegida>} />
+        <Route path="/admin/pedidos"    element={<RutaProtegida><PedidosPage /></RutaProtegida>} />
+        <Route path="/admin/dashboard" element={<RutaProtegida><Dashboard /></RutaProtegida>} />
+        <Route path="/admin/productos" element={<RutaProtegida><ProductosAdmin /></RutaProtegida>} />
 
         <Route path="*" element={<h1>Página no encontrada</h1>} />
       </Routes>

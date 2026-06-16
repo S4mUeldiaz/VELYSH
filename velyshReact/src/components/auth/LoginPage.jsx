@@ -33,7 +33,7 @@ export default function LoginPage() {
   return (
     <div className="login-wrapper">
       <div className="login-left">
-        <img src="/zapato.png" alt="Velysh" className="login-hero-img" />
+        <img src="public/zapatos.png" alt="Velysh" className="login-hero-img" />
       </div>
 
       <div className="login-right">
