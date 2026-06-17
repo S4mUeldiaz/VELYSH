@@ -1,14 +1,14 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage    from "./components/auth/LoginPage";
 import RegisterPage from "./components/auth/RegisterPage";
-import InventarioPage from "./components/Inventariopage";
-import PedidosPage    from "./components/Pedidospage";
 import NavbarCliente  from "./components/shared/NavbarCliente";
 import NavbarAdmin    from "./components/shared/NavbarAdmin";
 import Home           from "./components/cliente/Home";
 import Catalogo from "./components/cliente/Catalogo";
 import Dashboard from "./components/admin/Dashboard"
 import ProductosAdmin from "./components/admin/Productos"
+import Inventario from "./components/admin/Inventario"
+import PedidosAdmin from "./components/admin/Pedidos"
 import { getUsuarioActual } from "./Api/api";
 
 function RutaProtegida({ children }) {

@@ -1,0 +1,141 @@
+.inventario-admin-wrapper {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+.inventario-content {
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.inventario-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.inventario-card {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inventario-card-num {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.inventario-card-label {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.inventario-btn-reporte {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.inventario-btn-reporte:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.inventario-btn-ver {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.inventario-btn-ver:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.inventario-nivel {
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.nivel-normal {
+  background: rgba(46, 196, 182, 0.15);
+  color: #2ec4b6;
+}
+
+.nivel-bajo {
+  background: rgba(245, 166, 35, 0.15);
+  color: #f5a623;
+}
+
+.nivel-agotado {
+  background: rgba(230, 57, 70, 0.15);
+  color: var(--color-primary);
+}
+
+.inventario-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inventario-modal {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 32px;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.inventario-modal h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.inventario-modal p {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.inventario-modal strong {
+  color: var(--color-text);
+}
+
+@media (max-width: 768px) {
+  .inventario-cards { grid-template-columns: repeat(2, 1fr); }
+  .inventario-content { padding: 16px; }
+}
