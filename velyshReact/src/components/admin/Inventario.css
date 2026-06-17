@@ -139,3 +139,78 @@
   .inventario-cards { grid-template-columns: repeat(2, 1fr); }
   .inventario-content { padding: 16px; }
 }
+
+
+.stock-tabla-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.stock-tabla-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 40px;
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.stock-tabla-fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 40px;
+  gap: 12px;
+  align-items: center;
+}
+
+.stock-btn-eliminar {
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.stock-btn-eliminar:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.stock-btn-eliminar:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.stock-btn-agregar-fila {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 1px dashed var(--color-border);
+  color: var(--color-text-muted);
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all var(--transition);
+  width: fit-content;
+}
+
+.stock-btn-agregar-fila:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}

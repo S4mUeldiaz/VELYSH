@@ -6,20 +6,20 @@ const api = axios.create({
   baseURL: BASE_URL,
 })
 
-// Interceptor — agrega el token automáticamente a cada request
 api.interceptors.request.use((config) => {
   const token = sessionStorage.getItem('token')
   if (token) config.headers.Authorization = `Bearer ${token}`
   return config
 })
+
+// ── AUTH ───────────────────────────────────────────────────────────────────────
+
 export async function login(correo, password) {
   const { data } = await api.post('/auth/login', { correo, password })
-  console.log('data del login:', data)
   const usuario = {
     ...data.usuario,
     nombre_rol: data.usuario.roles?.nombre_rol ?? ''
   }
-  console.log('usuario mapeado:', usuario)
   sessionStorage.setItem('token', data.token)
   sessionStorage.setItem('usuario', JSON.stringify(usuario))
   return usuario
@@ -29,6 +29,7 @@ export async function registrar(datos) {
   const { data } = await api.post('/auth/registro', datos)
   return data
 }
+
 export function logout() {
   sessionStorage.removeItem('token')
   sessionStorage.removeItem('usuario')
@@ -42,6 +43,8 @@ export function getUsuarioActual() {
 export function getToken() {
   return sessionStorage.getItem('token')
 }
+
+// ── CATEGORÍAS ─────────────────────────────────────────────────────────────────
 
 export async function getCategorias() {
   const { data } = await api.get('/productos/categoria')
@@ -63,6 +66,7 @@ export async function eliminarCategoria(id) {
   return data
 }
 
+// ── PRODUCTOS ──────────────────────────────────────────────────────────────────
 
 export async function getProductos() {
   const { data } = await api.get('/productos')
@@ -105,6 +109,8 @@ export async function getTallas() {
   return data
 }
 
+// ── STOCK ──────────────────────────────────────────────────────────────────────
+
 export async function getStock() {
   const { data } = await api.get('/stock')
   return data.map(s => ({
@@ -129,7 +135,7 @@ export async function crearStock(datos) {
   }
 }
 
-export async function editarStock(id, datos) {
+export async function actualizarStock(id, datos) {
   const { data } = await api.put(`/stock/${id}`, datos)
   return {
     ...data,
@@ -143,9 +149,10 @@ export async function eliminarStock(id) {
   return data
 }
 
+// ── PEDIDOS ────────────────────────────────────────────────────────────────────
+
 export async function getPedidos() {
   const { data } = await api.get('/pedidos')
-  console.log('pedidos raw:', data)
   return data.map(p => ({
     ...p,
     detalles: (p.factura ?? []).map(d => ({
@@ -165,8 +172,6 @@ export async function getPedidosPorUsuario(numero_documento) {
 
 export async function crearPedido(datos) {
   const usuario = getUsuarioActual()
-  console.log('usuario actual:', usuario)
-  console.log('datos pedido:', datos)
   const payload = {
     numero_documento: usuario?.numero_documento,
     metodo_pago: datos.metodo_pago,
@@ -183,10 +188,10 @@ export async function crearPedido(datos) {
       }
     ]
   }
-  console.log('payload enviado:', payload)
   const { data } = await api.post('/pedidos', payload)
   return data
 }
+
 export async function actualizarEstadoPedido(id, datos) {
   const { data } = await api.put(`/pedidos/${id}`, datos)
   return data

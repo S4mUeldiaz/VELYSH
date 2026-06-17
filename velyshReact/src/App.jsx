@@ -8,7 +8,7 @@ import Catalogo from "./components/cliente/Catalogo";
 import Dashboard from "./components/admin/Dashboard"
 import ProductosAdmin from "./components/admin/Productos"
 import Inventario from "./components/admin/Inventario"
-import PedidosAdmin from "./components/admin/Pedidos"
+import Pedidos from "./components/admin/Pedidos"
 import { getUsuarioActual } from "./Api/api";
 
 function RutaProtegida({ children }) {
@@ -42,8 +42,8 @@ function App() {
         
 
         {/* Rutas admin */}
-        <Route path="/admin/inventario" element={<RutaProtegida><InventarioPage /></RutaProtegida>} />
-        <Route path="/admin/pedidos"    element={<RutaProtegida><PedidosPage /></RutaProtegida>} />
+        <Route path="/admin/Inventario" element={<RutaProtegida><Inventario /></RutaProtegida>} />
+        <Route path="/admin/Pedidos"    element={<RutaProtegida><Pedidos /></RutaProtegida>} />
         <Route path="/admin/dashboard" element={<RutaProtegida><Dashboard /></RutaProtegida>} />
         <Route path="/admin/productos" element={<RutaProtegida><ProductosAdmin /></RutaProtegida>} />
 
