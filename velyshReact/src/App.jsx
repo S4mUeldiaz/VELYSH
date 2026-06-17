@@ -9,6 +9,8 @@ import Dashboard from "./components/admin/Dashboard"
 import ProductosAdmin from "./components/admin/Productos"
 import Inventario from "./components/admin/Inventario"
 import Pedidos from "./components/admin/Pedidos"
+import Favoritos from "./components/cliente/Favoritos"
+import Historial from "./components/cliente/Historial"
 import { getUsuarioActual } from "./Api/api";
 
 function RutaProtegida({ children }) {
@@ -39,7 +41,8 @@ function App() {
         {/* Rutas cliente */}
         <Route path="/home"      element={<RutaProtegida><Home /></RutaProtegida>} />
         <Route path="/catalogo" element={<RutaProtegida><Catalogo /></RutaProtegida>} />
-        
+        <Route path="/favoritos" element={<RutaProtegida><Favoritos /></RutaProtegida>} />
+        <Route path="/historial" element={<RutaProtegida><Historial /></RutaProtegida>} />
 
         {/* Rutas admin */}
         <Route path="/admin/Inventario" element={<RutaProtegida><Inventario /></RutaProtegida>} />

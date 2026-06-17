@@ -29,7 +29,7 @@ export default function Home() {
         <div className="home-hero-content">
           <p className="home-hero-sub">Nueva colección 2026</p>
           <h1 className="home-hero-title">Encuentra tu <span>estilo</span></h1>
-          <p className="home-hero-desc">Los mejores zapatos y ropa deportiva al mejor precio</p>
+          <p className="home-hero-desc">Los mejores zapatos al mejor precio</p>
           <Link to="/catalogo" className="home-hero-btn">Ver catálogo</Link>
         </div>
         <div className="home-hero-img">

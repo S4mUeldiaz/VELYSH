@@ -21,7 +21,7 @@ export default function NavbarCliente({ usuario }) {
         <Link to="/home" className="navbar-cliente-logo">VELYSH</Link>
 
         <div className="navbar-cliente-right">
-          <button className="navbar-icon-btn"><FiBell /></button>
+          <Link to="/historial" className="navbar-icon-btn"><FiBell /></Link>
           <Link to="/favoritos" className="navbar-icon-btn"><FiHeart /></Link>
           <Link to="/carrito" className="navbar-icon-btn"><FiShoppingCart /></Link>
           <Link to="/perfil" className="navbar-icon-btn"><FiUser /></Link>
