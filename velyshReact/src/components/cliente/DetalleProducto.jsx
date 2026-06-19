@@ -10,7 +10,7 @@ export default function DetalleProducto() {
   const [producto,   setProducto]   = useState(null)
   const [stock,      setStock]      = useState([])
   const [colorSelec, setColorSelec] = useState(null)
-  const [tallaSelec, setTallaSelec] = useState(null)
+  const [tallaSelec, setTallaSelec] = useState(null) // guarda id_talla (number), la FK real
   const [esFav,      setEsFav]      = useState(false)
   const [cargando,   setCargando]   = useState(true)
   const usuario = getUsuarioActual()
@@ -45,6 +45,10 @@ export default function DetalleProducto() {
 
   function agregarAlCarrito() {
     if (!colorSelec || !tallaSelec) return
+    if (!stockSelec) {
+      console.warn('No se encontró stock para', { colorSelec, tallaSelec, stock })
+      return
+    }
     const carrito = JSON.parse(sessionStorage.getItem('carrito') || '[]')
     const existe = carrito.find(i => i.id_stock === stockSelec.id_stock)
     if (existe) {
@@ -56,7 +60,7 @@ export default function DetalleProducto() {
         nombre: producto.nombre,
         precio: producto.precio,
         color: colorSelec,
-        talla: tallasPorColor.find(s => s.id_talla === tallaSelec)?.talla,
+        talla: stockSelec.tallas?.talla,
         cantidad: 1,
         imagen: producto.imagenes_producto?.[0]?.url_imagen ?? '/zapato.png'
       })
@@ -118,8 +122,8 @@ export default function DetalleProducto() {
           >
             <option value="">Selecciona</option>
             {tallasPorColor.map(s => (
-              <option key={s.id_talla} value={s.id_talla} disabled={s.stock_actual === 0}>
-                {s.tallas?.talla ?? s.talla} {s.stock_actual === 0 ? '(Agotado)' : ''}
+              <option key={s.id_stock} value={s.id_talla} disabled={s.stock_actual === 0}>
+                {s.tallas?.talla} {s.stock_actual === 0 ? '(Agotado)' : ''}
               </option>
             ))}
           </select>

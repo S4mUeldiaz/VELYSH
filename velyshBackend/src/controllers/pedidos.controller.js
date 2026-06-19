@@ -14,17 +14,7 @@ export const obtenerPedidos = async (req, res) => {
       estado_pedido,
       usuarios ( nombre, apellido, correo ),
       direcciones ( direccion, ciudad, departamento ),
-      factura (
-        id_detalle,
-        cantidad,
-        precio_unitario,
-        subtotal,
-        stock (
-          color,
-          tallas ( talla ),
-          productos ( nombre, referencia )
-        )
-      )
+      factura ( id_detalle, cantidad, precio_unitario, subtotal )
     `)
     .order('fecha_pedido', { ascending: false })
 
@@ -118,9 +108,10 @@ export const crearPedido = async (req, res) => {
     .single()
 
   if (dirError) {
-  console.log('error direccion:', dirError)
-  return res.status(400).json({ error: dirError.message })
-}
+    console.log('error direccion:', dirError)
+    return res.status(400).json({ error: dirError.message })
+  }
+
   const precio_total = items.reduce((acc, item) => {
     return acc + item.cantidad * item.precio_unitario
   }, costo_envio || 0)
@@ -143,9 +134,10 @@ export const crearPedido = async (req, res) => {
     .single()
 
   if (pedidoError) {
-  console.log('error pedido:', pedidoError)
-  return res.status(400).json({ error: pedidoError.message })
-}
+    console.log('error pedido:', pedidoError)
+    return res.status(400).json({ error: pedidoError.message })
+  }
+
   const detalles = items.map(item => ({
     id_pedido: pedido.id_pedido,
     id_stock: item.id_stock,
@@ -158,10 +150,10 @@ export const crearPedido = async (req, res) => {
     .from('factura')
     .insert(detalles)
 
- if (facturaError) {
-  console.log('error factura:', facturaError)
-  return res.status(400).json({ error: facturaError.message })
-}
+  if (facturaError) {
+    console.log('error factura:', facturaError)
+    return res.status(400).json({ error: facturaError.message })
+  }
 
   return res.status(201).json({ mensaje: 'Pedido creado exitosamente', data: pedido })
 }

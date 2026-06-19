@@ -29,6 +29,7 @@ export const obtenerStockPorProducto = async (req, res) => {
     .from('stock')
     .select(`
       id_stock,
+      id_talla,
       color,
       stock_actual,
       stock_minimo,

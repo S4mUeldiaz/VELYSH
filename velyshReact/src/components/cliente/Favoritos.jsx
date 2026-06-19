@@ -19,8 +19,12 @@ export default function Favoritos() {
   }, [])
 
   async function handleEliminar(id_producto) {
+    if (!id_producto) {
+      console.error("handleEliminar: id_producto es undefined, revisa el shape de favoritos")
+      return
+    }
     await eliminarFavorito(usuario?.numero_documento, id_producto)
-    setFavoritos(prev => prev.filter(f => f.id_producto !== id_producto))
+    setFavoritos(prev => prev.filter(f => f.productos?.id_producto !== id_producto))
   }
 
   return (
@@ -48,38 +52,41 @@ export default function Favoritos() {
         </div>
       ) : (
         <div className="favoritos-grid">
-          {favoritos.map(f => (
-            <div key={f.id_favorito} className="favoritos-card">
-              <div className="favoritos-card-img">
-                <img src="/zapato.png" alt={f.productos?.nombre} />
-                <button
-                  className="favoritos-card-heart active"
-                  onClick={() => handleEliminar(f.id_producto)}
-                >
-                  <FiHeart />
-                </button>
-              </div>
-              <div className="favoritos-card-info">
-                <p className="favoritos-card-cat">{f.productos?.categorias?.nombre_categoria ?? ''}</p>
-                <h3 className="favoritos-card-nombre">{f.productos?.nombre}</h3>
-                <p className="favoritos-card-precio">${Number(f.productos?.precio).toLocaleString()}</p>
-                <div className="favoritos-card-btns">
+          {favoritos.map(f => {
+            const id_producto = f.productos?.id_producto
+            return (
+              <div key={f.id_favorito} className="favoritos-card">
+                <div className="favoritos-card-img">
+                  <img src="/zapato.png" alt={f.productos?.nombre} />
                   <button
-                    className="favoritos-btn-carrito"
-                    onClick={() => navigate(`/producto/${f.id_producto}`)}
+                    className="favoritos-card-heart active"
+                    onClick={() => handleEliminar(id_producto)}
                   >
-                    <FiShoppingCart /> Ver producto
-                  </button>
-                  <button
-                    className="favoritos-btn-eliminar"
-                    onClick={() => handleEliminar(f.id_producto)}
-                  >
-                    Eliminar
+                    <FiHeart />
                   </button>
                 </div>
+                <div className="favoritos-card-info">
+                  <p className="favoritos-card-cat">{f.productos?.categorias?.nombre_categoria ?? ''}</p>
+                  <h3 className="favoritos-card-nombre">{f.productos?.nombre}</h3>
+                  <p className="favoritos-card-precio">${Number(f.productos?.precio).toLocaleString()}</p>
+                  <div className="favoritos-card-btns">
+                    <button
+                      className="favoritos-btn-carrito"
+                      onClick={() => navigate(`/producto/${id_producto}`)}
+                    >
+                      <FiShoppingCart /> Ver producto
+                    </button>
+                    <button
+                      className="favoritos-btn-eliminar"
+                      onClick={() => handleEliminar(id_producto)}
+                    >
+                      Eliminar
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
     </div>
