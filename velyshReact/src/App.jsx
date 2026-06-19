@@ -11,7 +11,10 @@ import Inventario from "./components/admin/Inventario"
 import Pedidos from "./components/admin/Pedidos"
 import Favoritos from "./components/cliente/Favoritos"
 import Historial from "./components/cliente/Historial"
-import { getUsuarioActual } from "./Api/api";
+import DetalleProducto from "./components/cliente/DetalleProducto"
+import Carrito from "./components/cliente/Carrito"
+import Perfil from "./components/cliente/Perfil"
+import { getUsuarioActual } from "./Api/api"
 
 function RutaProtegida({ children }) {
   const token   = sessionStorage.getItem("token");
@@ -43,10 +46,13 @@ function App() {
         <Route path="/catalogo" element={<RutaProtegida><Catalogo /></RutaProtegida>} />
         <Route path="/favoritos" element={<RutaProtegida><Favoritos /></RutaProtegida>} />
         <Route path="/historial" element={<RutaProtegida><Historial /></RutaProtegida>} />
+        <Route path="/producto/:id" element={<RutaProtegida><DetalleProducto /></RutaProtegida>} />
+        <Route path="/carrito"      element={<RutaProtegida><Carrito /></RutaProtegida>} />
+        <Route path="/perfil" element={<RutaProtegida><Perfil /></RutaProtegida>} />
 
         {/* Rutas admin */}
-        <Route path="/admin/Inventario" element={<RutaProtegida><Inventario /></RutaProtegida>} />
-        <Route path="/admin/Pedidos"    element={<RutaProtegida><Pedidos /></RutaProtegida>} />
+        <Route path="/admin/inventario" element={<RutaProtegida><Inventario /></RutaProtegida>} />
+        <Route path="/admin/pedidos"    element={<RutaProtegida><Pedidos /></RutaProtegida>} />
         <Route path="/admin/dashboard" element={<RutaProtegida><Dashboard /></RutaProtegida>} />
         <Route path="/admin/productos" element={<RutaProtegida><ProductosAdmin /></RutaProtegida>} />
 

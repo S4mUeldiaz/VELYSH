@@ -46,6 +46,7 @@
   font-weight: 800;
   line-height: 1.1;
   margin-bottom: 20px;
+  color: var(--color-text);
 }
 
 .home-hero-title span {

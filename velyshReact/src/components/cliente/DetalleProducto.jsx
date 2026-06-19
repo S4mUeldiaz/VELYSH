@@ -1,0 +1,154 @@
+import { useState, useEffect } from "react"
+import { useParams, useNavigate } from "react-router-dom"
+import { getProductoPorId, getStockPorProducto, agregarFavorito, eliminarFavorito, getFavoritos, getUsuarioActual } from "../../Api/api"
+import { FiArrowLeft, FiHeart, FiShoppingCart } from "react-icons/fi"
+import "./DetalleProducto.css"
+
+export default function DetalleProducto() {
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const [producto,   setProducto]   = useState(null)
+  const [stock,      setStock]      = useState([])
+  const [colorSelec, setColorSelec] = useState(null)
+  const [tallaSelec, setTallaSelec] = useState(null)
+  const [esFav,      setEsFav]      = useState(false)
+  const [cargando,   setCargando]   = useState(true)
+  const usuario = getUsuarioActual()
+
+  const coloresUnicos = [...new Set(stock.map(s => s.color))]
+  const tallasPorColor = stock.filter(s => s.color === colorSelec)
+  const stockSelec = stock.find(s => s.color === colorSelec && s.id_talla === tallaSelec)
+
+  useEffect(() => {
+    Promise.all([
+      getProductoPorId(id),
+      getStockPorProducto(id),
+      getFavoritos(usuario?.numero_documento)
+    ]).then(([prod, st, favs]) => {
+      setProducto(prod)
+      setStock(st)
+      setEsFav(favs.some(f => f.id_producto === Number(id)))
+      if (st.length > 0) setColorSelec(st[0].color)
+      setCargando(false)
+    })
+  }, [id])
+
+  async function toggleFav() {
+    if (esFav) {
+      await eliminarFavorito(usuario?.numero_documento, Number(id))
+      setEsFav(false)
+    } else {
+      await agregarFavorito(usuario?.numero_documento, Number(id))
+      setEsFav(true)
+    }
+  }
+
+  function agregarAlCarrito() {
+    if (!colorSelec || !tallaSelec) return
+    const carrito = JSON.parse(sessionStorage.getItem('carrito') || '[]')
+    const existe = carrito.find(i => i.id_stock === stockSelec.id_stock)
+    if (existe) {
+      existe.cantidad += 1
+    } else {
+      carrito.push({
+        id_stock: stockSelec.id_stock,
+        id_producto: Number(id),
+        nombre: producto.nombre,
+        precio: producto.precio,
+        color: colorSelec,
+        talla: tallasPorColor.find(s => s.id_talla === tallaSelec)?.talla,
+        cantidad: 1,
+        imagen: producto.imagenes_producto?.[0]?.url_imagen ?? '/zapato.png'
+      })
+    }
+    sessionStorage.setItem('carrito', JSON.stringify(carrito))
+    navigate('/carrito')
+  }
+
+  if (cargando) return <div className="detalle-loading">Cargando...</div>
+  if (!producto) return <div className="detalle-loading">Producto no encontrado</div>
+
+  return (
+    <div className="detalle-wrapper">
+      {/* IMAGEN */}
+      <div className="detalle-img-section">
+        <img
+          src={producto.imagenes_producto?.[0]?.url_imagen ?? '/zapato.png'}
+          alt={producto.nombre}
+          className="detalle-img"
+        />
+      </div>
+
+      {/* INFO */}
+      <div className="detalle-info">
+        <button className="favoritos-back" onClick={() => navigate(-1)}>
+          <FiArrowLeft />
+        </button>
+
+        <h1 className="detalle-nombre">{producto.nombre}</h1>
+        <p className="detalle-precio">${Number(producto.precio).toLocaleString()}</p>
+        <hr className="detalle-divider" />
+
+        {/* COLORES */}
+        <div className="detalle-section">
+          <p className="detalle-label">Color</p>
+          <div className="detalle-colores">
+            {coloresUnicos.map(color => (
+              <button
+                key={color}
+                className={`detalle-color-btn ${colorSelec === color ? 'active' : ''}`}
+                style={{ background: color.toLowerCase() === 'blanco' ? '#fff' :
+                         color.toLowerCase() === 'negro' ? '#111' :
+                         color.toLowerCase() === 'rojo' ? '#e63946' :
+                         color.toLowerCase() }}
+                onClick={() => { setColorSelec(color); setTallaSelec(null) }}
+                title={color}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* TALLAS */}
+        <div className="detalle-section">
+          <p className="detalle-label">Tallas</p>
+          <select
+            className="detalle-select"
+            value={tallaSelec ?? ""}
+            onChange={e => setTallaSelec(Number(e.target.value))}
+          >
+            <option value="">Selecciona</option>
+            {tallasPorColor.map(s => (
+              <option key={s.id_talla} value={s.id_talla} disabled={s.stock_actual === 0}>
+                {s.tallas?.talla ?? s.talla} {s.stock_actual === 0 ? '(Agotado)' : ''}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* STOCK */}
+        {stockSelec && (
+          <p className="detalle-stock">Stock: {stockSelec.stock_actual} disponibles</p>
+        )}
+
+        {/* BOTONES */}
+        <div className="detalle-btns">
+          <button
+            className={`detalle-fav-btn ${esFav ? 'active' : ''}`}
+            onClick={toggleFav}
+          >
+            <FiHeart />
+          </button>
+          <button
+            className="detalle-carrito-btn"
+            onClick={agregarAlCarrito}
+            disabled={!colorSelec || !tallaSelec}
+          >
+            <FiShoppingCart /> Añadir al carrito
+          </button>
+        </div>
+
+        <p className="detalle-descripcion">{producto.descripcion}</p>
+      </div>
+    </div>
+  )
+}
