@@ -1,0 +1,152 @@
+import { useState, useEffect } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { logout, getUsuarioActual, getPedidosPorUsuario } from "../../Api/api"
+import { FiMenu, FiSearch, FiBell, FiHeart, FiShoppingCart, FiUser, FiX, FiPackage } from "react-icons/fi"
+import Sidebar from "./Sidebar"
+import "./NavbarCliente.css"
+
+function claveVistas(numero_documento) {
+  return `notif_estados_vistos_${numero_documento}`
+}
+
+function getEstadoLabel(estado) {
+  if (estado === 'pendiente')   return 'pendiente'
+  if (estado === 'confirmado')  return 'confirmado'
+  if (estado === 'preparacion') return 'en preparación'
+  if (estado === 'enviado')     return 'enviado'
+  if (estado === 'entregado')   return 'entregado'
+  if (estado === 'cancelado')   return 'cancelado'
+  return estado
+}
+
+export default function NavbarCliente({ usuario }) {
+  const [sidebarAbierto,     setSidebarAbierto]     = useState(false)
+  const [notifAbierta,       setNotifAbierta]       = useState(false)
+  const [notificaciones,     setNotificaciones]     = useState([])
+  const navigate = useNavigate()
+  const usuarioActual = usuario ?? getUsuarioActual()
+
+  useEffect(() => {
+    if (!usuarioActual?.numero_documento) return
+    cargarNotificaciones()
+  }, [usuarioActual?.numero_documento])
+
+  async function cargarNotificaciones() {
+    try {
+      const pedidos = await getPedidosPorUsuario(usuarioActual.numero_documento)
+      const clave = claveVistas(usuarioActual.numero_documento)
+      const vistas = JSON.parse(localStorage.getItem(clave) || 'null')
+
+      // Primera vez que el usuario usa la app con esta funcionalidad:
+      // se guarda el estado actual de todos sus pedidos como "ya vistos",
+      // sin generar notificaciones retroactivas de pedidos antiguos.
+      if (vistas === null) {
+        const baseline = {}
+        pedidos.forEach(p => { baseline[p.id_pedido] = p.estado_pedido })
+        localStorage.setItem(clave, JSON.stringify(baseline))
+        setNotificaciones([])
+        return
+      }
+
+      const nuevas = pedidos
+        .filter(p => vistas[p.id_pedido] !== p.estado_pedido)
+        .map(p => ({
+          id_pedido: p.id_pedido,
+          referencia: p.referencia,
+          estado_pedido: p.estado_pedido
+        }))
+
+      setNotificaciones(nuevas)
+    } catch (err) {
+      console.warn('No se pudieron cargar las notificaciones de pedidos', err)
+    }
+  }
+
+  function toggleNotificaciones() {
+    if (!notifAbierta) cargarNotificaciones() // refresca al abrir, por si algo cambió desde el último fetch
+    setNotifAbierta(prev => !prev)
+  }
+
+  function marcarTodasComoVistas() {
+    if (!usuarioActual?.numero_documento) return
+    const clave = claveVistas(usuarioActual.numero_documento)
+    const vistas = JSON.parse(localStorage.getItem(clave) || '{}')
+    notificaciones.forEach(n => { vistas[n.id_pedido] = n.estado_pedido })
+    localStorage.setItem(clave, JSON.stringify(vistas))
+    setNotificaciones([])
+  }
+
+  function irAlPedido() {
+    marcarTodasComoVistas()
+    setNotifAbierta(false)
+    navigate('/historial')
+  }
+
+  return (
+    <>
+      <nav className="navbar-cliente">
+        <div className="navbar-cliente-left">
+          <button className="navbar-icon-btn" onClick={() => setSidebarAbierto(true)}>
+            <FiMenu />
+          </button>
+        </div>
+
+        <Link to="/home" className="navbar-cliente-logo">VELYSH</Link>
+
+        <div className="navbar-cliente-right">
+          <div className="navbar-notif-wrapper">
+            <button className="navbar-icon-btn navbar-notif-btn" onClick={toggleNotificaciones}>
+              <FiBell />
+              {notificaciones.length > 0 && (
+                <span className="navbar-notif-badge">{notificaciones.length}</span>
+              )}
+            </button>
+
+            {notifAbierta && (
+              <div className="navbar-notif-dropdown">
+                <div className="navbar-notif-header">
+                  <span>Notificaciones</span>
+                  {notificaciones.length > 0 && (
+                    <button className="navbar-notif-marcar" onClick={marcarTodasComoVistas}>
+                      Marcar todas como leídas
+                    </button>
+                  )}
+                </div>
+
+                {notificaciones.length === 0 ? (
+                  <p className="navbar-notif-vacio">No tienes notificaciones nuevas</p>
+                ) : (
+                  <div className="navbar-notif-lista">
+                    {notificaciones.map(n => (
+                      <button key={n.id_pedido} className="navbar-notif-item" onClick={irAlPedido}>
+                        <FiPackage className="navbar-notif-icon" />
+                        <span>
+                          Tu pedido <strong>#{n.referencia}</strong> cambió a estado{" "}
+                          <strong>{getEstadoLabel(n.estado_pedido)}</strong>
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                <button className="navbar-notif-footer" onClick={() => { setNotifAbierta(false); navigate('/historial') }}>
+                  Ver todos mis pedidos
+                </button>
+              </div>
+            )}
+          </div>
+
+          <Link to="/favoritos" className="navbar-icon-btn"><FiHeart /></Link>
+          <Link to="/carrito" className="navbar-icon-btn"><FiShoppingCart /></Link>
+          <Link to="/perfil" className="navbar-icon-btn"><FiUser /></Link>
+        </div>
+      </nav>
+
+      <Sidebar 
+        abierto={sidebarAbierto} 
+        onCerrar={() => setSidebarAbierto(false)}
+        usuario={usuario}
+      />
+    </>
+  )
+}

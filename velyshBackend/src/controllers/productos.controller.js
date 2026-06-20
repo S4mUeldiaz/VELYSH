@@ -54,6 +54,7 @@ export const obtenerProductos = async (req, res) => {
     .from('productos')
     .select(`
       id_producto,
+      id_categoria,
       referencia,
       nombre,
       descripcion,
@@ -79,6 +80,7 @@ export const obtenerProductoPorId = async (req, res) => {
     .from('productos')
     .select(`
       id_producto,
+      id_categoria,
       referencia,
       nombre,
       descripcion,

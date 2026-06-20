@@ -1,0 +1,168 @@
+.comprobante-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background: #0d0d0d;
+  padding: 40px 20px;
+}
+
+.comprobante-card {
+  background: #161616;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 640px;
+  width: 100%;
+  color: #f0f0f0;
+}
+
+.comprobante-exito {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.comprobante-exito-icon {
+  font-size: 40px;
+  color: #2ec4b6;
+  margin-bottom: 8px;
+}
+
+.comprobante-titulo {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.comprobante-subtitulo {
+  color: #9a9a9a;
+  font-size: 13px;
+  max-width: 420px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+.comprobante-datos {
+  border-top: 1px solid #2a2a2a;
+  border-bottom: 1px solid #2a2a2a;
+  padding: 16px 0;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.comprobante-fila {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #9a9a9a;
+}
+
+.comprobante-fila strong {
+  color: #f0f0f0;
+  text-align: right;
+}
+
+.comprobante-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-bottom: 24px;
+}
+
+.comprobante-tabla th {
+  text-align: left;
+  padding: 8px 6px;
+  color: #9a9a9a;
+  font-size: 11px;
+  text-transform: uppercase;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.comprobante-tabla td {
+  padding: 8px 6px;
+  border-bottom: 1px solid #222;
+}
+
+.comprobante-total-label {
+  text-align: right;
+  font-weight: 700;
+  color: #9a9a9a;
+}
+
+.comprobante-total-valor {
+  font-weight: 700;
+  color: #e63946;
+  font-size: 15px;
+}
+
+.comprobante-acciones {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.comprobante-btn-imprimir,
+.comprobante-btn-historial {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+}
+
+.comprobante-btn-imprimir {
+  background: #1f1f1f;
+  color: #f0f0f0;
+  border: 1px solid #333;
+}
+
+.comprobante-btn-imprimir:hover {
+  background: #2a2a2a;
+}
+
+.comprobante-btn-historial {
+  background: #e63946;
+  color: #fff;
+}
+
+.comprobante-btn-historial:hover {
+  opacity: 0.9;
+}
+
+@media print {
+  .comprobante-wrapper {
+    background: #fff;
+    padding: 0;
+  }
+
+  .comprobante-card {
+    background: #fff;
+    border: none;
+    color: #000;
+    max-width: 100%;
+  }
+
+  .comprobante-subtitulo,
+  .comprobante-fila {
+    color: #444;
+  }
+
+  .comprobante-fila strong,
+  .comprobante-titulo,
+  .comprobante-total-valor {
+    color: #000;
+  }
+
+  .comprobante-acciones {
+    display: none;
+  }
+}

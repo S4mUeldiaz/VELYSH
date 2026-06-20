@@ -1,0 +1,197 @@
+.devoluciones-wrapper {
+  padding: 24px;
+  color: #f0f0f0;
+}
+
+.devoluciones-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.devoluciones-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.devoluciones-subtitle {
+  color: #9a9a9a;
+  font-size: 14px;
+  margin: 0;
+}
+
+.devoluciones-filtros {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.devoluciones-buscador {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 10px 14px;
+  max-width: 360px;
+  flex: 1;
+  color: #9a9a9a;
+}
+
+.devoluciones-buscador input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #f0f0f0;
+  width: 100%;
+  font-size: 14px;
+}
+
+.devoluciones-select {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: #f0f0f0;
+  padding: 10px 14px;
+  font-size: 14px;
+}
+
+.devoluciones-error {
+  background: rgba(230, 57, 70, 0.12);
+  color: #e63946;
+  border: 1px solid rgba(230, 57, 70, 0.4);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.devoluciones-loading,
+.devoluciones-empty {
+  text-align: center;
+  color: #9a9a9a;
+  padding: 40px;
+}
+
+.devoluciones-empty-icon {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.devoluciones-tabla-wrapper {
+  background: #161616;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+.devoluciones-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.devoluciones-tabla thead {
+  background: #1f1f1f;
+}
+
+.devoluciones-tabla th {
+  text-align: left;
+  padding: 14px 16px;
+  color: #9a9a9a;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.devoluciones-tabla td {
+  padding: 12px 16px;
+  border-top: 1px solid #2a2a2a;
+  vertical-align: top;
+}
+
+.devoluciones-detalle {
+  color: #9a9a9a;
+  font-size: 12px;
+}
+
+.devoluciones-motivo {
+  max-width: 260px;
+  color: #d0d0d0;
+}
+
+.devoluciones-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.devoluciones-badge-solicitada {
+  background: rgba(245, 166, 35, 0.15);
+  color: #f5a623;
+}
+
+.devoluciones-badge-aprobada {
+  background: rgba(46, 196, 182, 0.15);
+  color: #2ec4b6;
+}
+
+.devoluciones-badge-rechazada {
+  background: rgba(230, 57, 70, 0.15);
+  color: #e63946;
+}
+
+.devoluciones-badge-procesada {
+  background: rgba(74, 111, 165, 0.15);
+  color: #4a6fa5;
+}
+
+.devoluciones-acciones {
+  display: flex;
+  gap: 8px;
+}
+
+.devoluciones-btn-aprobar,
+.devoluciones-btn-rechazar,
+.devoluciones-btn-procesar {
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.devoluciones-btn-aprobar {
+  background: rgba(46, 196, 182, 0.15);
+  color: #2ec4b6;
+}
+
+.devoluciones-btn-rechazar {
+  background: rgba(230, 57, 70, 0.15);
+  color: #e63946;
+}
+
+.devoluciones-btn-procesar {
+  background: rgba(74, 111, 165, 0.15);
+  color: #4a6fa5;
+}
+
+.devoluciones-btn-aprobar:disabled,
+.devoluciones-btn-rechazar:disabled,
+.devoluciones-btn-procesar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.devoluciones-sin-accion {
+  color: #555;
+}
