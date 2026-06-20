@@ -1,4 +1,8 @@
 import { supabase } from '../config/supabase.js'
+// NOTA: este proyecto NO usa bcrypt manualmente. La columna usuarios.password_hash
+// guarda el UUID del usuario en Supabase Auth (ver auth.controller.js -> registro()).
+// La autenticación real (verificar contraseña, cambiarla) se hace con las funciones
+// de Supabase Auth, nunca comparando hashes a mano.
 
 export const obtenerUsuarios = async (req, res) => {
   const { data, error } = await supabase
@@ -83,6 +87,81 @@ export const cambiarEstadoUsuario = async (req, res) => {
   if (error) return res.status(400).json({ error: error.message })
 
   return res.status(200).json({ mensaje: `Usuario ${estado} exitosamente`, data })
+}
+
+export const cambiarPassword = async (req, res) => {
+  const { numero_documento } = req.params
+  const { password_actual, password_nueva } = req.body
+
+  if (!password_actual || !password_nueva) {
+    return res.status(400).json({ error: 'Debes enviar la contraseña actual y la nueva' })
+  }
+
+  if (password_nueva.length < 6) {
+    return res.status(400).json({ error: 'La nueva contraseña debe tener al menos 6 caracteres' })
+  }
+
+  const { data: usuario, error: buscarError } = await supabase
+    .from('usuarios')
+    .select('correo, password_hash')
+    .eq('numero_documento', numero_documento)
+    .single()
+
+  if (buscarError) return res.status(404).json({ error: 'Usuario no encontrado' })
+
+  const authUserId = usuario.password_hash
+
+  const { error: loginError } = await supabase.auth.signInWithPassword({
+    email: usuario.correo,
+    password: password_actual
+  })
+
+  if (loginError) {
+    return res.status(401).json({ error: 'La contraseña actual no es correcta' })
+  }
+
+  const { error: updateError } = await supabase.auth.admin.updateUserById(authUserId, {
+    password: password_nueva
+  })
+
+  if (updateError) return res.status(400).json({ error: updateError.message })
+
+  return res.status(200).json({ mensaje: 'Contraseña actualizada exitosamente' })
+}
+
+export const eliminarCuenta = async (req, res) => {
+  const { numero_documento } = req.params
+  const { password } = req.body
+
+  if (!password) {
+    return res.status(400).json({ error: 'Debes confirmar tu contraseña para eliminar la cuenta' })
+  }
+
+  const { data: usuario, error: buscarError } = await supabase
+    .from('usuarios')
+    .select('correo')
+    .eq('numero_documento', numero_documento)
+    .single()
+
+  if (buscarError) return res.status(404).json({ error: 'Usuario no encontrado' })
+
+  const { error: loginError } = await supabase.auth.signInWithPassword({
+    email: usuario.correo,
+    password
+  })
+
+  if (loginError) {
+    return res.status(401).json({ error: 'La contraseña no es correcta' })
+  }
+
+  const { error: updateError } = await supabase
+    .from('usuarios')
+    .update({ estado: 'inactivo' })
+    .eq('numero_documento', numero_documento)
+
+  if (updateError) return res.status(400).json({ error: updateError.message })
+
+  return res.status(200).json({ mensaje: 'Cuenta eliminada exitosamente' })
 }
 
 export const obtenerDirecciones = async (req, res) => {
