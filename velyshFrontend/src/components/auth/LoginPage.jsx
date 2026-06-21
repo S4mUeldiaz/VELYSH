@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { login } from "../../Api/api";
-import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
+import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowLeft } from "react-icons/fi";
+import { FcGoogle } from "react-icons/fc";
 import "./LoginPage.css";
 
 export default function LoginPage() {
@@ -32,55 +33,83 @@ export default function LoginPage() {
 
   return (
     <div className="login-wrapper">
-      <div className="login-left">
-        <img src="public/zapatos.png" alt="Velysh" className="login-hero-img" />
+      <div className="login-topbar">
+        <button
+          type="button"
+          className="login-back"
+          onClick={() => navigate(-1)}
+          aria-label="Volver"
+        >
+          <FiArrowLeft />
+        </button>
+        <span className="login-logo">VELYSH</span>
       </div>
 
-      <div className="login-right">
-        <div className="login-logo">VELYSH</div>
-        <h2 className="login-title">¿Deseas iniciar sesión?</h2>
+      <h1 className="login-title">¿Deseas iniciar sesión?</h1>
 
+      <div className="login-card">
         <form className="login-form" onSubmit={handleSubmit}>
-          <div className="login-group">
-            <FiMail className="login-icon" />
-            <input
-              className="login-input"
-              type="email"
-              value={correo}
-              onChange={e => setCorreo(e.target.value)}
-              placeholder="Correo electrónico"
-            />
+          <div>
+            <label className="login-label" htmlFor="correo">Correo electrónico:</label>
+            <div className="login-group">
+              <FiMail className="login-icon" />
+              <input
+                id="correo"
+                className="login-input"
+                type="email"
+                value={correo}
+                onChange={e => setCorreo(e.target.value)}
+                placeholder="tu@correo.com"
+              />
+            </div>
           </div>
 
-          <div className="login-group">
-            <FiLock className="login-icon" />
-            <input
-              className="login-input"
-              type={verPassword ? "text" : "password"}
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              placeholder="Contraseña"
-            />
-            <button
-              type="button"
-              className="login-eye"
-              onClick={() => setVerPassword(prev => !prev)}
-            >
-              {verPassword ? <FiEyeOff /> : <FiEye />}
-            </button>
+          <div>
+            <label className="login-label" htmlFor="password">Contraseña:</label>
+            <div className="login-group">
+              <FiLock className="login-icon" />
+              <input
+                id="password"
+                className="login-input"
+                type={verPassword ? "text" : "password"}
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                placeholder="••••••••"
+              />
+              <button
+                type="button"
+                className="login-eye"
+                onClick={() => setVerPassword(prev => !prev)}
+                aria-label={verPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+              >
+                {verPassword ? <FiEyeOff /> : <FiEye />}
+              </button>
+            </div>
           </div>
-
-          <Link to="/recuperar" className="login-forgot">¿Olvidaste tu contraseña?</Link>
 
           {error && <p className="login-error">{error}</p>}
 
           <button className="login-button" type="submit" disabled={cargando}>
-            {cargando ? "Verificando..." : "Ingresar"}
+            {cargando ? "Verificando..." : "Iniciar sesión"}
+          </button>
+
+          <Link to="/recuperar" className="login-forgot">¿Olvidaste tu contraseña?</Link>
+
+          <div className="login-divider" />
+
+          <button
+            type="button"
+            className="login-google"
+            disabled
+            title="Inicio de sesión con Google: próximamente"
+          >
+            <FcGoogle />
+            Continuar con Google
           </button>
         </form>
 
         <p className="login-footer">
-          ¿No tienes cuenta? <Link to="/register">Regístrate</Link>
+          ¿No estás registrado? <Link to="/register">Crear cuenta</Link>
         </p>
       </div>
     </div>
