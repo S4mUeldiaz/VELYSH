@@ -348,7 +348,7 @@
 
 .admin-btn-guardar {
   background-color: var(--color-primary);
-  color: white;
+  color: var(--color-bg);
   border: none;
   padding: 12px 32px;
   border-radius: var(--border-radius);
