@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useLocation } from "react-router-dom"
 import { logout, getUsuarioActual, getPedidosPorUsuario } from "../../Api/api"
 import { FiMenu, FiSearch, FiBell, FiHeart, FiShoppingCart, FiUser, FiX, FiPackage } from "react-icons/fi"
 import Sidebar from "./Sidebar"
 import "./NavbarCliente.css"
+
+// Debe coincidir con HERO_SCROLL_RANGE en Home.jsx para que el logo
+// del hero (grande) y el del navbar (chico) se sincronicen en el scroll.
+const HERO_SCROLL_RANGE = 320
 
 function claveVistas(numero_documento) {
   return `notif_estados_vistos_${numero_documento}`
@@ -24,7 +28,30 @@ export default function NavbarCliente({ usuario }) {
   const [notifAbierta,       setNotifAbierta]       = useState(false)
   const [notificaciones,     setNotificaciones]     = useState([])
   const navigate = useNavigate()
+  const location = useLocation()
   const usuarioActual = usuario ?? getUsuarioActual()
+
+  // Solo en Home el logo del navbar nace "oculto" y aparece al hacer scroll,
+  // imitando que el logo grande del hero "sube" hasta acá. En cualquier otra
+  // página, el logo del navbar se muestra siempre, normal.
+  const esHome = location.pathname === "/home" || location.pathname === "/"
+  const [scrollProgress, setScrollProgress] = useState(esHome ? 0 : 1)
+
+  useEffect(() => {
+    if (!esHome) {
+      setScrollProgress(1)
+      return
+    }
+
+    function handleScroll() {
+      const progreso = Math.min(window.scrollY / HERO_SCROLL_RANGE, 1)
+      setScrollProgress(progreso)
+    }
+
+    handleScroll() // estado inicial correcto si ya hay scroll al montar
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [esHome])
 
   useEffect(() => {
     if (!usuarioActual?.numero_documento) return
@@ -84,14 +111,29 @@ export default function NavbarCliente({ usuario }) {
 
   return (
     <>
-      <nav className="navbar-cliente">
+      <nav
+        className="navbar-cliente"
+        style={esHome ? {
+          backgroundColor: `rgba(0, 0, 0, ${scrollProgress})`,
+          borderBottomColor: `rgba(51, 51, 51, ${scrollProgress})`,
+        } : undefined}
+      >
         <div className="navbar-cliente-left">
           <button className="navbar-icon-btn" onClick={() => setSidebarAbierto(true)}>
             <FiMenu />
           </button>
         </div>
 
-        <Link to="/home" className="navbar-cliente-logo">VELYSH</Link>
+        <Link
+          to="/home"
+          className="navbar-cliente-logo"
+          style={{
+            opacity: scrollProgress,
+            transform: `scale(${0.6 + 0.4 * scrollProgress})`,
+          }}
+        >
+          VELYSH
+        </Link>
 
         <div className="navbar-cliente-right">
           <div className="navbar-notif-wrapper">
@@ -142,8 +184,8 @@ export default function NavbarCliente({ usuario }) {
         </div>
       </nav>
 
-      <Sidebar 
-        abierto={sidebarAbierto} 
+      <Sidebar
+        abierto={sidebarAbierto}
         onCerrar={() => setSidebarAbierto(false)}
         usuario={usuario}
       />

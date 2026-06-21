@@ -6,86 +6,88 @@
 
 /* HERO */
 .home-hero {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 80px 80px;
-  min-height: 500px;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
   position: relative;
+  min-height: 640px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
+  text-align: center;
 }
 
-.home-hero::before {
-  content: '';
+.home-hero-bg {
   position: absolute;
-  top: -50%;
-  right: -10%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(230, 57, 70, 0.15) 0%, transparent 70%);
-  pointer-events: none;
+  inset: 0;
+  z-index: 0;
 }
 
-.home-hero-content {
-  max-width: 500px;
-  z-index: 1;
+.home-hero-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.home-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.15) 35%, rgba(0,0,0,0.45) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 140px);
+}
+
+.home-hero-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(56px, 10vw, 140px);
+  letter-spacing: 8px;
+  color: var(--color-text);
+  white-space: nowrap;
+  z-index: 2;
+  pointer-events: none;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.7);
+  will-change: opacity, transform;
 }
 
 .home-hero-sub {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  margin-top: 220px;
   font-size: 13px;
   font-weight: 500;
-  color: var(--color-primary);
+  color: var(--color-text);
   letter-spacing: 3px;
   text-transform: uppercase;
-  margin-bottom: 16px;
-}
-
-.home-hero-title {
-  font-size: 56px;
-  font-weight: 800;
-  line-height: 1.1;
-  margin-bottom: 20px;
-  color: var(--color-text);
-}
-
-.home-hero-title span {
-  color: var(--color-primary);
-}
-
-.home-hero-desc {
-  font-size: 16px;
-  color: var(--color-text-muted);
-  margin-bottom: 40px;
-  line-height: 1.6;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+  transition: opacity 0.1s linear;
 }
 
 .home-hero-btn {
+  position: relative;
+  z-index: 2;
+  margin-top: 24px;
   display: inline-block;
-  background-color: var(--color-primary);
-  color: white;
-  padding: 14px 32px;
-  border-radius: var(--border-radius);
+  background: transparent;
+  border: 1px solid var(--color-text);
+  color: var(--color-text);
+  padding: 12px 28px;
+  border-radius: 50px;
+  font-size: 13px;
   font-weight: 600;
-  font-size: 15px;
-  transition: background-color var(--transition);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: background-color var(--transition), color var(--transition), opacity 0.1s linear;
 }
 
 .home-hero-btn:hover {
-  background-color: var(--color-primary-hover);
-}
-
-.home-hero-img {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.home-hero-img img {
-  max-width: 500px;
-  width: 100%;
-  filter: drop-shadow(0 0 60px rgba(230, 57, 70, 0.3));
+  background-color: var(--color-text);
+  color: var(--color-bg);
 }
 
 /* BÚSQUEDA */
@@ -159,10 +161,10 @@
 .home-cat-btn.active {
   background-color: var(--color-primary);
   border-color: var(--color-primary);
-  color: white;
+  color: var(--color-bg);
 }
 
-/* PRODUCTOS */
+/* PRODUCTOS — sin tocar, igual que ya lo tenías */
 .home-productos {
   padding: 20px 80px 80px;
 }
@@ -276,7 +278,7 @@
   align-items: center;
   gap: 6px;
   background-color: var(--color-primary);
-  color: white;
+  color: var(--color-bg);
   padding: 8px 16px;
   border-radius: var(--border-radius);
   font-size: 13px;
@@ -542,13 +544,9 @@
 }
 
 @media (max-width: 768px) {
-  .home-hero {
-    flex-direction: column;
-    padding: 40px 24px;
-    text-align: center;
-  }
-  .home-hero-title { font-size: 36px; }
-  .home-hero-img { margin-top: 40px; }
+  .home-hero { min-height: 480px; }
+  .home-hero-logo { font-size: clamp(40px, 14vw, 80px); letter-spacing: 4px; }
+  .home-hero-sub { margin-top: 160px; }
   .home-search-section,
   .home-categorias,
   .home-productos { padding-left: 24px; padding-right: 24px; }
