@@ -5,6 +5,10 @@ import { getColorHex } from "../../utils/colores";
 import { FiShoppingBag, FiHeart, FiSearch, FiFilter, FiX } from "react-icons/fi";
 import "./Home.css";
 
+// Debe coincidir con HERO_SCROLL_RANGE en NavbarCliente.jsx para que el
+// logo grande de aquí y el logo chico del navbar se sincronicen en el scroll.
+const HERO_SCROLL_RANGE = 320;
+
 function obtenerImagenPrincipal(producto) {
   const imagenes = producto.imagenes_producto
   if (!imagenes || imagenes.length === 0) return '/zapato.png'
@@ -20,6 +24,11 @@ export default function Home() {
   const [busqueda,   setBusqueda]   = useState("");
   const [categoriaActiva, setCategoriaActiva] = useState(null);
   const [filtrosAbiertos, setFiltrosAbiertos] = useState(false);
+
+  // Efecto "VELYSH sube al navbar": progreso de 0 (arriba del todo) a 1
+  // (ya se hizo scroll más allá del hero). El logo grande se desvanece
+  // y achica a medida que este valor sube hacia 1.
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   // RF-18: filtro avanzado (mismo criterio que Catalogo.jsx)
   const [coloresSelec, setColoresSelec] = useState([]);
@@ -39,6 +48,16 @@ export default function Home() {
         setPrecioMax(Math.max(...precios))
       }
     });
+  }, []);
+
+  useEffect(() => {
+    function handleScroll() {
+      const progreso = Math.min(window.scrollY / HERO_SCROLL_RANGE, 1);
+      setScrollProgress(progreso);
+    }
+    handleScroll(); // estado inicial correcto si ya hay scroll al montar
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const coloresDisponibles = useMemo(() => {
@@ -107,15 +126,37 @@ export default function Home() {
 
       {/* HERO */}
       <section className="home-hero">
-        <div className="home-hero-content">
-          <p className="home-hero-sub">Nueva colección 2026</p>
-          <h1 className="home-hero-title">Encuentra tu <span>estilo</span></h1>
-          <p className="home-hero-desc">Los mejores zapatos al mejor precio</p>
-          <Link to="/catalogo" className="home-hero-btn">Ver catálogo</Link>
+        <div className="home-hero-bg">
+          <img src="/zapato_home.webp" alt="" className="home-hero-bg-img" aria-hidden="true" />
+          <div className="home-hero-overlay" />
         </div>
-        <div className="home-hero-img">
-          <img src="/zapato.png" alt="Velysh" />
-        </div>
+
+        {/* Wordmark grande superpuesto. Se desvanece/achica con el scroll,
+            dando la ilusión de que "sube" hasta el logo del navbar. */}
+        <h1
+          className="home-hero-logo"
+          style={{
+            opacity: 1 - scrollProgress,
+            transform: `translate(-50%, calc(-50% - ${scrollProgress * 40}px)) scale(${1 - 0.45 * scrollProgress})`,
+          }}
+        >
+          VELYSH
+        </h1>
+
+        <p
+          className="home-hero-sub"
+          style={{ opacity: 1 - scrollProgress, pointerEvents: scrollProgress > 0.6 ? "none" : "auto" }}
+        >
+          Nueva colección 2026
+        </p>
+
+        <Link
+          to="/catalogo"
+          className="home-hero-btn"
+          style={{ opacity: 1 - scrollProgress, pointerEvents: scrollProgress > 0.6 ? "none" : "auto" }}
+        >
+          Ver catálogo →
+        </Link>
       </section>
 
       {/* BÚSQUEDA + FILTROS */}
@@ -251,7 +292,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* PRODUCTOS */}
+      {/* PRODUCTOS — sin tocar, igual que ya lo tenías */}
       <section className="home-productos">
         <h2 className="home-section-title">Productos destacados</h2>
         <div className="home-productos-grid">

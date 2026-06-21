@@ -8,6 +8,7 @@
   position: sticky;
   top: 0;
   z-index: 100;
+  transition: background-color 0.1s linear, border-color 0.1s linear;
 }
 
 .navbar-cliente-left,
@@ -18,11 +19,15 @@
 }
 
 .navbar-cliente-logo {
+  font-family: var(--font-display);
   font-size: 22px;
   font-weight: 800;
   letter-spacing: 4px;
   color: var(--color-text);
   text-decoration: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  will-change: opacity, transform;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 .navbar-icon-btn {
@@ -37,14 +42,13 @@
   align-items: center;
   justify-content: center;
   transition: background-color var(--transition), color var(--transition);
+  filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.5));
 }
 
 .navbar-icon-btn:hover {
   background-color: var(--color-bg-card);
   color: var(--color-primary);
 }
-
-/* ====== AGREGAR AL FINAL DE NavbarCliente.css ====== */
 
 .navbar-notif-wrapper {
   position: relative;
