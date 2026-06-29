@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { getProductoPorId, getStockPorProducto, agregarFavorito, eliminarFavorito, getFavoritos, getUsuarioActual } from "../../Api/api"
 import { getColorHex } from "../../utils/colores"
+import { obtenerImagenPrincipal, manejarErrorImagen, PLACEHOLDER_PRODUCTO } from "../../utils/imagenes"
 import { FiArrowLeft, FiHeart, FiShoppingCart, FiMinus, FiPlus } from "react-icons/fi"
 import "./DetalleProducto.css"
 
@@ -11,7 +12,7 @@ export default function DetalleProducto() {
   const [producto,   setProducto]   = useState(null)
   const [stock,      setStock]      = useState([])
   const [colorSelec, setColorSelec] = useState(null)
-  const [tallaSelec, setTallaSelec] = useState(null) // guarda id_talla (number), la FK real
+  const [tallaSelec, setTallaSelec] = useState(null)
   const [cantidad,   setCantidad]   = useState(1)
   const [esFav,      setEsFav]      = useState(false)
   const [cargando,   setCargando]   = useState(true)
@@ -22,8 +23,6 @@ export default function DetalleProducto() {
   const stockSelec = stock.find(s => s.color === colorSelec && s.id_talla === tallaSelec)
 
   useEffect(() => {
-    // RF-03: invitados pueden ver el detalle del producto y su stock; los
-    // favoritos solo se consultan si hay usuario, igual que en Catalogo.jsx
     Promise.all([
       getProductoPorId(id),
       getStockPorProducto(id),
@@ -37,8 +36,6 @@ export default function DetalleProducto() {
     })
   }, [id])
 
-  // Cada vez que cambia la variante seleccionada (color/talla), la cantidad
-  // vuelve a 1 para no arrastrar un valor que ya no es válido para el nuevo stock
   useEffect(() => {
     setCantidad(1)
   }, [colorSelec, tallaSelec])
@@ -90,7 +87,7 @@ export default function DetalleProducto() {
         color: colorSelec,
         talla: stockSelec.tallas?.talla,
         cantidad,
-        imagen: producto.imagenes_producto?.[0]?.url_imagen ?? '/zapato.png'
+        imagen: obtenerImagenPrincipal(producto)
       })
     }
     sessionStorage.setItem('carrito', JSON.stringify(carrito))
@@ -105,9 +102,10 @@ export default function DetalleProducto() {
       {/* IMAGEN */}
       <div className="detalle-img-section">
         <img
-          src={producto.imagenes_producto?.[0]?.url_imagen ?? '/zapato.png'}
+          src={obtenerImagenPrincipal(producto)}
           alt={producto.nombre}
           className="detalle-img"
+          onError={manejarErrorImagen}
         />
       </div>
 

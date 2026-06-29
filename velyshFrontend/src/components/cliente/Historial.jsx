@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { getPedidosPorUsuario, actualizarEstadoPedido, crearDevolucion, getUsuarioActual } from "../../Api/api"
+import { PLACEHOLDER_PRODUCTO, manejarErrorImagen } from "../../utils/imagenes"
 import { FiArrowLeft, FiPackage } from "react-icons/fi"
 import "./Historial.css"
 
 function obtenerImagenPedido(pedido) {
   const detalle = (pedido.factura ?? pedido.detalles ?? [])[0]
   const imagenes = detalle?.stock?.productos?.imagenes_producto
-  if (!imagenes || imagenes.length === 0) return '/zapato.png'
+  if (!imagenes || imagenes.length === 0) return PLACEHOLDER_PRODUCTO
 
   const principal = [...imagenes].sort((a, b) => a.orden - b.orden)[0]
-  return principal?.url_imagen || '/zapato.png'
+  return principal?.url_imagen || PLACEHOLDER_PRODUCTO
 }
 
 export default function Historial() {
@@ -115,7 +116,11 @@ export default function Historial() {
             return (
               <div key={p.id_pedido} className="historial-card">
                 <div className="historial-card-img">
-                  <img src={obtenerImagenPedido(p)} alt="producto" />
+                  <img
+                    src={obtenerImagenPedido(p)}
+                    alt="producto"
+                    onError={manejarErrorImagen}
+                  />
                 </div>
                 <div className="historial-card-info">
                   <p className="historial-card-nombre">

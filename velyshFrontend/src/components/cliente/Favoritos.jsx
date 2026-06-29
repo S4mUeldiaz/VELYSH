@@ -1,18 +1,11 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { getFavoritos, eliminarFavorito, getUsuarioActual, getProductos } from "../../Api/api"
+import { obtenerImagenPrincipal, manejarErrorImagen } from "../../utils/imagenes"
 import { FiArrowLeft, FiHeart, FiShoppingCart } from "react-icons/fi"
 import "./Favoritos.css"
 
 const MAX_RECOMENDACIONES = 4
-
-function obtenerImagenPrincipal(producto) {
-  const imagenes = producto?.imagenes_producto
-  if (!imagenes || imagenes.length === 0) return '/zapato.png'
-
-  const principal = [...imagenes].sort((a, b) => a.orden - b.orden)[0]
-  return principal?.url_imagen || '/zapato.png'
-}
 
 export default function Favoritos() {
   const [favoritos,      setFavoritos]      = useState([])
@@ -30,8 +23,6 @@ export default function Favoritos() {
       })
   }, [])
 
-  // "También te puede interesar": rellena la página cuando hay pocos
-  // favoritos y, de paso, sugiere más productos al usuario.
   async function cargarRecomendaciones(favoritosActuales) {
     try {
       const productos = await getProductos()
@@ -89,7 +80,11 @@ export default function Favoritos() {
               return (
                 <div key={f.id_favorito} className="favoritos-card">
                   <div className="favoritos-card-img">
-                    <img src={obtenerImagenPrincipal(f.productos)} alt={f.productos?.nombre} />
+                    <img
+                      src={obtenerImagenPrincipal(f.productos)}
+                      alt={f.productos?.nombre}
+                      onError={manejarErrorImagen}
+                    />
                     <button
                       className="favoritos-card-heart active"
                       onClick={() => handleEliminar(id_producto)}
@@ -122,7 +117,7 @@ export default function Favoritos() {
           </div>
         )}
 
-        {/* RECOMENDACIONES — solo si hay algo que recomendar */}
+        {/* RECOMENDACIONES*/}
         {!cargando && recomendaciones.length > 0 && (
           <div className="favoritos-recomendaciones">
             <h2 className="favoritos-recomendaciones-titulo">También te puede interesar</h2>
@@ -130,7 +125,11 @@ export default function Favoritos() {
               {recomendaciones.map(p => (
                 <div key={p.id_producto} className="favoritos-card">
                   <div className="favoritos-card-img">
-                    <img src={obtenerImagenPrincipal(p)} alt={p.nombre} />
+                    <img
+                      src={obtenerImagenPrincipal(p)}
+                      alt={p.nombre}
+                      onError={manejarErrorImagen}
+                    />
                   </div>
                   <div className="favoritos-card-info">
                     <p className="favoritos-card-cat">{p.categorias?.nombre_categoria ?? ''}</p>

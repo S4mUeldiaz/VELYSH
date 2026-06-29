@@ -2,15 +2,14 @@ import { useState, useEffect, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getProductos, getCategorias, getFavoritos, getStock, agregarFavorito, eliminarFavorito, getUsuarioActual } from "../../Api/api";
 import { getColorHex } from "../../utils/colores";
+import { obtenerImagenPrincipal, manejarErrorImagen } from "../../utils/imagenes";
 import { FiHeart, FiShoppingBag, FiFilter, FiX } from "react-icons/fi";
+import { FaHeart } from "react-icons/fa";
 import "./Catalogo.css";
 
-function obtenerImagenPrincipal(producto) {
-  const imagenes = producto.imagenes_producto
-  if (!imagenes || imagenes.length === 0) return '/zapato.png'
-  const principal = [...imagenes].sort((a, b) => a.orden - b.orden)[0]
-  return principal?.url_imagen || '/zapato.png'
-}
+// Cantidad de tarjetas "fantasma" mientras carga, simulando el grid real.
+const SKELETON_COUNT = 8;
+
 
 export default function Catalogo() {
   const [productos,        setProductos]        = useState([]);
@@ -299,33 +298,54 @@ export default function Catalogo() {
 
       {/* GRID */}
       {cargando ? (
-        <div className="catalogo-loading">Cargando productos...</div>
-      ) : (
         <div className="catalogo-grid">
-          {productosFiltrados.map(p => (
-            <div key={p.id_producto} className="catalogo-card">
-              <div className="catalogo-card-img">
-                <img src={obtenerImagenPrincipal(p)} alt={p.nombre} />
-                <button
-                  className={`catalogo-fav ${favoritos.includes(p.id_producto) ? 'active' : ''}`}
-                  onClick={() => toggleFavorito(p.id_producto)}
-                >
-                  <FiHeart />
-                </button>
-              </div>
-              <div className="catalogo-card-info">
-                <p className="catalogo-card-cat">{p.categorias?.nombre_categoria}</p>
-                <h3 className="catalogo-card-nombre">{p.nombre}</h3>
-                <p className="catalogo-card-marca">{p.marca}</p>
-                <div className="catalogo-card-footer">
-                  <span className="catalogo-card-precio">${p.precio.toLocaleString()}</span>
-                  <Link to={`/producto/${p.id_producto}`} className="catalogo-card-btn">
-                    <FiShoppingBag /> Ver
-                  </Link>
+          {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+            <div key={i} className="catalogo-skeleton-card">
+              <div className="catalogo-skeleton-img" />
+              <div className="catalogo-skeleton-info">
+                <div className="catalogo-skeleton-line catalogo-skeleton-line-sm" />
+                <div className="catalogo-skeleton-line catalogo-skeleton-line-lg" />
+                <div className="catalogo-skeleton-line catalogo-skeleton-line-md" />
+                <div className="catalogo-skeleton-footer">
+                  <div className="catalogo-skeleton-line catalogo-skeleton-line-price" />
+                  <div className="catalogo-skeleton-btn" />
                 </div>
               </div>
             </div>
           ))}
+        </div>
+      ) : (
+        <div className="catalogo-grid">
+          {productosFiltrados.map(p => {
+            const esFavorito = favoritos.includes(p.id_producto)
+            return (
+              <div key={p.id_producto} className="catalogo-card">
+                <div className="catalogo-card-img">
+                  <img src={obtenerImagenPrincipal(p)} alt={p.nombre} onError={manejarErrorImagen} />
+                  <button
+                    className={`catalogo-fav ${esFavorito ? 'active' : ''}`}
+                    onClick={() => toggleFavorito(p.id_producto)}
+                    aria-label={esFavorito ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+                  >
+                    {esFavorito
+                      ? <FaHeart key="filled" />
+                      : <FiHeart key="outline" />}
+                  </button>
+                </div>
+                <div className="catalogo-card-info">
+                  <p className="catalogo-card-cat">{p.categorias?.nombre_categoria}</p>
+                  <h3 className="catalogo-card-nombre">{p.nombre}</h3>
+                  <p className="catalogo-card-marca">{p.marca}</p>
+                  <div className="catalogo-card-footer">
+                    <span className="catalogo-card-precio">${p.precio.toLocaleString()}</span>
+                    <Link to={`/producto/${p.id_producto}`} className="catalogo-card-btn">
+                      <FiShoppingBag /> Ver
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
           {productosFiltrados.length === 0 && (
             <p className="catalogo-sin-resultados">No hay productos que coincidan con los filtros seleccionados.</p>
           )}

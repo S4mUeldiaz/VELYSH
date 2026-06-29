@@ -1,26 +1,26 @@
 import { useState, useEffect, useMemo } from "react";
-import { Link } from "react-router-dom";
-import { getProductos, getCategorias, getStock } from "../../Api/api";
+import { Link, useNavigate } from "react-router-dom";
+import { getProductos, getCategorias, getStock, getFavoritos, agregarFavorito, eliminarFavorito, getUsuarioActual } from "../../Api/api";
 import { getColorHex } from "../../utils/colores";
-import { FiShoppingBag, FiHeart, FiSearch, FiFilter, FiX } from "react-icons/fi";
+import { obtenerImagenPrincipal, manejarErrorImagen } from "../../utils/imagenes";
+import { FiShoppingBag, FiSearch, FiFilter, FiX } from "react-icons/fi";
+import { FiHeart } from "react-icons/fi";
+import { FaHeart } from "react-icons/fa";
 import "./Home.css";
 
 // Debe coincidir con HERO_SCROLL_RANGE en NavbarCliente.jsx para que el
 // logo grande de aquí y el logo chico del navbar se sincronicen en el scroll.
 const HERO_SCROLL_RANGE = 320;
 
-function obtenerImagenPrincipal(producto) {
-  const imagenes = producto.imagenes_producto
-  if (!imagenes || imagenes.length === 0) return '/zapato.png'
+// Cantidad de tarjetas "fantasma" mientras carga, simulando el grid real.
+const SKELETON_COUNT = 8;
 
-  const principal = [...imagenes].sort((a, b) => a.orden - b.orden)[0]
-  return principal?.url_imagen || '/zapato.png'
-}
 
 export default function Home() {
   const [productos,  setProductos]  = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [stock,       setStock]      = useState([]);
+  const [favoritos,  setFavoritos]  = useState([]);
   const [busqueda,   setBusqueda]   = useState("");
   const [categoriaActiva, setCategoriaActiva] = useState(null);
   const [generoActivo, setGeneroActivo] = useState(null);
@@ -30,18 +30,30 @@ export default function Home() {
   const [tallasSelec,  setTallasSelec]  = useState([]);
   const [precioMin,    setPrecioMin]    = useState(0);
   const [precioMax,    setPrecioMax]    = useState(0);
+  const [cargando,     setCargando]     = useState(true);
+
+  const usuario = getUsuarioActual();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    Promise.all([getProductos(), getCategorias(), getStock()]).then(([prods, cats, st]) => {
+    Promise.all([
+      getProductos(),
+      getCategorias(),
+      getStock(),
+      usuario ? getFavoritos(usuario.numero_documento) : Promise.resolve([])
+    ]).then(([prods, cats, st, favs]) => {
       setProductos(prods)
       setCategorias(cats)
       setStock(st)
+      setFavoritos(favs.map(f => f.id_producto))
 
       if (prods.length > 0) {
         const precios = prods.map(p => Number(p.precio))
         setPrecioMin(Math.min(...precios))
         setPrecioMax(Math.max(...precios))
       }
+
+      setCargando(false)
     });
   }, []);
 
@@ -54,6 +66,21 @@ export default function Home() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  async function toggleFavorito(id_producto) {
+    if (!usuario) {
+      navigate('/login')
+      return
+    }
+    const esFav = favoritos.includes(id_producto)
+    if (esFav) {
+      await eliminarFavorito(usuario?.numero_documento, id_producto)
+      setFavoritos(prev => prev.filter(id => id !== id_producto))
+    } else {
+      await agregarFavorito(usuario?.numero_documento, id_producto)
+      setFavoritos(prev => [...prev, id_producto])
+    }
+  }
 
   const coloresDisponibles = useMemo(() => {
     return [...new Set(stock.map(s => s.color))].filter(Boolean).sort()
@@ -127,8 +154,6 @@ export default function Home() {
           <div className="home-hero-overlay" />
         </div>
 
-        {/* Wordmark grande superpuesto. Se desvanece/achica con el scroll,
-            dando la ilusión de que "sube" hasta el logo del navbar. */}
         <h1
           className="home-hero-logo"
           style={{
@@ -175,8 +200,7 @@ export default function Home() {
         </button>
       </section>
 
-      {/* GÉNERO — reutiliza el estilo de las píldoras de categoría (home-cat-btn),
-          es un facet independiente que se combina con la categoría seleccionada abajo. */}
+      {/* GÉNERO */}
       <section className="home-categorias home-genero-filtro">
         <button
           className={`home-cat-btn ${generoActivo === null ? 'active' : ''}`}
@@ -311,33 +335,64 @@ export default function Home() {
         </div>
       )}
 
-      {/* PRODUCTOS — sin tocar, igual que ya lo tenías */}
+      {/* PRODUCTOS */}
       <section className="home-productos">
         <h2 className="home-section-title">Productos destacados</h2>
-        <div className="home-productos-grid">
-          {productosFiltrados.map(p => (
-            <div key={p.id_producto} className="home-producto-card">
-              <div className="home-producto-img">
-                <img src={obtenerImagenPrincipal(p)} alt={p.nombre} />
-                <button className="home-fav-btn"><FiHeart /></button>
-              </div>
-              <div className="home-producto-info">
-                <p className="home-producto-categoria">{p.categorias?.nombre_categoria ?? p.nombre_categoria}</p>
-                <h3 className="home-producto-nombre">{p.nombre}</h3>
-                <p className="home-producto-marca">{p.marca}</p>
-                <div className="home-producto-footer">
-                  <span className="home-producto-precio">${p.precio.toLocaleString()}</span>
-                  <Link to={`/producto/${p.id_producto}`} className="home-producto-btn">
-                    <FiShoppingBag /> Ver
-                  </Link>
+
+        {cargando ? (
+          <div className="home-productos-grid">
+            {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+              <div key={i} className="home-skeleton-card">
+                <div className="home-skeleton-img" />
+                <div className="home-skeleton-info">
+                  <div className="home-skeleton-line home-skeleton-line-sm" />
+                  <div className="home-skeleton-line home-skeleton-line-lg" />
+                  <div className="home-skeleton-line home-skeleton-line-md" />
+                  <div className="home-skeleton-footer">
+                    <div className="home-skeleton-line home-skeleton-line-price" />
+                    <div className="home-skeleton-btn" />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-          {productosFiltrados.length === 0 && (
-            <p className="home-sin-resultados">No hay productos que coincidan con los filtros seleccionados.</p>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="home-productos-grid">
+            {productosFiltrados.map(p => {
+              const esFavorito = favoritos.includes(p.id_producto)
+              return (
+                <div key={p.id_producto} className="home-producto-card">
+                  <div className="home-producto-img">
+                    <img src={obtenerImagenPrincipal(p)} alt={p.nombre} onError={manejarErrorImagen} />
+                    <button
+                      className={`home-fav-btn ${esFavorito ? 'active' : ''}`}
+                      onClick={() => toggleFavorito(p.id_producto)}
+                      aria-label={esFavorito ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+                    >
+                      {esFavorito
+                        ? <FaHeart key="filled" />
+                        : <FiHeart key="outline" />}
+                    </button>
+                  </div>
+                  <div className="home-producto-info">
+                    <p className="home-producto-categoria">{p.categorias?.nombre_categoria ?? p.nombre_categoria}</p>
+                    <h3 className="home-producto-nombre">{p.nombre}</h3>
+                    <p className="home-producto-marca">{p.marca}</p>
+                    <div className="home-producto-footer">
+                      <span className="home-producto-precio">${p.precio.toLocaleString()}</span>
+                      <Link to={`/producto/${p.id_producto}`} className="home-producto-btn">
+                        <FiShoppingBag /> Ver
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+            {productosFiltrados.length === 0 && (
+              <p className="home-sin-resultados">No hay productos que coincidan con los filtros seleccionados.</p>
+            )}
+          </div>
+        )}
       </section>
 
     </div>
