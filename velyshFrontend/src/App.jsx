@@ -3,6 +3,7 @@ import LoginPage    from "./components/auth/LoginPage.jsx";
 import RegisterPage from "./components/auth/RegisterPage.jsx";
 import NavbarCliente  from "./components/shared/NavbarCliente.jsx";
 import NavbarAdmin    from "./components/shared/NavbarAdmin.jsx";
+import Footer          from "./components/shared/Footer.jsx";
 import Home           from "./components/cliente/Home.jsx";
 import Catalogo from "./components/cliente/Catalogo.jsx";
 import Dashboard from "./components/admin/Dashboard.jsx"
@@ -27,7 +28,9 @@ function RutaProtegida({ children }) {
   const usuario = getUsuarioActual();
   if (!token || !usuario) return <Navigate to="/login" replace />;
 
-  const navbar = usuario.nombre_rol === "admin"
+  const esAdmin = usuario.nombre_rol === "admin";
+
+  const navbar = esAdmin
     ? <NavbarAdmin usuario={usuario} />
     : <NavbarCliente usuario={usuario} />
 
@@ -35,6 +38,7 @@ function RutaProtegida({ children }) {
     <>
       {navbar}
       {children}
+      {!esAdmin && <Footer />}
     </>
   );
 }
@@ -50,6 +54,7 @@ function RutaPublica({ children }) {
     <>
       {navbar}
       {children}
+      <Footer />
     </>
   );
 }
