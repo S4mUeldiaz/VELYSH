@@ -68,8 +68,13 @@ export async function eliminarCategoria(id) {
 
 // ── PRODUCTOS ──────────────────────────────────────────────────────────────────
 
-export async function getProductos() {
-  const { data } = await api.get('/productos')
+export async function getProductos(filtros = {}) {
+  const { categoria, genero } = filtros
+  const params = {}
+  if (categoria) params.categoria = categoria
+  if (genero) params.genero = genero
+
+  const { data } = await api.get('/productos', { params })
   return data.map(p => ({
     ...p,
     nombre_categoria: p.categorias?.nombre_categoria ?? ''

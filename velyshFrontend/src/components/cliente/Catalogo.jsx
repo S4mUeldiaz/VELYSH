@@ -8,8 +8,6 @@ import "./Catalogo.css";
 function obtenerImagenPrincipal(producto) {
   const imagenes = producto.imagenes_producto
   if (!imagenes || imagenes.length === 0) return '/zapato.png'
-
-  // La imagen principal es la de orden 0; si no existe, se usa la primera disponible
   const principal = [...imagenes].sort((a, b) => a.orden - b.orden)[0]
   return principal?.url_imagen || '/zapato.png'
 }
@@ -20,11 +18,10 @@ export default function Catalogo() {
   const [favoritos,        setFavoritos]        = useState([]);
   const [stock,             setStock]            = useState([]);
   const [categoriaActiva,  setCategoriaActiva]  = useState(null);
+  const [generoActivo,     setGeneroActivo]     = useState(null);
   const [ordenPrecio,      setOrdenPrecio]      = useState("");
   const [cargando,         setCargando]         = useState(true);
   const [filtrosAbiertos,  setFiltrosAbiertos]  = useState(false);
-
-  // RF-18: filtro avanzado
   const [coloresSelec, setColoresSelec] = useState([]);
   const [tallasSelec,  setTallasSelec]  = useState([]);
   const [precioMin,    setPrecioMin]    = useState(0);
@@ -113,6 +110,8 @@ export default function Catalogo() {
   let productosFiltrados = productos.filter(p => {
     if (categoriaActiva && p.id_categoria !== categoriaActiva) return false
 
+    if (generoActivo && p.genero !== generoActivo && p.genero !== 'unisex') return false
+
     const precio = Number(p.precio)
     if (precio < precioMin || precio > precioMax) return false
 
@@ -143,6 +142,27 @@ export default function Catalogo() {
 
       {/* FILTROS */}
       <div className="catalogo-filtros">
+        <div className="catalogo-categorias catalogo-genero-filtro">
+          <button
+            className={`catalogo-cat-btn ${generoActivo === null ? 'active' : ''}`}
+            onClick={() => setGeneroActivo(null)}
+          >
+            Todos los géneros
+          </button>
+          <button
+            className={`catalogo-cat-btn ${generoActivo === 'hombre' ? 'active' : ''}`}
+            onClick={() => setGeneroActivo('hombre')}
+          >
+            Hombre
+          </button>
+          <button
+            className={`catalogo-cat-btn ${generoActivo === 'mujer' ? 'active' : ''}`}
+            onClick={() => setGeneroActivo('mujer')}
+          >
+            Mujer
+          </button>
+        </div>
+
         <div className="catalogo-categorias">
           <button
             className={`catalogo-cat-btn ${categoriaActiva === null ? 'active' : ''}`}

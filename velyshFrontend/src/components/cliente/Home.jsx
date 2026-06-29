@@ -23,14 +23,9 @@ export default function Home() {
   const [stock,       setStock]      = useState([]);
   const [busqueda,   setBusqueda]   = useState("");
   const [categoriaActiva, setCategoriaActiva] = useState(null);
+  const [generoActivo, setGeneroActivo] = useState(null);
   const [filtrosAbiertos, setFiltrosAbiertos] = useState(false);
-
-  // Efecto "VELYSH sube al navbar": progreso de 0 (arriba del todo) a 1
-  // (ya se hizo scroll más allá del hero). El logo grande se desvanece
-  // y achica a medida que este valor sube hacia 1.
   const [scrollProgress, setScrollProgress] = useState(0);
-
-  // RF-18: filtro avanzado (mismo criterio que Catalogo.jsx)
   const [coloresSelec, setColoresSelec] = useState([]);
   const [tallasSelec,  setTallasSelec]  = useState([]);
   const [precioMin,    setPrecioMin]    = useState(0);
@@ -103,7 +98,8 @@ export default function Home() {
   const productosFiltrados = productos.filter(p => {
     const coincideBusqueda = p.nombre.toLowerCase().includes(busqueda.toLowerCase())
     const coincideCategoria = categoriaActiva ? p.id_categoria === categoriaActiva : true
-    if (!coincideBusqueda || !coincideCategoria) return false
+    const coincideGenero = generoActivo ? (p.genero === generoActivo || p.genero === 'unisex') : true
+    if (!coincideBusqueda || !coincideCategoria || !coincideGenero) return false
 
     const precio = Number(p.precio)
     if (precio < precioMin || precio > precioMax) return false
@@ -176,6 +172,29 @@ export default function Home() {
           onClick={() => setFiltrosAbiertos(true)}
         >
           <FiFilter /> Filtros {hayFiltrosActivos && <span className="home-filtros-dot" />}
+        </button>
+      </section>
+
+      {/* GÉNERO — reutiliza el estilo de las píldoras de categoría (home-cat-btn),
+          es un facet independiente que se combina con la categoría seleccionada abajo. */}
+      <section className="home-categorias home-genero-filtro">
+        <button
+          className={`home-cat-btn ${generoActivo === null ? 'active' : ''}`}
+          onClick={() => setGeneroActivo(null)}
+        >
+          Todos los géneros
+        </button>
+        <button
+          className={`home-cat-btn ${generoActivo === 'hombre' ? 'active' : ''}`}
+          onClick={() => setGeneroActivo('hombre')}
+        >
+          Hombre
+        </button>
+        <button
+          className={`home-cat-btn ${generoActivo === 'mujer' ? 'active' : ''}`}
+          onClick={() => setGeneroActivo('mujer')}
+        >
+          Mujer
         </button>
       </section>
 
