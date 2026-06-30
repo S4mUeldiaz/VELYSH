@@ -254,6 +254,38 @@
   animation: favPulse 0.3s ease;
 }
 
+/* QUICK VIEW */
+.home-quickview-btn {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.75);
+  border: none;
+  color: var(--color-text);
+  height: 38px;
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.2s ease, transform 0.2s ease, background-color var(--transition);
+}
+
+.home-producto-card:hover .home-quickview-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.home-quickview-btn:hover {
+  background: var(--color-primary);
+  color: var(--color-bg);
+}
+
 .home-producto-info {
   padding: 16px;
 }

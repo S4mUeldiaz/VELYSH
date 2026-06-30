@@ -83,6 +83,7 @@ export default function Favoritos() {
                     <img
                       src={obtenerImagenPrincipal(f.productos)}
                       alt={f.productos?.nombre}
+                      loading="lazy"
                       onError={manejarErrorImagen}
                     />
                     <button
@@ -117,7 +118,7 @@ export default function Favoritos() {
           </div>
         )}
 
-        {/* RECOMENDACIONES*/}
+        {/* RECOMENDACIONES — solo si hay algo que recomendar */}
         {!cargando && recomendaciones.length > 0 && (
           <div className="favoritos-recomendaciones">
             <h2 className="favoritos-recomendaciones-titulo">También te puede interesar</h2>
@@ -128,6 +129,7 @@ export default function Favoritos() {
                     <img
                       src={obtenerImagenPrincipal(p)}
                       alt={p.nombre}
+                      loading="lazy"
                       onError={manejarErrorImagen}
                     />
                   </div>

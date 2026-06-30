@@ -132,13 +132,14 @@
   justify-content: center;
   cursor: pointer;
   font-size: 16px;
-  transition: all var(--transition);
+  transition: all var(--transition), transform 0.2s ease;
 }
 
 .catalogo-fav:hover,
 .catalogo-fav.active {
   background: var(--color-primary);
   color: var(--color-bg);
+  transform: scale(1.1);
 }
 
 .catalogo-card-info {
@@ -437,11 +438,6 @@
   .catalogo-filtros { flex-direction: column; align-items: flex-start; }
 }
 
-/* ============================================================
-   SKELETON LOADER — Grid de catálogo
-   Mismo patrón que Home.css (shimmer con variables de tema).
-   ============================================================ */
-
 .catalogo-skeleton-card {
   background-color: var(--color-bg-card);
   border: 1px solid var(--color-border);
@@ -510,6 +506,47 @@
   animation: catalogo-skeleton-pulse 1.4s ease infinite;
 }
 
+@keyframes favPulse {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+.catalogo-fav svg {
+  animation: favPulse 0.3s ease;
+}
+
+/* QUICK VIEW */
+.catalogo-quickview-btn {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.75);
+  border: none;
+  color: var(--color-text);
+  height: 38px;
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.2s ease, transform 0.2s ease, background-color var(--transition);
+}
+
+.catalogo-card:hover .catalogo-quickview-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.catalogo-quickview-btn:hover {
+  background: var(--color-primary);
+  color: var(--color-bg);
+}
 @keyframes catalogo-skeleton-pulse {
   0%   { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }

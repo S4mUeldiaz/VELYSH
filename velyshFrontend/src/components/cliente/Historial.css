@@ -270,3 +270,18 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+.historial-grafica-card {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.historial-grafica-titulo {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 16px;
+}

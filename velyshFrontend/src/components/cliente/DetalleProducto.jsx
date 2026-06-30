@@ -3,7 +3,8 @@ import { useParams, useNavigate } from "react-router-dom"
 import { getProductoPorId, getStockPorProducto, agregarFavorito, eliminarFavorito, getFavoritos, getUsuarioActual } from "../../Api/api"
 import { getColorHex } from "../../utils/colores"
 import { obtenerImagenPrincipal, manejarErrorImagen, PLACEHOLDER_PRODUCTO } from "../../utils/imagenes"
-import { FiArrowLeft, FiHeart, FiShoppingCart, FiMinus, FiPlus } from "react-icons/fi"
+import Breadcrumbs from "../shared/Breadcrumbs"
+import { FiArrowLeft, FiHeart, FiShoppingCart, FiMinus, FiPlus, FiAlertTriangle } from "react-icons/fi"
 import "./DetalleProducto.css"
 
 export default function DetalleProducto() {
@@ -21,6 +22,9 @@ export default function DetalleProducto() {
   const coloresUnicos = [...new Set(stock.map(s => s.color))]
   const tallasPorColor = stock.filter(s => s.color === colorSelec)
   const stockSelec = stock.find(s => s.color === colorSelec && s.id_talla === tallaSelec)
+  const stockBajo = stockSelec
+    ? stockSelec.stock_actual > 0 && stockSelec.stock_actual <= stockSelec.stock_minimo
+    : false
 
   useEffect(() => {
     Promise.all([
@@ -97,8 +101,21 @@ export default function DetalleProducto() {
   if (cargando) return <div className="detalle-loading">Cargando...</div>
   if (!producto) return <div className="detalle-loading">Producto no encontrado</div>
 
+  const breadcrumbItems = [
+    { label: "Home", to: "/home" },
+    { label: "Catálogo", to: "/catalogo" },
+    ...(producto.categorias?.nombre_categoria
+      ? [{ label: producto.categorias.nombre_categoria, to: `/catalogo?categoria=${producto.id_categoria}` }]
+      : []),
+    { label: producto.nombre }
+  ]
+
   return (
-    <div className="detalle-wrapper">
+    <>
+      <div className="detalle-breadcrumbs-wrap">
+        <Breadcrumbs items={breadcrumbItems} />
+      </div>
+      <div className="detalle-wrapper">
       {/* IMAGEN */}
       <div className="detalle-img-section">
         <img
@@ -180,7 +197,13 @@ export default function DetalleProducto() {
 
         {/* STOCK */}
         {stockSelec && (
-          <p className="detalle-stock">Stock: {stockSelec.stock_actual} disponibles</p>
+          stockBajo ? (
+            <p className="detalle-stock detalle-stock-bajo">
+              <FiAlertTriangle /> ¡Solo quedan {stockSelec.stock_actual} unidades!
+            </p>
+          ) : (
+            <p className="detalle-stock">Stock: {stockSelec.stock_actual} disponibles</p>
+          )
         )}
 
         {/* BOTONES */}
@@ -202,6 +225,7 @@ export default function DetalleProducto() {
 
         <p className="detalle-descripcion">{producto.descripcion}</p>
       </div>
-    </div>
+      </div>
+    </>
   )
 }

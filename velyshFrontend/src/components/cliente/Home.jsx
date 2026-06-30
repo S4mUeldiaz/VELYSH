@@ -3,16 +3,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { getProductos, getCategorias, getStock, getFavoritos, agregarFavorito, eliminarFavorito, getUsuarioActual } from "../../Api/api";
 import { getColorHex } from "../../utils/colores";
 import { obtenerImagenPrincipal, manejarErrorImagen } from "../../utils/imagenes";
-import { FiShoppingBag, FiSearch, FiFilter, FiX } from "react-icons/fi";
+import { useScrollReveal } from "../../utils/useScrollReveal";
+import QuickView from "../shared/QuickView";
+import EstadoVacio from "../shared/EstadoVacio";
+import { FiShoppingBag, FiSearch, FiFilter, FiX, FiEye } from "react-icons/fi";
 import { FiHeart } from "react-icons/fi";
 import { FaHeart } from "react-icons/fa";
 import "./Home.css";
 
-// Debe coincidir con HERO_SCROLL_RANGE en NavbarCliente.jsx para que el
-// logo grande de aquí y el logo chico del navbar se sincronicen en el scroll.
 const HERO_SCROLL_RANGE = 320;
-
-// Cantidad de tarjetas "fantasma" mientras carga, simulando el grid real.
 const SKELETON_COUNT = 8;
 
 
@@ -31,6 +30,7 @@ export default function Home() {
   const [precioMin,    setPrecioMin]    = useState(0);
   const [precioMax,    setPrecioMax]    = useState(0);
   const [cargando,     setCargando]     = useState(true);
+  const [quickViewId,  setQuickViewId]  = useState(null);
 
   const usuario = getUsuarioActual();
   const navigate = useNavigate();
@@ -119,6 +119,13 @@ export default function Home() {
     setPrecioMax(precioMaxAbsoluto)
   }
 
+  function limpiarTodosLosFiltros() {
+    limpiarFiltros()
+    setBusqueda("")
+    setCategoriaActiva(null)
+    setGeneroActivo(null)
+  }
+
   const hayFiltrosActivos = coloresSelec.length > 0 || tallasSelec.length > 0 ||
     precioMin > precioMinAbsoluto || precioMax < precioMaxAbsoluto
 
@@ -143,6 +150,8 @@ export default function Home() {
 
     return true
   })
+
+  const gridRef = useScrollReveal([productosFiltrados.length, cargando])
 
   return (
     <div className="home-wrapper">
@@ -357,13 +366,20 @@ export default function Home() {
             ))}
           </div>
         ) : (
-          <div className="home-productos-grid">
+          <div className="home-productos-grid" ref={gridRef}>
             {productosFiltrados.map(p => {
               const esFavorito = favoritos.includes(p.id_producto)
               return (
                 <div key={p.id_producto} className="home-producto-card">
                   <div className="home-producto-img">
-                    <img src={obtenerImagenPrincipal(p)} alt={p.nombre} onError={manejarErrorImagen} />
+                    <img src={obtenerImagenPrincipal(p)} alt={p.nombre} loading="lazy" onError={manejarErrorImagen} />
+                    <button
+                      className="home-quickview-btn"
+                      onClick={() => setQuickViewId(p.id_producto)}
+                      aria-label="Vista rápida"
+                    >
+                      <FiEye />
+                    </button>
                     <button
                       className={`home-fav-btn ${esFavorito ? 'active' : ''}`}
                       onClick={() => toggleFavorito(p.id_producto)}
@@ -389,11 +405,19 @@ export default function Home() {
               )
             })}
             {productosFiltrados.length === 0 && (
-              <p className="home-sin-resultados">No hay productos que coincidan con los filtros seleccionados.</p>
+              <EstadoVacio
+                titulo="No encontramos productos con estos filtros"
+                subtitulo="Prueba ajustando la búsqueda, el precio o la categoría seleccionada."
+                onLimpiar={limpiarTodosLosFiltros}
+              />
             )}
           </div>
         )}
       </section>
+
+      {quickViewId && (
+        <QuickView idProducto={quickViewId} onClose={() => setQuickViewId(null)} />
+      )}
 
     </div>
   )
