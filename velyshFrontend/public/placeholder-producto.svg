@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#191919"/>
+  <g fill="none" stroke="#555555" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M110 230 
+             c0,-18 14,-30 34,-34 
+             l60,-12 
+             c10,-2 18,-8 24,-16 
+             l10,-14 
+             c4,-6 12,-9 19,-6 
+             l34,14 
+             c14,6 22,20 22,35 
+             v18 
+             c0,11 -9,20 -20,20 
+             h-163 
+             c-11,0 -20,-9 -20,-20 
+             z"/>
+    <path d="M110 230 l0,14 c0,6 5,11 11,11 h170 c6,0 11,-5 11,-11 l0,-9"/>
+    <line x1="150" y1="195" x2="150" y2="225"/>
+    <line x1="175" y1="190" x2="175" y2="225"/>
+    <line x1="200" y1="186" x2="200" y2="225"/>
+  </g>
+  <text x="200" y="300" font-family="Georgia, serif" font-size="22" letter-spacing="3" fill="#666666" text-anchor="middle">VELYSH</text>
+</svg>

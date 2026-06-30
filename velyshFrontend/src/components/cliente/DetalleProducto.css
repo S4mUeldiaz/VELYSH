@@ -230,6 +230,25 @@
   border-top: 1px solid var(--color-border);
 }
 
+.detalle-stock-bajo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #d4a72c;
+  font-weight: 600;
+  animation: detalle-stock-bajo-pulse 1.8s ease-in-out infinite;
+}
+
+.detalle-stock-bajo svg {
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+@keyframes detalle-stock-bajo-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.6; }
+}
+
 @media (max-width: 768px) {
   .detalle-wrapper { flex-direction: column; }
   .detalle-img-section { min-height: 300px; position: relative; }

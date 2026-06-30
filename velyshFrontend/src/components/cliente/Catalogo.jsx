@@ -1,18 +1,18 @@
 import { useState, useEffect, useMemo } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { getProductos, getCategorias, getFavoritos, getStock, agregarFavorito, eliminarFavorito, getUsuarioActual } from "../../Api/api";
 import { getColorHex } from "../../utils/colores";
-import { FiHeart, FiShoppingBag, FiFilter, FiX } from "react-icons/fi";
+import { obtenerImagenPrincipal, manejarErrorImagen } from "../../utils/imagenes";
+import { useScrollReveal } from "../../utils/useScrollReveal";
+import QuickView from "../shared/QuickView";
+import Breadcrumbs from "../shared/Breadcrumbs";
+import EstadoVacio from "../shared/EstadoVacio";
+import { FiHeart, FiShoppingBag, FiFilter, FiX, FiEye } from "react-icons/fi";
+import { FaHeart } from "react-icons/fa";
 import "./Catalogo.css";
 
-function obtenerImagenPrincipal(producto) {
-  const imagenes = producto.imagenes_producto
-  if (!imagenes || imagenes.length === 0) return '/zapato.png'
+const SKELETON_COUNT = 8;
 
-  // La imagen principal es la de orden 0; si no existe, se usa la primera disponible
-  const principal = [...imagenes].sort((a, b) => a.orden - b.orden)[0]
-  return principal?.url_imagen || '/zapato.png'
-}
 
 export default function Catalogo() {
   const [productos,        setProductos]        = useState([]);
@@ -20,18 +20,19 @@ export default function Catalogo() {
   const [favoritos,        setFavoritos]        = useState([]);
   const [stock,             setStock]            = useState([]);
   const [categoriaActiva,  setCategoriaActiva]  = useState(null);
+  const [generoActivo,     setGeneroActivo]     = useState(null);
   const [ordenPrecio,      setOrdenPrecio]      = useState("");
   const [cargando,         setCargando]         = useState(true);
   const [filtrosAbiertos,  setFiltrosAbiertos]  = useState(false);
-
-  // RF-18: filtro avanzado
   const [coloresSelec, setColoresSelec] = useState([]);
   const [tallasSelec,  setTallasSelec]  = useState([]);
   const [precioMin,    setPrecioMin]    = useState(0);
   const [precioMax,    setPrecioMax]    = useState(0);
+  const [quickViewId,  setQuickViewId]  = useState(null);
 
   const usuario = getUsuarioActual();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     Promise.all([
@@ -54,6 +55,18 @@ export default function Catalogo() {
       setCargando(false)
     })
   }, [])
+
+  useEffect(() => {
+    const paramCategoria = searchParams.get('categoria')
+    if (!paramCategoria || categorias.length === 0) return
+
+    const esNumerico = !isNaN(Number(paramCategoria))
+    const encontrada = esNumerico
+      ? categorias.find(c => c.id_categoria === Number(paramCategoria))
+      : categorias.find(c => c.nombre_categoria.toLowerCase() === paramCategoria.toLowerCase())
+
+    if (encontrada) setCategoriaActiva(encontrada.id_categoria)
+  }, [searchParams, categorias])
 
   async function toggleFavorito(id_producto) {
     if (!usuario) {
@@ -107,11 +120,19 @@ export default function Catalogo() {
     setPrecioMax(precioMaxAbsoluto)
   }
 
+  function limpiarTodosLosFiltros() {
+    limpiarFiltros()
+    setCategoriaActiva(null)
+    setGeneroActivo(null)
+  }
+
   const hayFiltrosActivos = coloresSelec.length > 0 || tallasSelec.length > 0 ||
     precioMin > precioMinAbsoluto || precioMax < precioMaxAbsoluto
 
   let productosFiltrados = productos.filter(p => {
     if (categoriaActiva && p.id_categoria !== categoriaActiva) return false
+
+    if (generoActivo && p.genero !== generoActivo && p.genero !== 'unisex') return false
 
     const precio = Number(p.precio)
     if (precio < precioMin || precio > precioMax) return false
@@ -132,8 +153,21 @@ export default function Catalogo() {
   if (ordenPrecio === "asc")  productosFiltrados = [...productosFiltrados].sort((a, b) => a.precio - b.precio)
   if (ordenPrecio === "desc") productosFiltrados = [...productosFiltrados].sort((a, b) => b.precio - a.precio)
 
+  const categoriaActivaObj = categorias.find(c => c.id_categoria === categoriaActiva)
+  const breadcrumbItems = [
+    { label: "Home", to: "/home" },
+    categoriaActivaObj
+      ? { label: "Catálogo", to: "/catalogo" }
+      : { label: "Catálogo" },
+    ...(categoriaActivaObj ? [{ label: categoriaActivaObj.nombre_categoria }] : [])
+  ]
+
+  const gridRef = useScrollReveal([productosFiltrados.length, cargando])
+
   return (
     <div className="catalogo-wrapper">
+
+      <Breadcrumbs items={breadcrumbItems} />
 
       {/* HEADER */}
       <div className="catalogo-header">
@@ -143,6 +177,27 @@ export default function Catalogo() {
 
       {/* FILTROS */}
       <div className="catalogo-filtros">
+        <div className="catalogo-categorias catalogo-genero-filtro">
+          <button
+            className={`catalogo-cat-btn ${generoActivo === null ? 'active' : ''}`}
+            onClick={() => setGeneroActivo(null)}
+          >
+            Todos los géneros
+          </button>
+          <button
+            className={`catalogo-cat-btn ${generoActivo === 'hombre' ? 'active' : ''}`}
+            onClick={() => setGeneroActivo('hombre')}
+          >
+            Hombre
+          </button>
+          <button
+            className={`catalogo-cat-btn ${generoActivo === 'mujer' ? 'active' : ''}`}
+            onClick={() => setGeneroActivo('mujer')}
+          >
+            Mujer
+          </button>
+        </div>
+
         <div className="catalogo-categorias">
           <button
             className={`catalogo-cat-btn ${categoriaActiva === null ? 'active' : ''}`}
@@ -279,37 +334,73 @@ export default function Catalogo() {
 
       {/* GRID */}
       {cargando ? (
-        <div className="catalogo-loading">Cargando productos...</div>
-      ) : (
         <div className="catalogo-grid">
-          {productosFiltrados.map(p => (
-            <div key={p.id_producto} className="catalogo-card">
-              <div className="catalogo-card-img">
-                <img src={obtenerImagenPrincipal(p)} alt={p.nombre} />
-                <button
-                  className={`catalogo-fav ${favoritos.includes(p.id_producto) ? 'active' : ''}`}
-                  onClick={() => toggleFavorito(p.id_producto)}
-                >
-                  <FiHeart />
-                </button>
-              </div>
-              <div className="catalogo-card-info">
-                <p className="catalogo-card-cat">{p.categorias?.nombre_categoria}</p>
-                <h3 className="catalogo-card-nombre">{p.nombre}</h3>
-                <p className="catalogo-card-marca">{p.marca}</p>
-                <div className="catalogo-card-footer">
-                  <span className="catalogo-card-precio">${p.precio.toLocaleString()}</span>
-                  <Link to={`/producto/${p.id_producto}`} className="catalogo-card-btn">
-                    <FiShoppingBag /> Ver
-                  </Link>
+          {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+            <div key={i} className="catalogo-skeleton-card">
+              <div className="catalogo-skeleton-img" />
+              <div className="catalogo-skeleton-info">
+                <div className="catalogo-skeleton-line catalogo-skeleton-line-sm" />
+                <div className="catalogo-skeleton-line catalogo-skeleton-line-lg" />
+                <div className="catalogo-skeleton-line catalogo-skeleton-line-md" />
+                <div className="catalogo-skeleton-footer">
+                  <div className="catalogo-skeleton-line catalogo-skeleton-line-price" />
+                  <div className="catalogo-skeleton-btn" />
                 </div>
               </div>
             </div>
           ))}
+        </div>
+      ) : (
+        <div className="catalogo-grid" ref={gridRef}>
+          {productosFiltrados.map(p => {
+            const esFavorito = favoritos.includes(p.id_producto)
+            return (
+              <div key={p.id_producto} className="catalogo-card">
+                <div className="catalogo-card-img">
+                  <img src={obtenerImagenPrincipal(p)} alt={p.nombre} loading="lazy" onError={manejarErrorImagen} />
+                  <button
+                    className="catalogo-quickview-btn"
+                    onClick={() => setQuickViewId(p.id_producto)}
+                    aria-label="Vista rápida"
+                  >
+                    <FiEye />
+                  </button>
+                  <button
+                    className={`catalogo-fav ${esFavorito ? 'active' : ''}`}
+                    onClick={() => toggleFavorito(p.id_producto)}
+                    aria-label={esFavorito ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+                  >
+                    {esFavorito
+                      ? <FaHeart key="filled" />
+                      : <FiHeart key="outline" />}
+                  </button>
+                </div>
+                <div className="catalogo-card-info">
+                  <p className="catalogo-card-cat">{p.categorias?.nombre_categoria}</p>
+                  <h3 className="catalogo-card-nombre">{p.nombre}</h3>
+                  <p className="catalogo-card-marca">{p.marca}</p>
+                  <div className="catalogo-card-footer">
+                    <span className="catalogo-card-precio">${p.precio.toLocaleString()}</span>
+                    <Link to={`/producto/${p.id_producto}`} className="catalogo-card-btn">
+                      <FiShoppingBag /> Ver
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
           {productosFiltrados.length === 0 && (
-            <p className="catalogo-sin-resultados">No hay productos que coincidan con los filtros seleccionados.</p>
+            <EstadoVacio
+              titulo="No encontramos productos con estos filtros"
+              subtitulo="Prueba ajustando el precio, el color o la categoría seleccionada."
+              onLimpiar={limpiarTodosLosFiltros}
+            />
           )}
         </div>
+      )}
+
+      {quickViewId && (
+        <QuickView idProducto={quickViewId} onClose={() => setQuickViewId(null)} />
       )}
     </div>
   )

@@ -19,7 +19,7 @@ export const crearCategoria = async (req, res) => {
 }
 
 export const crearProducto = async (req, res) => {
-  const { id_categoria, referencia, nombre, descripcion, marca, precio } = req.body
+  const { id_categoria, referencia, nombre, descripcion, marca, precio, genero } = req.body
 
   const { data, error } = await supabase
     .from('productos')
@@ -29,7 +29,8 @@ export const crearProducto = async (req, res) => {
       nombre,
       descripcion: descripcion || '',
       marca: marca || 'VELYSH',
-      precio
+      precio,
+      genero: genero || 'unisex'
     })
     .select()
     .single()
@@ -38,7 +39,8 @@ export const crearProducto = async (req, res) => {
 
   return res.status(201).json({ mensaje: 'Producto creado exitosamente', data })
 }
-  export const obtenerCategorias = async (req, res) => {
+
+export const obtenerCategorias = async (req, res) => {
   const { data, error } = await supabase
     .from('categorias')
     .select('*')
@@ -49,8 +51,11 @@ export const crearProducto = async (req, res) => {
 
   return res.status(200).json(data)
 }
+
 export const obtenerProductos = async (req, res) => {
-  const { data, error } = await supabase
+  const { categoria, genero } = req.query
+
+  let query = supabase
     .from('productos')
     .select(`
       id_producto,
@@ -60,13 +65,18 @@ export const obtenerProductos = async (req, res) => {
       descripcion,
       marca,
       precio,
+      genero,
       estado,
       total_ventas,
       categorias ( nombre_categoria ),
       imagenes_producto ( url_imagen, orden )
     `)
     .eq('estado', 'activo')
-    .order('total_ventas', { ascending: false })
+
+  if (categoria) query = query.eq('id_categoria', categoria)
+  if (genero) query = query.eq('genero', genero)
+
+  const { data, error } = await query.order('total_ventas', { ascending: false })
 
   if (error) return res.status(400).json({ error: error.message })
 
@@ -86,6 +96,7 @@ export const obtenerProductoPorId = async (req, res) => {
       descripcion,
       marca,
       precio,
+      genero,
       estado,
       categorias ( nombre_categoria ),
       imagenes_producto ( url_imagen, orden ),
@@ -117,11 +128,11 @@ export const actualizarCategoria = async (req, res) => {
 
 export const actualizarProducto = async (req, res) => {
   const { id } = req.params
-  const { nombre, descripcion, marca, precio, estado, id_categoria } = req.body
+  const { nombre, descripcion, marca, precio, estado, id_categoria, genero } = req.body
 
   const { data, error } = await supabase
     .from('productos')
-    .update({ nombre, descripcion, marca, precio, estado, id_categoria })
+    .update({ nombre, descripcion, marca, precio, estado, id_categoria, genero })
     .eq('id_producto', id)
     .select()
     .single()
