@@ -3,6 +3,14 @@ import { getProductos, getCategorias, crearProducto, editarProducto, eliminarPro
 import { FiSearch, FiEdit2, FiPlus, FiBell, FiUser } from "react-icons/fi"
 import "./Productos.css"
 
+function obtenerImagenPrincipal(producto) {
+  const imagenes = producto?.imagenes_producto
+  if (!imagenes || imagenes.length === 0) return '/zapato.png'
+
+  const principal = [...imagenes].sort((a, b) => a.orden - b.orden)[0]
+  return principal?.url_imagen || '/zapato.png'
+}
+
 export default function Productos() {
   const [productos,       setProductos]       = useState([])
   const [categorias,      setCategorias]      = useState([])
@@ -64,7 +72,7 @@ export default function Productos() {
 
   async function toggleEstado(p) {
     const nuevoEstado = p.estado === "activo" ? "inactivo" : "activo"
-    const actualizado = await editarProducto(p.id_producto, { estado: nuevoEstado })
+    await editarProducto(p.id_producto, { estado: nuevoEstado })
     setProductos(prev => prev.map(prod => prod.id_producto === p.id_producto ? { ...prod, estado: nuevoEstado } : prod))
   }
 
@@ -145,14 +153,14 @@ export default function Productos() {
                 <tr key={p.id_producto}>
                   <td>
                     <div className="admin-producto-img">
-                      <img src="/zapato.png" alt={p.nombre} />
+                      <img src={obtenerImagenPrincipal(p)} alt={p.nombre} />
                     </div>
                   </td>
                   <td>
                     <p className="admin-producto-nombre">{p.nombre}</p>
                     <p className="admin-producto-ref">Ref: {p.referencia}</p>
                   </td>
-                  <td>{p.nombre_categoria}</td>
+                  <td>{p.categorias?.nombre_categoria ?? p.nombre_categoria}</td>
                   <td>${Number(p.precio).toLocaleString()}</td>
                   <td>
                     <span className={`admin-estado ${p.estado}`}>{p.estado}</span>

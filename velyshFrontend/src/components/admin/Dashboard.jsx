@@ -22,7 +22,6 @@ export default function Dashboard() {
       setUsuarios(users)
       setPedidos(peds)
 
-
       const stockPorCat = cats.map(c => ({
         name: c.nombre_categoria,
         value: stock
@@ -35,7 +34,6 @@ export default function Dashboard() {
     })
   }, [])
 
-  
   const dias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
   const ventasPorDia = dias.map(dia => ({
     dia,
@@ -54,7 +52,6 @@ export default function Dashboard() {
   return (
     <div className="dashboard-wrapper">
 
-      
       <nav className="dashboard-navbar">
         <div className="dashboard-navbar-right">
           <button className="dashboard-icon-btn"><FiBell /></button>
@@ -74,10 +71,8 @@ export default function Dashboard() {
       ) : (
         <div className="dashboard-content">
 
-          
           <div className="dashboard-top">
 
-           
             <div className="dashboard-cards">
               <div className="dashboard-card">
                 <div className="dashboard-card-info">
@@ -100,7 +95,6 @@ export default function Dashboard() {
               </div>
             </div>
 
-            
             <div className="dashboard-torta">
               <h3 className="dashboard-section-title">Stock general</h3>
               <div className="dashboard-torta-content">
@@ -112,17 +106,17 @@ export default function Dashboard() {
                     </div>
                   ))}
                 </div>
-                <ResponsiveContainer width={200} height={200}>
+                <ResponsiveContainer width="100%" height={220}>
                   <PieChart>
                     <Pie
                       data={stockData}
                       cx="50%"
                       cy="50%"
-                      innerRadius={50}
-                      outerRadius={90}
+                      innerRadius={55}
+                      outerRadius={85}
                       dataKey="value"
                       label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
-                      labelLine={false}
+                      labelLine={true}
                     >
                       {stockData.map((_, i) => (
                         <Cell key={i} fill={COLORES[i % COLORES.length]} />
@@ -135,7 +129,6 @@ export default function Dashboard() {
             </div>
           </div>
 
-        
           <div className="dashboard-barras">
             <h3 className="dashboard-section-title">Ventas de la última semana</h3>
             <ResponsiveContainer width="100%" height={300}>

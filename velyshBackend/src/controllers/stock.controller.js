@@ -14,7 +14,7 @@ export const obtenerStock = async (req, res) => {
       estado,
       ubicacion_almacen,
       fecha_actualizacion,
-      productos ( nombre, referencia, precio ),
+      productos ( nombre, referencia, precio, id_categoria ),
       tallas ( talla )
     `)
     .order('id_stock')
