@@ -55,7 +55,6 @@ export default function DetalleProducto() {
   }
 
   async function toggleFav() {
-    // RF-03: marcar favoritos requiere cuenta
     if (!usuario) {
       navigate('/login')
       return

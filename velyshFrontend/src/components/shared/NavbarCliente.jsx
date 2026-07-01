@@ -5,8 +5,6 @@ import { FiMenu, FiSearch, FiBell, FiHeart, FiShoppingCart, FiUser, FiX, FiPacka
 import Sidebar from "./Sidebar"
 import "./NavbarCliente.css"
 
-// Debe coincidir con HERO_SCROLL_RANGE en Home.jsx para que el logo
-// del hero (grande) y el del navbar (chico) se sincronicen en el scroll.
 const HERO_SCROLL_RANGE = 320
 
 function claveVistas(numero_documento) {
@@ -30,10 +28,6 @@ export default function NavbarCliente({ usuario }) {
   const navigate = useNavigate()
   const location = useLocation()
   const usuarioActual = usuario ?? getUsuarioActual()
-
-  // Solo en Home el logo del navbar nace "oculto" y aparece al hacer scroll,
-  // imitando que el logo grande del hero "sube" hasta acá. En cualquier otra
-  // página, el logo del navbar se muestra siempre, normal.
   const esHome = location.pathname === "/home" || location.pathname === "/"
   const [scrollProgress, setScrollProgress] = useState(esHome ? 0 : 1)
 

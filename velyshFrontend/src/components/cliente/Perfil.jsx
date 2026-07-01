@@ -156,7 +156,7 @@ export default function Perfil() {
           </form>
         </div>
 
-        {/* SECCIÓN: cambio de contraseña (requiere la actual) */}
+        {/* SECCIÓN: cambio de contraseña */}
         <div className="perfil-seccion">
           <h2 className="perfil-seccion-titulo">Cambiar contraseña</h2>
           <form className="perfil-form" onSubmit={handleGuardarPassword}>
@@ -216,7 +216,6 @@ export default function Perfil() {
           </form>
         </div>
 
-        {/* SECCIÓN: zona de peligro — deliberadamente discreta */}
         <div className="perfil-seccion">
           <h2 className="perfil-seccion-titulo">Zona de peligro</h2>
           <p className="perfil-zona-peligro-texto">

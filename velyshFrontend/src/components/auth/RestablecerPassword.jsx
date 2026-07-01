@@ -10,14 +10,10 @@ export default function RestablecerPassword() {
   const [confirmacion,    setConfirmacion]     = useState("")
   const [verPassword,     setVerPassword]      = useState(false)
   const [cargando,        setCargando]         = useState(false)
-  const [sesionValida,    setSesionValida]     = useState(null) // null = verificando
+  const [sesionValida,    setSesionValida]     = useState(null)
   const [error,           setError]            = useState("")
   const [exito,           setExito]            = useState(false)
 
-  // El link del correo de Supabase crea automáticamente una sesión temporal
-  // de "recovery" al cargar la página (gracias a detectSessionInUrl, activo
-  // por defecto en supabase-js v2). Aquí solo confirmamos que esa sesión existe;
-  // si alguien llega a esta URL sin pasar por el link del correo, no podrá continuar.
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setSesionValida(!!data.session)

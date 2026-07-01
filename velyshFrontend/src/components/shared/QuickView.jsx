@@ -31,13 +31,11 @@ export default function QuickView({ idProducto, onClose }) {
     })
   }, [idProducto])
 
-  // Bloquea el scroll del fondo mientras el modal está abierto
   useEffect(() => {
     document.body.style.overflow = 'hidden'
     return () => { document.body.style.overflow = '' }
   }, [])
-
-  // Cierra con tecla Escape
+  
   useEffect(() => {
     function handleEsc(e) {
       if (e.key === 'Escape') onClose()

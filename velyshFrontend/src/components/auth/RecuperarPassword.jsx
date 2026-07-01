@@ -16,15 +16,11 @@ export default function RecuperarPassword() {
     setCargando(true)
     try {
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(correo, {
-        // Debe coincidir con la URL donde el usuario pondrá su nueva contraseña.
-        // En desarrollo local normalmente es http://localhost:5173/restablecer-password
         redirectTo: `${window.location.origin}/restablecer-password`
       })
 
       if (resetError) throw resetError
-
-      // Por seguridad, Supabase no confirma si el correo existe o no en su sistema.
-      // Siempre se muestra el mismo mensaje de éxito, exista o no la cuenta.
+      
       setEnviado(true)
     } catch (err) {
       setError(err.message || "No se pudo enviar el correo de recuperación")

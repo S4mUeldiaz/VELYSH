@@ -116,7 +116,6 @@ export default function Historial() {
         <h1 className="historial-title">Mis pedidos</h1>
       </div>
 
-      {/* GRÁFICA ANUAL — solo se muestra si hay al menos una compra este año */}
       {!cargando && hayComprasEsteAnio && (
         <div className="historial-grafica-card">
           <p className="historial-grafica-titulo">Tus compras en {new Date().getFullYear()}</p>

@@ -33,8 +33,6 @@ export default function Carrito() {
   const subtotal = items.reduce((acc, i) => acc + i.precio * i.cantidad, 0)
 
   function irAPagar() {
-    // RF-03: cualquiera puede armar el carrito, pero para pasar al
-    // formulario de pago se exige tener sesión iniciada.
     if (!usuario) {
       setError("Debes iniciar sesión o registrarte para finalizar tu compra")
       return
@@ -70,9 +68,6 @@ export default function Carrito() {
         pedidosCreados.push(respuesta.data)
       }
 
-      // RF-11 (versión simulada, sin pasarela real): se marca el pago como
-      // exitoso de inmediato y se genera el comprobante. Documentado en el
-      // Excel como simulación, no como integración real con PSE/tarjeta.
       for (const pedido of pedidosCreados) {
         await actualizarEstadoPedido(pedido.id_pedido, { estado_pago: 'pagado' })
       }
@@ -168,7 +163,6 @@ export default function Carrito() {
             <span>${subtotal.toLocaleString()}</span>
           </div>
 
-          {/* RF-03: invitado ve el aviso antes de poder continuar */}
           {!usuario && items.length > 0 && (
             <p className="carrito-aviso-invitado">
               Estás navegando como invitado.{" "}

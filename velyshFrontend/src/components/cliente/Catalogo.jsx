@@ -238,7 +238,7 @@ export default function Catalogo() {
         </div>
       </div>
 
-      {/* PANEL DE FILTRO AVANZADO (RF-18) */}
+      {/* PANEL DE FILTRO */}
       {filtrosAbiertos && (
         <div className="catalogo-filtros-overlay" onClick={() => setFiltrosAbiertos(false)}>
           <div className="catalogo-filtros-panel" onClick={e => e.stopPropagation()}>

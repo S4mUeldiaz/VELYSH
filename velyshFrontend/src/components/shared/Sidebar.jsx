@@ -14,8 +14,6 @@ export default function Sidebar({ abierto, onCerrar, usuario }) {
 
   function handleLogout() {
     logout()
-    // RF-05: al cerrar sesión, se redirige a la página principal (Home),
-    // que ahora es pública (RF-03), en vez de forzar a /login.
     navigate("/home")
     onCerrar()
   }

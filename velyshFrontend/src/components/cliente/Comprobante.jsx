@@ -16,8 +16,6 @@ export default function Comprobante() {
   const navigate = useNavigate()
   const usuario = getUsuarioActual()
 
-  // Si alguien recarga la página o llega por URL directa sin haber pasado
-  // por el checkout, no hay datos del pedido que mostrar -> redirige a Historial.
   useEffect(() => {
     if (!state?.pedidos) navigate('/historial', { replace: true })
   }, [state, navigate])
