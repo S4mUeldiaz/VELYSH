@@ -42,7 +42,7 @@ export default function NavbarCliente({ usuario }) {
       setScrollProgress(progreso)
     }
 
-    handleScroll() // estado inicial correcto si ya hay scroll al montar
+    handleScroll()
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [esHome])
@@ -58,9 +58,6 @@ export default function NavbarCliente({ usuario }) {
       const clave = claveVistas(usuarioActual.numero_documento)
       const vistas = JSON.parse(localStorage.getItem(clave) || 'null')
 
-      // Primera vez que el usuario usa la app con esta funcionalidad:
-      // se guarda el estado actual de todos sus pedidos como "ya vistos",
-      // sin generar notificaciones retroactivas de pedidos antiguos.
       if (vistas === null) {
         const baseline = {}
         pedidos.forEach(p => { baseline[p.id_pedido] = p.estado_pedido })
@@ -84,7 +81,7 @@ export default function NavbarCliente({ usuario }) {
   }
 
   function toggleNotificaciones() {
-    if (!notifAbierta) cargarNotificaciones() // refresca al abrir, por si algo cambió desde el último fetch
+    if (!notifAbierta) cargarNotificaciones()
     setNotifAbierta(prev => !prev)
   }
 

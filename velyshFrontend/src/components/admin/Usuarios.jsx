@@ -15,7 +15,7 @@ export default function Usuarios() {
   const [busqueda,  setBusqueda]  = useState("")
   const [cargando,  setCargando]  = useState(true)
   const [error,     setError]     = useState("")
-  const [procesando, setProcesando] = useState(null) // numero_documento en proceso de cambio de estado
+  const [procesando, setProcesando] = useState(null)
 
   useEffect(() => {
     cargarUsuarios()

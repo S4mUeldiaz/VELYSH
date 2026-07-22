@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
 import 'dotenv/config'
 import { verificarToken, verificarRol } from './middlewares/auth.middleware.js'
 import authRoutes              from './routes/auth.routes.js'
@@ -19,8 +20,12 @@ import movimientoInventarioRoutes from './routes/movimientoInventario.routes.js'
 const app = express()
 const PORT = process.env.PORT || 3001
 
-app.use(cors({ origin: 'http://localhost:5173' }))
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true,   // permite enviar/recibir la cookie httpOnly
+}))
 app.use(express.json())
+app.use(cookieParser())
 
 // ── RUTAS PÚBLICAS (no requieren token)
 app.use('/api/auth', authRoutes)
@@ -28,7 +33,7 @@ app.use('/api/productos',      productosRoutes)
 app.use('/api/tallas',         tallasRoutes)
 app.use('/api/tipo-documento', tipoDocumentoRoutes)
 
-// ── RUTAS PROTEGIDAS 
+// ── RUTAS PROTEGIDAS
 
 app.use('/api/pedidos',      verificarToken, pedidosRoutes)
 app.use('/api/favoritos',    verificarToken, favoritosRoutes)

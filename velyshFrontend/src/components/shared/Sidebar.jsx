@@ -12,8 +12,8 @@ export default function Sidebar({ abierto, onCerrar, usuario }) {
     getCategorias().then(setCategorias)
   }, [])
 
-  function handleLogout() {
-    logout()
+  async function handleLogout() {
+    await logout()
     navigate("/home")
     onCerrar()
   }

@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage    from "./components/auth/LoginPage.jsx";
 import RegisterPage from "./components/auth/RegisterPage.jsx";
@@ -21,12 +22,13 @@ import RestablecerPassword from './components/auth/RestablecerPassword.jsx'
 import Reportes from './components/admin/Reportes.jsx'
 import Devoluciones from './components/admin/Devoluciones.jsx'
 import Comprobante from './components/cliente/Comprobante.jsx'
-import { getUsuarioActual } from "./Api/api.js"
+import { getUsuarioActual, getSesion } from "./Api/api.js"
 
 function RutaProtegida({ children }) {
-  const token   = sessionStorage.getItem("token");
+  // Ya no se lee el token: vive en la cookie httpOnly, invisible para el JS.
+  // La fuente de verdad es getUsuarioActual(), rehidratado al arrancar la app.
   const usuario = getUsuarioActual();
-  if (!token || !usuario) return <Navigate to="/login" replace />;
+  if (!usuario) return <Navigate to="/login" replace />;
 
   const esAdmin = usuario.nombre_rol === "admin";
 
@@ -60,6 +62,36 @@ function RutaPublica({ children }) {
 }
 
 function App() {
+  // true mientras preguntamos al backend "¿quién soy?" leyendo la cookie.
+  const [cargandoSesion, setCargandoSesion] = useState(true);
+
+  useEffect(() => {
+    // Rehidratación: al montar, intentamos recuperar la sesión desde la cookie.
+    // Si hay cookie válida, getSesion() repuebla sessionStorage.usuario.
+    // Si no (invitado o sesión expirada), responde 401 → limpiamos el caché.
+    getSesion()
+      .catch(() => {
+        sessionStorage.removeItem('usuario');
+      })
+      .finally(() => setCargandoSesion(false));
+  }, []);
+
+  if (cargandoSesion) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'var(--color-bg)',
+        color: 'var(--color-text-muted)',
+        fontFamily: 'var(--font-main)'
+      }}>
+        Cargando...
+      </div>
+    );
+  }
+
   return (
     <BrowserRouter>
       <Routes>
