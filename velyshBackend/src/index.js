@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
 import 'dotenv/config'
 import { verificarToken, verificarRol } from './middlewares/auth.middleware.js'
 import authRoutes from './routes/auth.routes.js'
@@ -19,11 +20,30 @@ import movimientoInventarioRoutes from './routes/movimientoInventario.routes.js'
 const app = express()
 const PORT = process.env.PORT || 3001
 
-app.use(cors({ origin: 'http://localhost:5173' }))
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true,   // permite enviar/recibir la cookie httpOnly
+}))
 app.use(express.json())
+app.use(cookieParser())
 
 app.use('/api/auth', authRoutes)
+app.use('/api/productos',      productosRoutes)
+app.use('/api/tallas',         tallasRoutes)
+app.use('/api/tipo-documento', tipoDocumentoRoutes)
 
+// ── RUTAS PROTEGIDAS
+
+app.use('/api/pedidos',      verificarToken, pedidosRoutes)
+app.use('/api/favoritos',    verificarToken, favoritosRoutes)
+
+app.use('/api/stock', stockRoutes)
+app.use('/api/factura',      verificarToken, facturaRoutes)
+app.use('/api/devoluciones', verificarToken, devolucionesRoutes)
+app.use('/api/imagenes-producto', verificarToken, imagenesProductoRoutes)
+app.use('/api/usuarios', verificarToken, verificarRol('admin'), usuariosRoutes)
+app.use('/api/roles', verificarToken, verificarRol('admin'), rolesRoutes)
+app.use('/api/movimiento-inventario', verificarToken, verificarRol('admin', 'operador'), movimientoInventarioRoutes)
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`)
 

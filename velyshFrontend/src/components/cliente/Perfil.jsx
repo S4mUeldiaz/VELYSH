@@ -85,7 +85,7 @@ export default function Perfil() {
 
     try {
       await eliminarCuenta(usuario?.numero_documento, password)
-      logout()
+      await logout()
       navigate("/login")
     } catch (err) {
       alert(err.response?.data?.error || err.message)

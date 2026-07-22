@@ -4,15 +4,8 @@ const BASE_URL = 'http://localhost:3001/api'
 
 const api = axios.create({
   baseURL: BASE_URL,
+  withCredentials: true,   // manda la cookie httpOnly en cada request
 })
-
-api.interceptors.request.use((config) => {
-  const token = sessionStorage.getItem('token')
-  if (token) config.headers.Authorization = `Bearer ${token}`
-  return config
-})
-
-// ── AUTH ───────────────────────────────────────────────────────────────────────
 
 export async function login(correo, password) {
   const { data } = await api.post('/auth/login', { correo, password })
@@ -20,7 +13,6 @@ export async function login(correo, password) {
     ...data.usuario,
     nombre_rol: data.usuario.roles?.nombre_rol ?? ''
   }
-  sessionStorage.setItem('token', data.token)
   sessionStorage.setItem('usuario', JSON.stringify(usuario))
   return usuario
 }
@@ -30,18 +22,24 @@ export async function registrar(datos) {
   return data
 }
 
-export function logout() {
-  sessionStorage.removeItem('token')
+export async function logout() {
+  await api.post('/auth/logout')      // ahora es async: invalida la cookie en el servidor
   sessionStorage.removeItem('usuario')
+}
+
+export async function getSesion() {
+  const { data } = await api.get('/auth/yo')   // rehidrata la sesión tras recargar
+  const usuario = {
+    ...data.usuario,
+    nombre_rol: data.usuario.roles?.nombre_rol ?? ''
+  }
+  sessionStorage.setItem('usuario', JSON.stringify(usuario))
+  return usuario
 }
 
 export function getUsuarioActual() {
   const raw = sessionStorage.getItem('usuario')
   return raw ? JSON.parse(raw) : null
-}
-
-export function getToken() {
-  return sessionStorage.getItem('token')
 }
 
 // ── CATEGORÍAS ─────────────────────────────────────────────────────────────────
@@ -68,13 +66,8 @@ export async function eliminarCategoria(id) {
 
 // ── PRODUCTOS ──────────────────────────────────────────────────────────────────
 
-export async function getProductos(filtros = {}) {
-  const { categoria, genero } = filtros
-  const params = {}
-  if (categoria) params.categoria = categoria
-  if (genero) params.genero = genero
-
-  const { data } = await api.get('/productos', { params })
+export async function getProductos() {
+  const { data } = await api.get('/productos')
   return data.map(p => ({
     ...p,
     nombre_categoria: p.categorias?.nombre_categoria ?? ''
