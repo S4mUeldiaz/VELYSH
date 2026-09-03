@@ -172,6 +172,7 @@ export default function NavbarCliente({ usuario }) {
           <Link to="/favoritos" className="navbar-icon-btn"><FiHeart /></Link>
           <Link to="/carrito" className="navbar-icon-btn"><FiShoppingCart /></Link>
           <Link to="/perfil" className="navbar-icon-btn"><FiUser /></Link>
+           <span className="navbar-user-user">{usuario?.nombre}</span>
         </div>
       </nav>
 

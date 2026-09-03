@@ -2,7 +2,8 @@ import jwt from 'jsonwebtoken'
 
 export const verificarToken = (req, res, next) => {
   const authHeader = req.headers['authorization']
-  const token = authHeader && authHeader.split(' ')[1] 
+  const tokenHeader = authHeader && authHeader.split(' ')[1]
+  const token = req.cookies?.token || tokenHeader
 
   if (!token) return res.status(401).json({ error: 'Token requerido' })
 
