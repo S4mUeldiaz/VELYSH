@@ -196,6 +196,64 @@
   border-top: 1px solid var(--color-border);
 }
 
+/* CTA invitado: reemplaza el antiguo .carrito-aviso-invitado (texto pequeño) */
+.carrito-cta-invitado {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 16px;
+  margin: 16px 0;
+  text-align: center;
+}
+
+.carrito-cta-invitado-titulo {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--color-text);
+  margin: 0 0 4px;
+}
+
+.carrito-cta-invitado-sub {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0 0 14px;
+}
+
+.carrito-cta-invitado-botones {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.carrito-btn-login,
+.carrito-btn-registro {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.carrito-btn-login:hover,
+.carrito-btn-registro:hover {
+  opacity: 0.85;
+}
+
+.carrito-btn-login {
+  background-color: var(--color-primary);
+  color: var(--color-bg);
+}
+
+.carrito-btn-registro {
+  background-color: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
 .carrito-btn-pagar {
   background-color: var(--color-bg-input);
   color: var(--color-text);
@@ -267,23 +325,6 @@
   padding: 8px 12px;
   border-radius: 8px;
   font-size: 13px;
-}
-
-.carrito-aviso-invitado {
-  background: rgba(245, 166, 35, 0.12);
-  border: 1px solid rgba(245, 166, 35, 0.4);
-  color: #f5a623;
-  border-radius: 8px;
-  padding: 10px 14px;
-  font-size: 13px;
-  margin: 12px 0;
-  text-align: center;
-}
-
-.carrito-aviso-invitado a {
-  color: #f5a623;
-  font-weight: 700;
-  text-decoration: underline;
 }
 
 @media (max-width: 768px) {

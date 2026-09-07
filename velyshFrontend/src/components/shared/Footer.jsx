@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { FaInstagram, FaFacebookF, FaWhatsapp } from 'react-icons/fa'
 import './Footer.css'
 
@@ -6,6 +7,12 @@ const CATEGORIAS_FOOTER = ['Hombre', 'Mujer', 'Deportivo', 'Casual', 'Botas']
 
 function Footer() {
   const anioActual = new Date().getFullYear()
+  const { pathname, search } = useLocation()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname, search])
+  
 
   return (
     <footer className="footer-cliente">
@@ -19,7 +26,7 @@ function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram VELYSH"
-            >
+              >
               <FaInstagram />
             </a>
             <a
@@ -27,7 +34,7 @@ function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Facebook VELYSH"
-            >
+              >
               <FaFacebookF />
             </a>
             <a
@@ -35,7 +42,7 @@ function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="WhatsApp VELYSH"
-            >
+              >
               <FaWhatsapp />
             </a>
           </div>

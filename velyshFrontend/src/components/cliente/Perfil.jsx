@@ -95,9 +95,9 @@ export default function Perfil() {
   return (
     <div className="perfil-wrapper">
       <div className="perfil-topbar">
-        <button className="perfil-back" onClick={() => navigate(-1)} aria-label="Volver">
-          <FiArrowLeft />
-        </button>
+          <button className="favoritos-back" onClick={() => navigate(-1)}>
+            <FiArrowLeft /> Volver
+          </button>
         <span className="perfil-titulo-pagina">Mi perfil</span>
       </div>
 

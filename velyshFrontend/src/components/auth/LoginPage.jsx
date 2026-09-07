@@ -34,14 +34,9 @@ export default function LoginPage() {
   return (
     <div className="login-wrapper">
       <div className="login-topbar">
-        <button
-          type="button"
-          className="login-back"
-          onClick={() => navigate(-1)}
-          aria-label="Volver"
-        >
-          <FiArrowLeft />
-        </button>
+          <button className="favoritos-back" onClick={() => navigate(-1)}>
+            <FiArrowLeft /> Volver
+          </button>
         <span className="login-logo">VELYSH</span>
       </div>
 

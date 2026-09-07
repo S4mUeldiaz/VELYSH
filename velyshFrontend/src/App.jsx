@@ -25,8 +25,6 @@ import Comprobante from './components/cliente/Comprobante.jsx'
 import { getUsuarioActual, getSesion } from "./Api/api.js"
 
 function RutaProtegida({ children }) {
-  // Ya no se lee el token: vive en la cookie httpOnly, invisible para el JS.
-  // La fuente de verdad es getUsuarioActual(), rehidratado al arrancar la app.
   const usuario = getUsuarioActual();
   if (!usuario) return <Navigate to="/login" replace />;
 
@@ -62,13 +60,9 @@ function RutaPublica({ children }) {
 }
 
 function App() {
-  // true mientras preguntamos al backend "¿quién soy?" leyendo la cookie.
   const [cargandoSesion, setCargandoSesion] = useState(true);
 
   useEffect(() => {
-    // Rehidratación: al montar, intentamos recuperar la sesión desde la cookie.
-    // Si hay cookie válida, getSesion() repuebla sessionStorage.usuario.
-    // Si no (invitado o sesión expirada), responde 401 → limpiamos el caché.
     getSesion()
       .catch(() => {
         sessionStorage.removeItem('usuario');

@@ -4,7 +4,7 @@ const BASE_URL = 'http://localhost:3001/api'
 
 const api = axios.create({
   baseURL: BASE_URL,
-  withCredentials: true,   // manda la cookie httpOnly en cada request
+  withCredentials: true,
 })
 
 export async function login(correo, password) {

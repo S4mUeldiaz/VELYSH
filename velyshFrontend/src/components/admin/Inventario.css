@@ -72,6 +72,29 @@
   transition: all var(--transition);
 }
 
+.paginacion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.inventario-btn-pag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  padding: 6px 14px;
+  border-radius: var(--border-radius);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+
 .inventario-btn-ver:hover {
   border-color: var(--color-primary);
   color: var(--color-primary);

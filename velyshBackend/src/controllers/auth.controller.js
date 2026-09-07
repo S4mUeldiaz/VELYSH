@@ -1,4 +1,4 @@
-import { supabase } from '../config/supabase.js'
+import { supabase, supabaseAuth } from '../config/supabase.js'
 import jwt from 'jsonwebtoken'
 
 const COOKIE = 'token'
@@ -13,7 +13,7 @@ const opcionesCookie = {
 export const registro = async (req, res) => {
   const { numero_documento, id_tipo_documento, nombre, apellido, correo, telefono, password, id_rol } = req.body
 
-  const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+  const { data: authData, error: authError } = await supabaseAuth.auth.admin.createUser({
     email: correo,
     password,
     email_confirm: true
@@ -33,8 +33,7 @@ export const registro = async (req, res) => {
 export const login = async (req, res) => {
   const { correo, password } = req.body
 
-  // 1. Autenticar con Supabase
-  const { data, error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabaseAuth.auth.signInWithPassword({
     email: correo,
     password
   })

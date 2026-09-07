@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { getProductos, getUsuarioActual, crearPedido, actualizarEstadoPedido } from "../../Api/api"
-import { FiArrowLeft, FiTrash2, FiHeart } from "react-icons/fi"
+import { FiArrowLeft, FiTrash2, FiHeart, FiLogIn, FiUserPlus } from "react-icons/fi"
 import "./Carrito.css"
 
 export default function Carrito() {
@@ -96,7 +96,7 @@ export default function Carrito() {
       <div className="carrito-left">
         <div className="carrito-header">
           <button className="favoritos-back" onClick={() => navigate(-1)}>
-            <FiArrowLeft />
+            <FiArrowLeft /> Volver
           </button>
           <h1 className="carrito-title">TUS SELECCIONES</h1>
         </div>
@@ -164,21 +164,34 @@ export default function Carrito() {
           </div>
 
           {!usuario && items.length > 0 && (
-            <p className="carrito-aviso-invitado">
-              Estás navegando como invitado.{" "}
-              <Link to="/login">Inicia sesión</Link> o{" "}
-              <Link to="/register">regístrate</Link> para finalizar tu compra.
-            </p>
+            <div className="carrito-cta-invitado">
+              <p className="carrito-cta-invitado-titulo">
+                Inicia sesión o regístrate para continuar
+              </p>
+              <p className="carrito-cta-invitado-sub">
+                Necesitas una cuenta para confirmar tu pedido y darle seguimiento.
+              </p>
+              <div className="carrito-cta-invitado-botones">
+                <Link to="/login" className="carrito-btn-login">
+                  <FiLogIn /> Iniciar sesión
+                </Link>
+                <Link to="/register" className="carrito-btn-registro">
+                  <FiUserPlus /> Registrarse
+                </Link>
+              </div>
+            </div>
           )}
 
           {paso === 1 ? (
-            <button
-              className="carrito-btn-pagar"
-              onClick={irAPagar}
-              disabled={items.length === 0}
-            >
-              Ir a pagar →
-            </button>
+            usuario && (
+              <button
+                className="carrito-btn-pagar"
+                onClick={irAPagar}
+                disabled={items.length === 0}
+              >
+                Ir a pagar →
+              </button>
+            )
           ) : (
             <form onSubmit={handlePagar} className="carrito-form">
               <input className="carrito-input" placeholder="Dirección" value={form.direccion} onChange={e => setForm(p => ({ ...p, direccion: e.target.value }))} />

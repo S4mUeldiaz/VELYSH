@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { getStock, getCategorias, crearStock, actualizarStock, getTallas, getProductos } from "../../Api/api"
-import { FiSearch, FiBell, FiUser, FiDownload, FiEye, FiPlus, FiTrash2 } from "react-icons/fi"
+import { FiSearch, FiBell, FiUser, FiDownload, FiEye, FiPlus, FiTrash2, FiChevronRight, FiChevronLeft } from "react-icons/fi"
 import "./Inventario.css"
 
 export default function Inventario() {
@@ -14,24 +14,26 @@ export default function Inventario() {
   const [cargando,        setCargando]        = useState(true)
   const [modalStock,      setModalStock]      = useState(null)
   const [vista,           setVista]           = useState("lista")
-
+  const [paginaActual, setPaginaActual] = useState(1)
+  const productosPorPagina = 10;
+  
   // Form agregar stock
   const [productoSeleccionado, setProductoSeleccionado] = useState("")
   const [filas, setFilas] = useState([{ id_talla: "", color: "", stock_actual: "", stock_minimo: 5, stock_maximo: 100 }])
   const [errorForm, setErrorForm] = useState("")
   const [guardando, setGuardando] = useState(false)
-
+  
   useEffect(() => {
     Promise.all([getStock(), getCategorias(), getTallas(), getProductos()])
-      .then(([s, c, t, p]) => {
-        setStock(s)
-        setCategorias(c)
-        setTallas(t)
-        setProductos(p)
-        setCargando(false)
-      })
+    .then(([s, c, t, p]) => {
+      setStock(s)
+      setCategorias(c)
+      setTallas(t)
+      setProductos(p)
+      setCargando(false)
+    })
   }, [])
-
+  
   const stockFiltrado = stock.filter(s => {
     const coincideBusqueda = s.nombre_producto?.toLowerCase().includes(busqueda.toLowerCase())
     const coincideCategoria = categoriaFiltro ? s.productos?.id_categoria === Number(categoriaFiltro) : true
@@ -39,30 +41,41 @@ export default function Inventario() {
     return coincideBusqueda && coincideCategoria && coincideNivel
   })
 
+  useEffect(() => {
+    setPaginaActual(1)
+  }, [busqueda, categoriaFiltro, nivelFiltro])
+  
+  const totalPaginas = Math.ceil(stockFiltrado.length / productosPorPagina)
+  const inicio = (paginaActual - 1) * productosPorPagina;
+  const stockPaginado= stockFiltrado.slice(
+    inicio,
+    inicio + productosPorPagina
+  )
+  
   const totalProductos = stock.length
   const stockBajo      = stock.filter(s => s.estado === 'bajo').length
   const sinStock       = stock.filter(s => s.estado === 'agotado').length
   const valorStock     = stock.reduce((acc, s) => acc + (s.stock_actual * (s.productos?.precio ?? 0)), 0)
-
+  
   function getNivelLabel(estado) {
     if (estado === 'disponible') return { label: 'Normal',     clase: 'nivel-normal'  }
     if (estado === 'bajo')       return { label: 'Stock bajo', clase: 'nivel-bajo'    }
     if (estado === 'agotado')    return { label: 'Sin stock',  clase: 'nivel-agotado' }
     return { label: estado, clase: '' }
   }
-
+  
   function agregarFila() {
     setFilas(prev => [...prev, { id_talla: "", color: "", stock_actual: "", stock_minimo: 5, stock_maximo: 100 }])
   }
-
+  
   function eliminarFila(i) {
     setFilas(prev => prev.filter((_, idx) => idx !== i))
   }
-
+  
   function handleFilaChange(i, campo, valor) {
     setFilas(prev => prev.map((f, idx) => idx === i ? { ...f, [campo]: valor } : f))
   }
-
+  
   async function handleGuardarStock(e) {
     e.preventDefault()
     if (!productoSeleccionado) { setErrorForm("Selecciona un producto"); return }
@@ -93,7 +106,7 @@ export default function Inventario() {
       setGuardando(false)
     }
   }
-
+  
   return (
     <div className="inventario-admin-wrapper">
 
@@ -178,7 +191,7 @@ export default function Inventario() {
               </tr>
             </thead>
             <tbody>
-              {stockFiltrado.map(s => {
+              {stockPaginado.map(s => {
                 const nivel = getNivelLabel(s.estado)
                 const precio = s.productos?.precio ?? 0
                 return (
@@ -202,6 +215,21 @@ export default function Inventario() {
               })}
             </tbody>
           </table>
+          <div className="paginacion">
+            <button onClick={() => setPaginaActual(paginaActual - 1)} disabled={paginaActual === 1} className="inventario-btn-pag">
+                <FiChevronLeft />
+                Página anterior
+            </button>
+            <span>
+              Página {paginaActual} de {totalPaginas}
+            </span>
+            <button onClick={() => setPaginaActual(paginaActual + 1)} disabled={paginaActual === totalPaginas} className="inventario-btn-pag">
+                Página siguiente
+                <FiChevronRight />
+            </button>
+          </div>
+
+
         </div>
       )}
 

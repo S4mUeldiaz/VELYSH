@@ -29,9 +29,34 @@ export default function RegisterPage() {
     e.preventDefault();
     setError("");
 
+    if(!/^\d+$/.test(form.numero_documento)) {
+      setError("El número de documento dolo puede contener números");
+      return;
+    }
+
+    if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(form.nombre)) {
+    setError("El nombre solo puede contener letras");
+    return;
+    }
+
     if (form.password !== confirmPassword) {
       setError("Las contraseñas no coinciden");
       return;
+    }
+
+    if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(form.apellido)) {
+    setError("El apellido solo puede contener letras");
+    return;
+    }
+
+    if (!/^\d+$/.test(form.telefono)) {
+    setError("El teléfono solo puede contener números");
+    return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.correo)) {
+    setError("Ingresa un correo electrónico válido");
+    return;
     }
 
     setCargando(true);
@@ -95,6 +120,7 @@ export default function RegisterPage() {
                   value={form.numero_documento}
                   onChange={handleChange}
                   placeholder="0000000000"
+                  inputMode="numeric"
                 />
               </div>
             </div>
@@ -142,6 +168,8 @@ export default function RegisterPage() {
                 value={form.telefono}
                 onChange={handleChange}
                 placeholder="300 000 0000"
+                inputMode="numeric"
+                maxLength={10}
               />
             </div>
           </div>
