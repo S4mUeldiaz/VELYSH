@@ -16,9 +16,14 @@ import stockRoutes             from './routes/stock.routes.js'
 import imagenesProductoRoutes  from './routes/imagenesProducto.routes.js'
 import rolesRoutes             from './routes/roles.routes.js'
 import movimientoInventarioRoutes from './routes/movimientoInventario.routes.js'
+import swaggerSpec from './config/swagger.js'
+import swaggerUi from 'swagger-ui-express'
 
-const app = express()
+const app = express();
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 const PORT = process.env.PORT || 3001
+
 
 app.use(cors({
   origin: 'http://localhost:5173',
