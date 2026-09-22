@@ -3,11 +3,14 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { getProductos, getCategorias, getFavoritos, getStock, agregarFavorito, eliminarFavorito, getUsuarioActual } from "../../Api/api";
 import { getColorHex } from "../../utils/colores";
 import { obtenerImagenPrincipal, manejarErrorImagen } from "../../utils/imagenes";
+import { esProductoNuevo } from "../../utils/producto";
 import { useScrollReveal } from "../../utils/useScrollReveal";
 import QuickView from "../shared/QuickView";
+import QuickViewButton from "../shared/QuickViewButton";
 import Breadcrumbs from "../shared/Breadcrumbs";
 import EstadoVacio from "../shared/EstadoVacio";
-import { FiHeart, FiShoppingBag, FiFilter, FiX, FiEye } from "react-icons/fi";
+import BadgeAcento from "../shared/BadgeAcento";
+import { FiHeart, FiShoppingBag, FiFilter, FiX } from "react-icons/fi";
 import { FaHeart } from "react-icons/fa";
 import "./Catalogo.css";
 
@@ -354,17 +357,12 @@ export default function Catalogo() {
         <div className="catalogo-grid" ref={gridRef}>
           {productosFiltrados.map(p => {
             const esFavorito = favoritos.includes(p.id_producto)
+            const esNuevo = esProductoNuevo(p.fecha_creacion)
             return (
               <div key={p.id_producto} className="catalogo-card">
                 <div className="catalogo-card-img">
                   <img src={obtenerImagenPrincipal(p)} alt={p.nombre} loading="lazy" onError={manejarErrorImagen} />
-                  <button
-                    className="catalogo-quickview-btn"
-                    onClick={() => setQuickViewId(p.id_producto)}
-                    aria-label="Vista rápida"
-                  >
-                    <FiEye />
-                  </button>
+                  {esNuevo && <BadgeAcento texto="Nuevo" className="catalogo-card-badge" />}
                   <button
                     className={`catalogo-fav ${esFavorito ? 'active' : ''}`}
                     onClick={() => toggleFavorito(p.id_producto)}
@@ -375,6 +373,7 @@ export default function Catalogo() {
                       : <FiHeart key="outline" />}
                   </button>
                 </div>
+                <QuickViewButton onClick={() => setQuickViewId(p.id_producto)} />
                 <div className="catalogo-card-info">
                   <p className="catalogo-card-cat">{p.categorias?.nombre_categoria}</p>
                   <h3 className="catalogo-card-nombre">{p.nombre}</h3>

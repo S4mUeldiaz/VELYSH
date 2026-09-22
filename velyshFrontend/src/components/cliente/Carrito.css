@@ -58,7 +58,7 @@
   width: 100px;
   height: 100px;
   min-width: 100px;
-  background: #111;
+  background: var(--color-bg-input);
   border-radius: 8px;
   display: flex;
   align-items: center;

@@ -169,21 +169,39 @@ export default function Pedidos() {
 
         {/* MODAL DETALLE */}
         {modalPedido && (
-          <div className="inventario-modal-overlay" onClick={() => setModalPedido(null)}>
-            <div className="inventario-modal" onClick={e => e.stopPropagation()}>
-              <h3>Pedido #{modalPedido.referencia}</h3>
+          <div className="pedido-modal-overlay" onClick={() => setModalPedido(null)}>
+            <div className="pedido-modal" onClick={e => e.stopPropagation()}>
+              <h3 className="pedido-modal-titulo">Pedido #{modalPedido.referencia}</h3>
               <p>Cliente: <strong>{modalPedido.usuarios?.nombre} {modalPedido.usuarios?.apellido}</strong></p>
               <p>Correo: <strong>{modalPedido.usuarios?.correo}</strong></p>
               <p>Total: <strong>${Number(modalPedido.precio_total).toLocaleString()}</strong></p>
               <p>Método de pago: <strong>{modalPedido.metodo_pago}</strong></p>
               <p>Estado: <strong>{modalPedido.estado_pedido}</strong></p>
               <p>Dirección: <strong>{modalPedido.direcciones?.direccion}, {modalPedido.direcciones?.ciudad}</strong></p>
-              <hr style={{ borderColor: 'var(--color-border)', margin: '8px 0' }} />
-              <p style={{ fontWeight: 600 }}>Productos:</p>
-              {(modalPedido.factura ?? []).map(d => (
-                <p key={d.id_detalle}>• {d.stock?.productos?.nombre} x{d.cantidad} — ${Number(d.subtotal).toLocaleString()}</p>
-              ))}
-              <button className="admin-btn-guardar" style={{ marginTop: 8 }} onClick={() => setModalPedido(null)}>Cerrar</button>
+
+              <hr className="pedido-modal-divisor" />
+              <p className="pedido-modal-subtitulo">Productos</p>
+
+              <div className="pedido-modal-items">
+                {(modalPedido.detalles ?? []).map(item => (
+                  <div key={item.id_detalle} className="pedido-modal-item">
+                    <div className="pedido-modal-item-info">
+                      <p className="pedido-modal-item-nombre">{item.nombre_producto || 'Producto'}</p>
+                      <p className="pedido-modal-item-variante">
+                        {item.color}{item.color && item.talla ? ' · ' : ''}
+                        {item.talla ? `Talla ${item.talla}` : ''}
+                        {' · '}Cant. {item.cantidad}
+                      </p>
+                    </div>
+                    <div className="pedido-modal-item-precios">
+                      <span className="pedido-modal-item-unitario">${Number(item.precio_unitario).toLocaleString()} c/u</span>
+                      <span className="pedido-modal-item-subtotal">${Number(item.subtotal).toLocaleString()}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <button className="pedido-modal-cerrar" onClick={() => setModalPedido(null)}>Cerrar</button>
             </div>
           </div>
         )}

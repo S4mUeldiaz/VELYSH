@@ -12,10 +12,14 @@
 }
 
 .navbar-admin-logo {
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: 4px;
-  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+}
+
+.navbar-admin-logo img {
+  display: block;
+  height: 22px;
+  width: auto;
 }
 
 .navbar-admin-links {

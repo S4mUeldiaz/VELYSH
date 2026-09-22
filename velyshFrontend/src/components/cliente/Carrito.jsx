@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { getProductos, getUsuarioActual, crearPedido, actualizarEstadoPedido } from "../../Api/api"
-import { FiArrowLeft, FiTrash2, FiHeart, FiLogIn, FiUserPlus } from "react-icons/fi"
+import { FiTrash2, FiHeart, FiLogIn, FiUserPlus } from "react-icons/fi"
+import BackButton from "../shared/BackButton"
 import "./Carrito.css"
 
 export default function Carrito() {
@@ -95,9 +96,7 @@ export default function Carrito() {
       {/* IZQUIERDA */}
       <div className="carrito-left">
         <div className="carrito-header">
-          <button className="favoritos-back" onClick={() => navigate(-1)}>
-            <FiArrowLeft /> Volver
-          </button>
+          <BackButton />
           <h1 className="carrito-title">TUS SELECCIONES</h1>
         </div>
 

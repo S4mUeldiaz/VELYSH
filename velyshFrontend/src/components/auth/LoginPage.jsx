@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { login } from "../../Api/api";
-import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowLeft } from "react-icons/fi";
+import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
+import BackButton from "../shared/BackButton"
 import { FcGoogle } from "react-icons/fc";
 import "./LoginPage.css";
 
@@ -34,11 +35,10 @@ export default function LoginPage() {
   return (
     <div className="login-wrapper">
       <div className="login-topbar">
-          <button className="favoritos-back" onClick={() => navigate(-1)}>
-            <FiArrowLeft /> Volver
-          </button>
-        <span className="login-logo">VELYSH</span>
+          <BackButton />
       </div>
+
+      <img src="/logo-wordmark-dark.png" alt="VELYSH" className="login-logo" />
 
       <h1 className="login-title">¿Deseas iniciar sesión?</h1>
 

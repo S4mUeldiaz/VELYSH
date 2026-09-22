@@ -1,14 +1,17 @@
 :root {
-  --color-bg:           #000000;
-  --color-bg-card:      #191919;
-  --color-bg-input:     #2a2a2a;
-  --color-primary:      #ffffff;
-  --color-primary-hover:#d9d9d9;
-  --color-text:         #ffffff;
-  --color-text-muted:   #9a9a9a;
-  --color-border:       #333333;
-  --color-overlay:      rgba(255, 255, 255, 0.10); /* #FFFFFF1A */
-  --color-error:        #e63946; /* solo para mensajes de error*/
+  --color-bg:           #fafafa;
+  --color-bg-card:      #ffffff;
+  --color-bg-input:     #f1f1f0;
+  --color-primary:      #121212;
+  --color-primary-hover:#3a3a3a;
+  --color-text:         #121212;
+  --color-text-muted:   #6b6b6b;
+  --color-border:       #e3e2e0;
+  --color-overlay:      rgba(18, 18, 18, 0.55); /* scrim oscuro sobre fotos/modales — igual en claro y oscuro */
+  --color-overlay-strong: rgba(18, 18, 18, 0.75); /* mismo scrim, más opaco — igual que AppMovil (overlayStrong) */
+  --color-error:        #e63946; /* SOLO errores reales de validación/red — mismo rojo que el resto de acentos de la app */
+  --color-warning:      #d4a72c; /* stock bajo / urgencia comercial — igual que AppMovil */
+  --color-favorite-active: #e0273f; /* reservado: corazón de favorito activo (aún no aplicado en ningún componente) */
 
   /* Tipografía */
   --font-display: 'Inria Serif', serif;   /* títulos, logo, encabezados */

@@ -3,16 +3,21 @@ import { Link, useNavigate } from "react-router-dom";
 import { getProductos, getCategorias, getStock, getFavoritos, agregarFavorito, eliminarFavorito, getUsuarioActual } from "../../Api/api";
 import { getColorHex } from "../../utils/colores";
 import { obtenerImagenPrincipal, manejarErrorImagen } from "../../utils/imagenes";
+import { esProductoNuevo } from "../../utils/producto";
 import { useScrollReveal } from "../../utils/useScrollReveal";
+import { useCategoriasConImagen, useProductosConBanners } from "../../utils/useCategoriaBanners";
 import QuickView from "../shared/QuickView";
+import QuickViewButton from "../shared/QuickViewButton";
+import BannerCategoria from "../shared/BannerCategoria";
+import BadgeAcento from "../shared/BadgeAcento";
 import EstadoVacio from "../shared/EstadoVacio";
-import { FiShoppingBag, FiSearch, FiFilter, FiX, FiEye } from "react-icons/fi";
+import { FiShoppingBag, FiSearch, FiFilter, FiX } from "react-icons/fi";
 import { FiHeart } from "react-icons/fi";
 import { FaHeart } from "react-icons/fa";
 import "./Home.css";
 
-const HERO_SCROLL_RANGE = 320;
 const SKELETON_COUNT = 8;
+const MAS_VENDIDOS_COUNT = 8;
 
 
 export default function Home() {
@@ -24,7 +29,6 @@ export default function Home() {
   const [categoriaActiva, setCategoriaActiva] = useState(null);
   const [generoActivo, setGeneroActivo] = useState(null);
   const [filtrosAbiertos, setFiltrosAbiertos] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [coloresSelec, setColoresSelec] = useState([]);
   const [tallasSelec,  setTallasSelec]  = useState([]);
   const [precioMin,    setPrecioMin]    = useState(0);
@@ -55,16 +59,6 @@ export default function Home() {
 
       setCargando(false)
     });
-  }, []);
-
-  useEffect(() => {
-    function handleScroll() {
-      const progreso = Math.min(window.scrollY / HERO_SCROLL_RANGE, 1);
-      setScrollProgress(progreso);
-    }
-    handleScroll(); // estado inicial correcto si ya hay scroll al montar
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   async function toggleFavorito(id_producto) {
@@ -151,42 +145,78 @@ export default function Home() {
     return true
   })
 
+  // "Más vendidos": el backend ya ordena /productos por total_ventas
+  // descendente, pero se reordena aquí también por si en el futuro cambia esa
+  // garantía — mismo criterio que AppMovil (home.tsx).
+  const masVendidos = useMemo(
+    () => [...productos].sort((a, b) => b.total_ventas - a.total_ventas).slice(0, MAS_VENDIDOS_COUNT),
+    [productos]
+  )
+
+  const categoriasConImagen = useCategoriasConImagen(categorias, productos)
+  const productosConBanners = useProductosConBanners(productosFiltrados, categoriasConImagen)
+
   const gridRef = useScrollReveal([productosFiltrados.length, cargando])
+
+  function renderProductoCard(p, esMasVendido = false) {
+    const esFavorito = favoritos.includes(p.id_producto)
+    // Máximo un badge por card — "más vendido" gana si la card viene del
+    // carrusel de Más vendidos. Misma regla que AppMovil (renderProducto).
+    const esNuevo = !esMasVendido && esProductoNuevo(p.fecha_creacion)
+    return (
+      <div key={p.id_producto} className="home-producto-card">
+        <div className="home-producto-img">
+          <img src={obtenerImagenPrincipal(p)} alt={p.nombre} loading="lazy" onError={manejarErrorImagen} />
+          {esMasVendido && <BadgeAcento texto="Más vendido" className="home-producto-badge" />}
+          {esNuevo && <BadgeAcento texto="Nuevo" className="home-producto-badge" />}
+          <button
+            className={`home-fav-btn ${esFavorito ? 'active' : ''}`}
+            onClick={() => toggleFavorito(p.id_producto)}
+            aria-label={esFavorito ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+          >
+            {esFavorito
+              ? <FaHeart key="filled" />
+              : <FiHeart key="outline" />}
+          </button>
+        </div>
+        <QuickViewButton onClick={() => setQuickViewId(p.id_producto)} />
+        <div className="home-producto-info">
+          <p className="home-producto-categoria">{p.categorias?.nombre_categoria ?? p.nombre_categoria}</p>
+          <h3 className="home-producto-nombre">{p.nombre}</h3>
+          <p className="home-producto-marca">{p.marca}</p>
+          <div className="home-producto-footer">
+            <span className="home-producto-precio">${p.precio.toLocaleString()}</span>
+            <Link to={`/producto/${p.id_producto}`} className="home-producto-btn">
+              <FiShoppingBag /> Ver
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="home-wrapper">
 
-      {/* HERO */}
+      {/* HERO — foto de modelo + degradado, sin logo (el logo ya vive en el
+          navbar/sidebar/footer). Mismo tratamiento editorial que el banner
+          "Colección 2026" de más abajo. */}
       <section className="home-hero">
-        <div className="home-hero-bg">
-          <img src="/zapato_home.webp" alt="" className="home-hero-bg-img" aria-hidden="true" />
-          <div className="home-hero-overlay" />
+        {/* Fondo: la misma foto, desenfocada y oscurecida, en cover — rellena
+            los bordes sin recortar la foto nítida de encima. La foto es
+            retrato (1080x1351) y el hero es mucho más ancho que alto, así
+            que "cover" a secas cortaba cara y piernas de forma agresiva. */}
+        <div
+          className="home-hero-fondo"
+          style={{ backgroundImage: "url(/modelo_home.jpg)" }}
+          aria-hidden="true"
+        />
+        <img src="/modelo_home.jpg" alt="" className="home-hero-bg-img" aria-hidden="true" />
+        <div className="home-hero-overlay" />
+        <div className="home-hero-contenido">
+          <p className="home-hero-sub">Nueva colección 2026</p>
+          <Link to="/catalogo" className="home-hero-btn">Ver catálogo →</Link>
         </div>
-
-        <h1
-          className="home-hero-logo"
-          style={{
-            opacity: 1 - scrollProgress,
-            transform: `translate(-50%, calc(-50% - ${scrollProgress * 40}px)) scale(${1 - 0.45 * scrollProgress})`,
-          }}
-        >
-          VELYSH
-        </h1>
-
-        <p
-          className="home-hero-sub"
-          style={{ opacity: 1 - scrollProgress, pointerEvents: scrollProgress > 0.6 ? "none" : "auto" }}
-        >
-          Nueva colección 2026
-        </p>
-
-        <Link
-          to="/catalogo"
-          className="home-hero-btn"
-          style={{ opacity: 1 - scrollProgress, pointerEvents: scrollProgress > 0.6 ? "none" : "auto" }}
-        >
-          Ver catálogo →
-        </Link>
       </section>
 
       {/* BÚSQUEDA + FILTROS */}
@@ -344,9 +374,26 @@ export default function Home() {
         </div>
       )}
 
+      {/* MÁS VENDIDOS */}
+      {!cargando && masVendidos.length > 0 && (
+        <section className="home-mas-vendidos">
+          <h2 className="home-section-title">Más vendidos</h2>
+          <div className="home-mas-vendidos-row">
+            {masVendidos.map(p => renderProductoCard(p, true))}
+          </div>
+        </section>
+      )}
+
+      {/* BANNER EDITORIAL — "Colección 2026" */}
+      <Link to="/catalogo" className="home-banner-coleccion">
+        <img src="/coleccion_2026.avif" alt="" className="home-banner-coleccion-img" />
+        <div className="home-banner-coleccion-overlay" />
+        <span className="home-banner-coleccion-texto">Colección 2026</span>
+      </Link>
+
       {/* PRODUCTOS */}
       <section className="home-productos">
-        <h2 className="home-section-title">Productos destacados</h2>
+        <h2 className="home-section-title">Todos los productos</h2>
 
         {cargando ? (
           <div className="home-productos-grid">
@@ -367,43 +414,18 @@ export default function Home() {
           </div>
         ) : (
           <div className="home-productos-grid" ref={gridRef}>
-            {productosFiltrados.map(p => {
-              const esFavorito = favoritos.includes(p.id_producto)
-              return (
-                <div key={p.id_producto} className="home-producto-card">
-                  <div className="home-producto-img">
-                    <img src={obtenerImagenPrincipal(p)} alt={p.nombre} loading="lazy" onError={manejarErrorImagen} />
-                    <button
-                      className="home-quickview-btn"
-                      onClick={() => setQuickViewId(p.id_producto)}
-                      aria-label="Vista rápida"
-                    >
-                      <FiEye />
-                    </button>
-                    <button
-                      className={`home-fav-btn ${esFavorito ? 'active' : ''}`}
-                      onClick={() => toggleFavorito(p.id_producto)}
-                      aria-label={esFavorito ? 'Quitar de favoritos' : 'Agregar a favoritos'}
-                    >
-                      {esFavorito
-                        ? <FaHeart key="filled" />
-                        : <FiHeart key="outline" />}
-                    </button>
-                  </div>
-                  <div className="home-producto-info">
-                    <p className="home-producto-categoria">{p.categorias?.nombre_categoria ?? p.nombre_categoria}</p>
-                    <h3 className="home-producto-nombre">{p.nombre}</h3>
-                    <p className="home-producto-marca">{p.marca}</p>
-                    <div className="home-producto-footer">
-                      <span className="home-producto-precio">${p.precio.toLocaleString()}</span>
-                      <Link to={`/producto/${p.id_producto}`} className="home-producto-btn">
-                        <FiShoppingBag /> Ver
-                      </Link>
-                    </div>
-                  </div>
-                </div>
+            {productosConBanners.map(item =>
+              item.tipo === 'bannerCategoria' ? (
+                <BannerCategoria
+                  key={item.id}
+                  imagen={item.imagen}
+                  nombre={item.categoria.nombre_categoria}
+                  idCategoria={item.categoria.id_categoria}
+                />
+              ) : (
+                renderProductoCard(item.producto)
               )
-            })}
+            )}
             {productosFiltrados.length === 0 && (
               <EstadoVacio
                 titulo="No encontramos productos con estos filtros"

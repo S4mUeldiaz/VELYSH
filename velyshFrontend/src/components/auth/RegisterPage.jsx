@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { registrar } from "../../Api/api";
-import { FiUser, FiMail, FiPhone, FiLock, FiEye, FiEyeOff, FiCreditCard, FiArrowLeft } from "react-icons/fi";
+import { FiUser, FiMail, FiPhone, FiLock, FiEye, FiEyeOff, FiCreditCard } from "react-icons/fi";
+import BackButton from "../shared/BackButton"
+import { validarNumeroDocumento } from "../../utils/validarDocumento";
 import "./RegisterPage.css";
 
 export default function RegisterPage() {
@@ -29,8 +31,9 @@ export default function RegisterPage() {
     e.preventDefault();
     setError("");
 
-    if(!/^\d+$/.test(form.numero_documento)) {
-      setError("El número de documento dolo puede contener números");
+    const validacionDocumento = validarNumeroDocumento(form.numero_documento, Number(form.id_tipo_documento));
+    if (!validacionDocumento.valido) {
+      setError(validacionDocumento.mensaje);
       return;
     }
 
@@ -73,16 +76,10 @@ export default function RegisterPage() {
   return (
     <div className="register-wrapper">
       <div className="register-topbar">
-        <button
-          type="button"
-          className="register-back"
-          onClick={() => navigate(-1)}
-          aria-label="Volver"
-        >
-          <FiArrowLeft />
-        </button>
-        <span className="register-logo">VELYSH</span>
+        <BackButton />
       </div>
+
+      <img src="/logo-wordmark-dark.png" alt="VELYSH" className="register-logo" />
 
       <h1 className="register-title">¿Deseas registrarte?</h1>
 
@@ -120,7 +117,7 @@ export default function RegisterPage() {
                   value={form.numero_documento}
                   onChange={handleChange}
                   placeholder="0000000000"
-                  inputMode="numeric"
+                  inputMode={Number(form.id_tipo_documento) === 4 ? "text" : "numeric"}
                 />
               </div>
             </div>

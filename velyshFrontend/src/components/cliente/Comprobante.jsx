@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { useLocation, useNavigate, Link } from "react-router-dom"
 import { getUsuarioActual } from "../../Api/api"
 import { FiCheckCircle, FiPrinter } from "react-icons/fi"
+import BackButton from "../shared/BackButton"
 import "./Comprobante.css"
 
 const ETIQUETAS_METODO_PAGO = {
@@ -31,6 +32,8 @@ export default function Comprobante() {
   return (
     <div className="comprobante-wrapper">
       <div className="comprobante-card comprobante-printable">
+
+        <BackButton className="comprobante-back" />
 
         <div className="comprobante-exito">
           <FiCheckCircle className="comprobante-exito-icon" />

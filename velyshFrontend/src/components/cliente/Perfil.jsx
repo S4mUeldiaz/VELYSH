@@ -1,8 +1,11 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { getUsuarioActual, actualizarUsuario, cambiarPassword, eliminarCuenta, logout } from "../../Api/api"
-import { FiArrowLeft, FiEye, FiEyeOff } from "react-icons/fi"
+import { getUsuarioActual, actualizarUsuario, cambiarPassword, eliminarCuenta, logout, subirFotoPerfil } from "../../Api/api"
+import { FiEye, FiEyeOff, FiUser, FiCamera, FiLogOut } from "react-icons/fi"
+import BackButton from "../shared/BackButton"
 import "./Perfil.css"
+
+const TIPOS_PERMITIDOS = ['image/jpeg', 'image/png', 'image/webp']
 
 export default function Perfil() {
   const usuario  = getUsuarioActual()
@@ -27,6 +30,11 @@ export default function Perfil() {
   const [error,    setError]    = useState("")
   const [mensajePassword, setMensajePassword] = useState("")
   const [errorPassword,   setErrorPassword]   = useState("")
+
+  const [fotoUrl,      setFotoUrl]      = useState(usuario?.url_foto_perfil ?? null)
+  const [subiendoFoto, setSubiendoFoto] = useState(false)
+  const [errorFoto,    setErrorFoto]    = useState("")
+  const inputFotoRef = useRef(null)
 
   function handleChange(e) {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
@@ -77,6 +85,11 @@ export default function Perfil() {
     }
   }
 
+  async function handleLogout() {
+    await logout()
+    navigate("/login")
+  }
+
   async function handleEliminar() {
     const password = prompt("Para eliminar tu cuenta, confirma tu contraseña:")
     if (!password) return
@@ -92,16 +105,80 @@ export default function Perfil() {
     }
   }
 
+  function elegirFoto() {
+    inputFotoRef.current?.click()
+  }
+
+  async function handleFotoSeleccionada(e) {
+    const archivo = e.target.files?.[0]
+    e.target.value = '' // permite volver a elegir el mismo archivo después de un error
+    if (!archivo) return
+
+    setErrorFoto("")
+
+    if (!TIPOS_PERMITIDOS.includes(archivo.type)) {
+      setErrorFoto("Formato no soportado. Usa JPG, PNG o WebP")
+      return
+    }
+    if (archivo.size > 5 * 1024 * 1024) {
+      setErrorFoto("La imagen no puede pesar más de 5MB")
+      return
+    }
+
+    setSubiendoFoto(true)
+    try {
+      const { url_foto_perfil } = await subirFotoPerfil(usuario.numero_documento, archivo)
+      setFotoUrl(url_foto_perfil)
+      const usuarioActualizado = { ...usuario, url_foto_perfil }
+      sessionStorage.setItem('usuario', JSON.stringify(usuarioActualizado))
+    } catch (err) {
+      setErrorFoto(err.response?.data?.error || err.message)
+    } finally {
+      setSubiendoFoto(false)
+    }
+  }
+
   return (
     <div className="perfil-wrapper">
       <div className="perfil-topbar">
-          <button className="favoritos-back" onClick={() => navigate(-1)}>
-            <FiArrowLeft /> Volver
-          </button>
+          <BackButton />
         <span className="perfil-titulo-pagina">Mi perfil</span>
       </div>
 
       <div className="perfil-card">
+
+        {/* FOTO DE PERFIL */}
+        <div className="perfil-seccion perfil-seccion-avatar">
+          <button
+            type="button"
+            className="perfil-avatar"
+            onClick={elegirFoto}
+            disabled={subiendoFoto}
+            aria-label="Cambiar foto de perfil"
+          >
+            <span className="perfil-avatar-foto">
+              {fotoUrl ? (
+                <img src={fotoUrl} alt="" className="perfil-avatar-img" />
+              ) : (
+                <FiUser className="perfil-avatar-icon" />
+              )}
+            </span>
+            <span className="perfil-avatar-badge">
+              <FiCamera />
+            </span>
+          </button>
+          <input
+            ref={inputFotoRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            className="perfil-avatar-input"
+            onChange={handleFotoSeleccionada}
+          />
+          <button type="button" className="perfil-avatar-link" onClick={elegirFoto} disabled={subiendoFoto}>
+            {subiendoFoto ? "Subiendo..." : "Cambiar foto"}
+          </button>
+          {errorFoto && <p className="perfil-error">{errorFoto}</p>}
+        </div>
 
         {/* SECCIÓN: datos personales */}
         <div className="perfil-seccion">
@@ -214,6 +291,12 @@ export default function Perfil() {
               {cargandoPassword ? "Guardando..." : "Actualizar contraseña"}
             </button>
           </form>
+        </div>
+
+        <div className="perfil-seccion">
+          <button type="button" className="perfil-btn-logout" onClick={handleLogout}>
+            <FiLogOut /> Cerrar sesión
+          </button>
         </div>
 
         <div className="perfil-seccion">

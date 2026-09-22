@@ -13,7 +13,9 @@ export default function NavbarAdmin({ usuario }) {
 
   return (
     <nav className="navbar-admin">
-      <div className="navbar-admin-logo">VELYSH</div>
+      <Link to="/admin/dashboard" className="navbar-admin-logo">
+        <img src="/logo-wordmark.png" alt="VELYSH" />
+      </Link>
       <div className="navbar-admin-links">
         <Link to="/admin/dashboard" className="navbar-admin-link">
           <FiGrid /> Dashboard

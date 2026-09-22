@@ -60,7 +60,6 @@ export default function Dashboard() {
             <input placeholder="¿Qué estás buscando?" />
           </div>
           <div className="dashboard-admin-info">
-            <span>Admin VELYSH</span>
             <button className="dashboard-icon-btn"><FiUser /></button>
           </div>
         </div>

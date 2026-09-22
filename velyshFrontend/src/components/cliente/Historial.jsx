@@ -2,7 +2,8 @@ import { useState, useEffect, useMemo } from "react"
 import { useNavigate } from "react-router-dom"
 import { getPedidosPorUsuario, actualizarEstadoPedido, crearDevolucion, getUsuarioActual } from "../../Api/api"
 import { PLACEHOLDER_PRODUCTO, manejarErrorImagen } from "../../utils/imagenes"
-import { FiArrowLeft, FiPackage } from "react-icons/fi"
+import { FiPackage } from "react-icons/fi"
+import BackButton from "../shared/BackButton"
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts"
 import "./Historial.css"
 
@@ -110,9 +111,7 @@ export default function Historial() {
 
       {/* HEADER */}
       <div className="historial-header">
-        <button className="favoritos-back" onClick={() => navigate(-1)}>
-          <FiArrowLeft /> Volver
-        </button>
+        <BackButton />
         <h1 className="historial-title">Mis pedidos</h1>
       </div>
 

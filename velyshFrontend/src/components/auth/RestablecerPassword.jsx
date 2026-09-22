@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { supabase } from "../../lib/supabase"
 import { FiLock, FiEye, FiEyeOff } from "react-icons/fi"
+import BackButton from "../shared/BackButton"
 import "./RestablecerPassword.css"
 
 export default function RestablecerPassword() {
@@ -54,6 +55,7 @@ export default function RestablecerPassword() {
     return (
       <div className="restablecer-wrapper">
         <div className="restablecer-card">
+          <BackButton to="/login" label="Volver a iniciar sesión" className="restablecer-back" />
           <h2 className="restablecer-title">Enlace inválido o expirado</h2>
           <p className="restablecer-mensaje">
             Este enlace ya no es válido. Solicita uno nuevo desde la pantalla de inicio de sesión.
@@ -69,6 +71,7 @@ export default function RestablecerPassword() {
   return (
     <div className="restablecer-wrapper">
       <div className="restablecer-card">
+        <BackButton to="/login" label="Volver a iniciar sesión" className="restablecer-back" />
         <h2 className="restablecer-title">Define tu nueva contraseña</h2>
 
         {exito ? (

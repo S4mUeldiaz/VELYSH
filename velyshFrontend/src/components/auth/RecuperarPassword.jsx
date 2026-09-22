@@ -1,7 +1,7 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
 import { supabase } from "../../lib/supabase"
-import { FiMail, FiArrowLeft } from "react-icons/fi"
+import { FiMail } from "react-icons/fi"
+import BackButton from "../shared/BackButton"
 import "./RecuperarPassword.css"
 
 export default function RecuperarPassword() {
@@ -32,9 +32,7 @@ export default function RecuperarPassword() {
   return (
     <div className="recuperar-wrapper">
       <div className="recuperar-card">
-        <Link to="/login" className="recuperar-back">
-          <FiArrowLeft /> Volver a iniciar sesión
-        </Link>
+        <BackButton to="/login" label="Volver a iniciar sesión" className="recuperar-back" />
 
         <h2 className="recuperar-title">Encuentra tu cuenta</h2>
 

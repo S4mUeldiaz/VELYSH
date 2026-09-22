@@ -61,7 +61,7 @@
   width: 120px;
   height: 120px;
   min-width: 120px;
-  background: #111;
+  background: var(--color-bg-input);
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -177,8 +177,8 @@
 }
 
 .historial-btn-devolucion:disabled {
-  border-color: #555;
-  color: #9a9a9a;
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
   cursor: not-allowed;
 }
 
@@ -194,13 +194,13 @@
 }
 
 .historial-modal {
-  background: #161616;
-  border: 1px solid #2a2a2a;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 24px;
   max-width: 420px;
   width: 100%;
-  color: #f0f0f0;
+  color: var(--color-text);
 }
 
 .historial-modal-title {
@@ -212,16 +212,16 @@
 .historial-modal-label {
   display: block;
   font-size: 13px;
-  color: #9a9a9a;
+  color: var(--color-text-muted);
   margin-bottom: 6px;
 }
 
 .historial-modal-textarea {
   width: 100%;
-  background: #1f1f1f;
-  border: 1px solid #333;
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
-  color: #f0f0f0;
+  color: var(--color-text);
   padding: 10px 12px;
   font-size: 14px;
   resize: vertical;
@@ -256,9 +256,9 @@
 }
 
 .historial-modal-btn-cancelar {
-  background: #1f1f1f;
-  color: #f0f0f0;
-  border: 1px solid #333;
+  background: var(--color-bg-input);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
 }
 
 .historial-modal-btn-enviar {

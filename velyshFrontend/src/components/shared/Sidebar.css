@@ -33,15 +33,26 @@
   transform: translateX(0);
 }
 
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.sidebar-logo {
+  display: block;
+  height: 26px;
+  width: auto;
+}
+
 .sidebar-close {
   background: none;
   border: none;
   color: var(--color-text);
   font-size: 22px;
   cursor: pointer;
-  align-self: flex-start;
   padding: 4px;
-  margin-bottom: 32px;
   transition: color var(--transition);
 }
 

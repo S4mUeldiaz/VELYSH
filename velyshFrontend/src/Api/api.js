@@ -258,3 +258,14 @@ export async function eliminarCuenta(numero_documento, password) {
   const { data } = await api.delete(`/usuarios/${numero_documento}/cuenta`, { data: { password } })
   return data
 }
+
+// ── PERFIL (autoservicio, sin rol admin) ────────────────────────────────────────
+
+export async function subirFotoPerfil(numero_documento, archivo) {
+  const formData = new FormData()
+  formData.append('foto', archivo)
+  // Sin Content-Type manual: axios arma el boundary del multipart solo si se
+  // lo dejamos detectarlo desde el propio FormData.
+  const { data } = await api.post(`/perfil/${numero_documento}/foto`, formData)
+  return data
+}

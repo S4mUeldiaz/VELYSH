@@ -21,10 +21,10 @@
 }
 
 .footer-logo {
-  font-family: var(--font-display);
-  font-size: 28px;
-  margin: 0 0 8px;
-  letter-spacing: 1px;
+  display: block;
+  height: 30px;
+  width: auto;
+  margin: 0 0 12px;
 }
 
 .footer-tagline {

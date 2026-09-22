@@ -3,7 +3,10 @@ import { Link, useLocation } from 'react-router-dom'
 import { FaInstagram, FaFacebookF, FaWhatsapp } from 'react-icons/fa'
 import './Footer.css'
 
-const CATEGORIAS_FOOTER = ['Hombre', 'Mujer', 'Deportivo', 'Casual', 'Botas']
+// "Hombre"/"Mujer" no son categorías reales (son valores de género, un filtro
+// aparte) — el enlace nunca calzaba con ningún id_categoria. Se quitan hasta
+// que exista un filtro de género propio al que enlazar.
+const CATEGORIAS_FOOTER = ['Deportivo', 'Casual', 'Botas']
 
 function Footer() {
   const anioActual = new Date().getFullYear()
@@ -18,7 +21,7 @@ function Footer() {
     <footer className="footer-cliente">
       <div className="footer-top">
         <div className="footer-brand">
-          <h2 className="footer-logo">VELYSH</h2>
+          <img src="/logo-wordmark-dark.png" alt="VELYSH" className="footer-logo" />
           <p className="footer-tagline">Estilo, comodidad real.</p>
           <div className="footer-social">
             <a

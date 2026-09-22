@@ -16,24 +16,6 @@
   margin-bottom: 40px;
 }
 
-.favoritos-back {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: none;
-  border: 1px solid var(--color-border);
-  color: var(--color-text);
-  padding: 8px 16px;
-  border-radius: var(--border-radius);
-  font-size: 14px;
-  cursor: pointer;
-  transition: all var(--transition);
-}
-
-.favoritos-back:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-}
 
 .favoritos-title {
   font-family: var(--font-display);
@@ -105,7 +87,7 @@
 .favoritos-card-img {
   position: relative;
   height: 220px;
-  background: #111;
+  background: var(--color-bg-input);
   display: flex;
   align-items: center;
   justify-content: center;

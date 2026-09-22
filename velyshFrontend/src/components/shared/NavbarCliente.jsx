@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react"
-import { Link, useNavigate, useLocation } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { logout, getUsuarioActual, getPedidosPorUsuario } from "../../Api/api"
-import { FiMenu, FiSearch, FiBell, FiHeart, FiShoppingCart, FiUser, FiX, FiPackage } from "react-icons/fi"
+import { FiMenu, FiBell, FiHeart, FiShoppingCart, FiUser, FiPackage } from "react-icons/fi"
 import Sidebar from "./Sidebar"
 import "./NavbarCliente.css"
-
-const HERO_SCROLL_RANGE = 320
 
 function claveVistas(numero_documento) {
   return `notif_estados_vistos_${numero_documento}`
@@ -26,26 +24,7 @@ export default function NavbarCliente({ usuario }) {
   const [notifAbierta,       setNotifAbierta]       = useState(false)
   const [notificaciones,     setNotificaciones]     = useState([])
   const navigate = useNavigate()
-  const location = useLocation()
   const usuarioActual = usuario ?? getUsuarioActual()
-  const esHome = location.pathname === "/home" || location.pathname === "/"
-  const [scrollProgress, setScrollProgress] = useState(esHome ? 0 : 1)
-
-  useEffect(() => {
-    if (!esHome) {
-      setScrollProgress(1)
-      return
-    }
-
-    function handleScroll() {
-      const progreso = Math.min(window.scrollY / HERO_SCROLL_RANGE, 1)
-      setScrollProgress(progreso)
-    }
-
-    handleScroll()
-    window.addEventListener("scroll", handleScroll, { passive: true })
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [esHome])
 
   useEffect(() => {
     if (!usuarioActual?.numero_documento) return
@@ -102,28 +81,15 @@ export default function NavbarCliente({ usuario }) {
 
   return (
     <>
-      <nav
-        className="navbar-cliente"
-        style={esHome ? {
-          backgroundColor: `rgba(0, 0, 0, ${scrollProgress})`,
-          borderBottomColor: `rgba(51, 51, 51, ${scrollProgress})`,
-        } : undefined}
-      >
+      <nav className="navbar-cliente">
         <div className="navbar-cliente-left">
           <button className="navbar-icon-btn" onClick={() => setSidebarAbierto(true)}>
             <FiMenu />
           </button>
         </div>
 
-        <Link
-          to="/home"
-          className="navbar-cliente-logo"
-          style={{
-            opacity: scrollProgress,
-            transform: `scale(${0.6 + 0.4 * scrollProgress})`,
-          }}
-        >
-          VELYSH
+        <Link to="/home" className="navbar-cliente-logo">
+          <img src="/logo-wordmark-dark.png" alt="VELYSH" />
         </Link>
 
         <div className="navbar-cliente-right">

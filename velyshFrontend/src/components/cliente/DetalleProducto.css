@@ -6,20 +6,94 @@
 
 .detalle-img-section {
   flex: 1;
-  background: #0d0d0d;
+  background: var(--color-bg-input);
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
   min-height: 100vh;
   position: sticky;
   top: 0;
 }
 
+.detalle-img-principal {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
 .detalle-img {
-  width: 85%;
-  max-width: 600px;
+  width: 92%;
+  max-width: 760px;
+  max-height: 100%;
   object-fit: contain;
   filter: drop-shadow(0 0 40px rgba(230, 57, 70, 0.2));
+}
+
+/* Flechas de la galería: mismo tratamiento que los badges flotantes sobre
+   fotos de producto en el resto de la app (círculo oscuro translúcido +
+   ícono blanco), independiente del tema claro/oscuro de la página. */
+.detalle-galeria-flecha {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-overlay);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background-color var(--transition);
+}
+
+.detalle-galeria-flecha:hover {
+  background: rgba(18, 18, 18, 0.75);
+}
+
+.detalle-galeria-flecha--prev {
+  left: 20px;
+}
+
+.detalle-galeria-flecha--next {
+  right: 20px;
+}
+
+.detalle-thumbs {
+  display: flex;
+  gap: 10px;
+  padding: 20px;
+  overflow-x: auto;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.detalle-thumb {
+  width: 64px;
+  height: 64px;
+  min-width: 64px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background: var(--color-bg-card);
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color var(--transition);
+}
+
+.detalle-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.detalle-thumb.active {
+  border-color: var(--color-primary);
 }
 
 .detalle-loading {
@@ -234,7 +308,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #d4a72c;
+  color: var(--color-warning);
   font-weight: 600;
   animation: detalle-stock-bajo-pulse 1.8s ease-in-out infinite;
 }
@@ -249,8 +323,66 @@
   50%      { opacity: 0.6; }
 }
 
+.detalle-recomendados {
+  padding: 48px 80px 64px;
+  border-top: 1px solid var(--color-border);
+}
+
+.detalle-recomendados-titulo {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--color-text);
+  margin: 0 0 24px;
+}
+
+.detalle-recomendados-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+.detalle-recomendado-card {
+  display: block;
+  color: inherit;
+}
+
+.detalle-recomendado-img {
+  height: 200px;
+  border-radius: 12px;
+  background-color: var(--color-bg-input);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.detalle-recomendado-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform var(--transition);
+}
+
+.detalle-recomendado-card:hover .detalle-recomendado-img img {
+  transform: scale(1.05);
+}
+
+.detalle-recomendado-nombre {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 4px;
+}
+
+.detalle-recomendado-precio {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0;
+}
+
 @media (max-width: 768px) {
   .detalle-wrapper { flex-direction: column; }
   .detalle-img-section { min-height: 300px; position: relative; }
   .detalle-info { padding: 24px; max-width: 100%; }
+  .detalle-recomendados { padding: 32px 24px 48px; }
 }

@@ -2,7 +2,8 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { getFavoritos, eliminarFavorito, getUsuarioActual, getProductos } from "../../Api/api"
 import { obtenerImagenPrincipal, manejarErrorImagen } from "../../utils/imagenes"
-import { FiArrowLeft, FiHeart, FiShoppingCart } from "react-icons/fi"
+import { FiHeart, FiShoppingCart } from "react-icons/fi"
+import BackButton from "../shared/BackButton"
 import "./Favoritos.css"
 
 const MAX_RECOMENDACIONES = 4
@@ -55,9 +56,7 @@ export default function Favoritos() {
 
         {/* HEADER */}
         <div className="favoritos-header">
-          <button className="favoritos-back" onClick={() => navigate(-1)}>
-            <FiArrowLeft /> Volver
-          </button>
+          <BackButton />
           <h1 className="favoritos-title">Mis favoritos</h1>
           <span className="favoritos-count">{favoritos.length} productos</span>
         </div>

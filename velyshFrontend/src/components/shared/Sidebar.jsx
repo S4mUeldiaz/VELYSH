@@ -28,9 +28,12 @@ export default function Sidebar({ abierto, onCerrar, usuario }) {
 
       {/* Sidebar */}
       <div className={`sidebar ${abierto ? 'open' : ''}`}>
-        <button className="sidebar-close" onClick={onCerrar}>
-          <FiX />
-        </button>
+        <div className="sidebar-header">
+          <img src="/logo-wordmark-dark.png" alt="VELYSH" className="sidebar-logo" />
+          <button className="sidebar-close" onClick={onCerrar}>
+            <FiX />
+          </button>
+        </div>
 
         {/* Categorías */}
         <nav className="sidebar-nav">

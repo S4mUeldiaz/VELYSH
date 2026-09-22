@@ -69,7 +69,7 @@
 
 .quickview-img {
   flex: 1 1 300px;
-  background: #111;
+  background: var(--color-bg-input);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -210,7 +210,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #d4a72c;
+  color: var(--color-warning);
   font-weight: 600;
   animation: quickview-stock-pulse 1.8s ease-in-out infinite;
 }
