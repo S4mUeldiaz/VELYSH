@@ -18,7 +18,7 @@ const router = Router()
 
 /**
  * @swagger
- * /api/tipos-documento:
+ * /api/tipo-documento:
  *   get:
  *     summary: Obtener tipos de documento
  *     tags: [Tipos de documento]
@@ -32,7 +32,7 @@ router.get('/', obtenerTiposDocumento)
 
 /**
  * @swagger
- * /api/tipos-documento:
+ * /api/tipo-documento:
  *   post:
  *     summary: Crear un tipo de documento
  *     tags: [Tipos de documento]
@@ -61,7 +61,7 @@ router.post('/', crearTipoDocumento)
 
 /**
  * @swagger
- * /api/tipos-documento/{id}:
+ * /api/tipo-documento/{id}:
  *   put:
  *     summary: Actualizar un tipo de documento
  *     tags: [Tipos de documento]
@@ -94,7 +94,7 @@ router.put('/:id', actualizarTipoDocumento)
 
 /**
  * @swagger
- * /api/tipos-documento/{id}:
+ * /api/tipo-documento/{id}:
  *   delete:
  *     summary: Eliminar un tipo de documento
  *     tags: [Tipos de documento]

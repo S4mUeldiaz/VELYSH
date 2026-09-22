@@ -99,7 +99,7 @@ export const obtenerProductoPorId = async (req, res) => {
       genero,
       estado,
       categorias ( nombre_categoria ),
-      imagenes_producto ( url_imagen, orden ),
+      imagenes_producto ( url_imagen, orden, color ),
       stock ( id_stock, color, stock_actual, estado, tallas ( talla ) )
     `)
     .eq('id_producto', id)

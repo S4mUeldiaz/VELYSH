@@ -11,6 +11,7 @@ import tipoDocumentoRoutes     from './routes/tipoDocumento.routes.js'
 import tallasRoutes            from './routes/tallas.routes.js'
 import pedidosRoutes           from './routes/pedidos.routes.js'
 import usuariosRoutes          from './routes/usuarios.routes.js'
+import perfilRoutes            from './routes/perfil.routes.js'
 import devolucionesRoutes      from './routes/devoluciones.routes.js'
 import stockRoutes             from './routes/stock.routes.js'
 import imagenesProductoRoutes  from './routes/imagenesProducto.routes.js'
@@ -47,7 +48,14 @@ app.use('/api/stock', stockRoutes)
 app.use('/api/factura',      verificarToken, facturaRoutes)
 app.use('/api/devoluciones', verificarToken, devolucionesRoutes)
 app.use('/api/imagenes-producto', verificarToken, imagenesProductoRoutes)
-app.use('/api/usuarios', verificarToken, verificarRol('admin'), usuariosRoutes)
+// Autoservicio del propio usuario — SIN verificarRol('admin'), la propia
+// pertenencia del registro se valida dentro del controlador (ver perfil.controller.js).
+app.use('/api/perfil', verificarToken, perfilRoutes)
+// Sin verificarRol('admin') a nivel de router: usuariosRoutes.js aplica
+// verificarRol('admin') o verificarPropioOAdmin ruta por ruta, según si es
+// una acción de administración o de autoservicio (editar mi perfil, cambiar
+// mi contraseña, eliminar mi cuenta).
+app.use('/api/usuarios', verificarToken, usuariosRoutes)
 app.use('/api/roles', verificarToken, verificarRol('admin'), rolesRoutes)
 app.use('/api/movimiento-inventario', verificarToken, verificarRol('admin', 'operador'), movimientoInventarioRoutes)
 app.listen(PORT, () => {

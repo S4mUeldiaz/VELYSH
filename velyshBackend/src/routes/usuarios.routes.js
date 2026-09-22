@@ -1,4 +1,10 @@
+// Este router solo lleva verificarToken desde index.js. Cada ruta decide acá
+// mismo si exige rol admin (gestión de OTROS usuarios: listar, activar/
+// desactivar) o si basta con ser el dueño del recurso (autoservicio: editar
+// mi perfil, cambiar mi contraseña, eliminar mi cuenta) vía
+// verificarPropioOAdmin. La foto de perfil vive aparte, en perfil.routes.js.
 import { Router } from 'express'
+import { verificarRol, verificarPropioOAdmin } from '../middlewares/auth.middleware.js'
 
 import {
   obtenerUsuarios,
@@ -33,7 +39,7 @@ const router = Router()
  *       400:
  *         description: Error al consultar los usuarios
  */
-router.get('/', obtenerUsuarios)
+router.get('/', verificarRol('admin'), obtenerUsuarios)
 
 /**
  * @swagger
@@ -54,7 +60,7 @@ router.get('/', obtenerUsuarios)
  *       404:
  *         description: Usuario no encontrado
  */
-router.get('/:numero_documento', obtenerUsuarioPorDocumento)
+router.get('/:numero_documento', verificarRol('admin'), obtenerUsuarioPorDocumento)
 
 /**
  * @swagger
@@ -91,7 +97,7 @@ router.get('/:numero_documento', obtenerUsuarioPorDocumento)
  *       400:
  *         description: Error al actualizar el usuario
  */
-router.put('/:numero_documento', actualizarUsuario)
+router.put('/:numero_documento', verificarPropioOAdmin, actualizarUsuario)
 
 /**
  * @swagger
@@ -124,7 +130,7 @@ router.put('/:numero_documento', actualizarUsuario)
  *       400:
  *         description: Estado inválido o error al actualizar
  */
-router.patch('/:numero_documento/estado', cambiarEstadoUsuario)
+router.patch('/:numero_documento/estado', verificarRol('admin'), cambiarEstadoUsuario)
 
 /**
  * @swagger
@@ -165,7 +171,7 @@ router.patch('/:numero_documento/estado', cambiarEstadoUsuario)
  *       404:
  *         description: Usuario no encontrado
  */
-router.patch('/:numero_documento/password', cambiarPassword)
+router.patch('/:numero_documento/password', verificarPropioOAdmin, cambiarPassword)
 
 /**
  * @swagger
@@ -200,7 +206,7 @@ router.patch('/:numero_documento/password', cambiarPassword)
  *       404:
  *         description: Usuario no encontrado
  */
-router.delete('/:numero_documento/cuenta', eliminarCuenta)
+router.delete('/:numero_documento/cuenta', verificarPropioOAdmin, eliminarCuenta)
 
 /**
  * @swagger
@@ -221,7 +227,7 @@ router.delete('/:numero_documento/cuenta', eliminarCuenta)
  *       400:
  *         description: Error al consultar las direcciones
  */
-router.get('/:numero_documento/direcciones', obtenerDirecciones)
+router.get('/:numero_documento/direcciones', verificarRol('admin'), obtenerDirecciones)
 
 /**
  * @swagger
@@ -263,7 +269,7 @@ router.get('/:numero_documento/direcciones', obtenerDirecciones)
  *       400:
  *         description: Error al agregar la dirección
  */
-router.post('/:numero_documento/direcciones', agregarDireccion)
+router.post('/:numero_documento/direcciones', verificarRol('admin'), agregarDireccion)
 
 /**
  * @swagger
@@ -290,6 +296,6 @@ router.post('/:numero_documento/direcciones', agregarDireccion)
  *       400:
  *         description: Error al eliminar la dirección
  */
-router.delete('/:numero_documento/direcciones/:id_direccion', eliminarDireccion)
+router.delete('/:numero_documento/direcciones/:id_direccion', verificarRol('admin'), eliminarDireccion)
 
 export default router

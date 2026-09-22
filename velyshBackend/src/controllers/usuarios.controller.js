@@ -1,8 +1,17 @@
-import { supabase } from '../config/supabase.js'
+import { supabase, supabaseAuth } from '../config/supabase.js'
 // NOTA: este proyecto NO usa bcrypt manualmente. La columna usuarios.password_hash
 // guarda el UUID del usuario en Supabase Auth (ver auth.controller.js -> registro()).
 // La autenticación real (verificar contraseña, cambiarla) se hace con las funciones
 // de Supabase Auth, nunca comparando hashes a mano.
+//
+// IMPORTANTE: las llamadas a .auth.* de ESTE archivo (signInWithPassword,
+// admin.updateUserById) van siempre por `supabaseAuth`, nunca por `supabase`.
+// `supabase` es el cliente compartido que usa todo el resto del backend para
+// queries normales; `signInWithPassword` sobre él muta su sesión interna y
+// deja ese cliente "logueado" como el usuario para todas las peticiones
+// futuras de cualquiera, hasta reiniciar el proceso (RLS entonces devuelve
+// arrays vacíos con 200 OK en vez de error). `supabaseAuth` se creó con
+// persistSession:false / autoRefreshToken:false exactamente para aislar esto.
 
 export const obtenerUsuarios = async (req, res) => {
   const { data, error } = await supabase
@@ -111,7 +120,7 @@ export const cambiarPassword = async (req, res) => {
 
   const authUserId = usuario.password_hash
 
-  const { error: loginError } = await supabase.auth.signInWithPassword({
+  const { error: loginError } = await supabaseAuth.auth.signInWithPassword({
     email: usuario.correo,
     password: password_actual
   })
@@ -120,7 +129,7 @@ export const cambiarPassword = async (req, res) => {
     return res.status(401).json({ error: 'La contraseña actual no es correcta' })
   }
 
-  const { error: updateError } = await supabase.auth.admin.updateUserById(authUserId, {
+  const { error: updateError } = await supabaseAuth.auth.admin.updateUserById(authUserId, {
     password: password_nueva
   })
 
@@ -145,7 +154,7 @@ export const eliminarCuenta = async (req, res) => {
 
   if (buscarError) return res.status(404).json({ error: 'Usuario no encontrado' })
 
-  const { error: loginError } = await supabase.auth.signInWithPassword({
+  const { error: loginError } = await supabaseAuth.auth.signInWithPassword({
     email: usuario.correo,
     password
   })

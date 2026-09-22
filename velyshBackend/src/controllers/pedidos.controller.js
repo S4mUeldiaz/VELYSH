@@ -14,7 +14,17 @@ export const obtenerPedidos = async (req, res) => {
       estado_pedido,
       usuarios ( nombre, apellido, correo ),
       direcciones ( direccion, ciudad, departamento ),
-      factura ( id_detalle, cantidad, precio_unitario, subtotal )
+      factura (
+        id_detalle,
+        cantidad,
+        precio_unitario,
+        subtotal,
+        stock (
+          color,
+          tallas ( talla ),
+          productos ( nombre, referencia )
+        )
+      )
     `)
     .order('fecha_pedido', { ascending: false })
 

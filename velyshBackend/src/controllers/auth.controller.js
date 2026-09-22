@@ -1,5 +1,6 @@
 import { supabase, supabaseAuth } from '../config/supabase.js'
 import jwt from 'jsonwebtoken'
+import { validarNumeroDocumento } from '../utils/validarDocumento.js'
 
 const COOKIE = 'token'
 const opcionesCookie = {
@@ -12,6 +13,11 @@ const opcionesCookie = {
 
 export const registro = async (req, res) => {
   const { numero_documento, id_tipo_documento, nombre, apellido, correo, telefono, password, id_rol } = req.body
+
+  const validacionDocumento = validarNumeroDocumento(numero_documento, Number(id_tipo_documento))
+  if (!validacionDocumento.valido) {
+    return res.status(400).json({ error: validacionDocumento.mensaje })
+  }
 
   const { data: authData, error: authError } = await supabaseAuth.auth.admin.createUser({
     email: correo,
@@ -49,6 +55,7 @@ export const login = async (req, res) => {
       correo,
       telefono,
       estado,
+      url_foto_perfil,
       roles ( nombre_rol )
     `)
     .eq('correo', correo)
@@ -95,6 +102,7 @@ export const yo = async (req, res) => {
       correo,
       telefono,
       estado,
+      url_foto_perfil,
       roles ( nombre_rol )
     `)
     .eq('numero_documento', req.usuario.numero_documento)

@@ -24,3 +24,17 @@ export const verificarRol = (...roles) => {
     next()
   }
 }
+
+// Para rutas de autoservicio con :numero_documento en la URL (editar mi
+// perfil, cambiar mi contraseña, eliminar mi cuenta): deja pasar al dueño del
+// recurso (su propio numero_documento, tomado del token, no del body/URL) o a
+// un admin. Reemplaza a verificarRol('admin') en esas rutas puntuales — ese
+// gate bloqueaba también al dueño legítimo, no solo a terceros.
+export const verificarPropioOAdmin = (req, res, next) => {
+  const esDueño = req.usuario.numero_documento === req.params.numero_documento
+  const esAdmin = req.usuario.rol === 'admin'
+  if (!esDueño && !esAdmin) {
+    return res.status(403).json({ error: 'No tienes permisos para esta acción' })
+  }
+  next()
+}
