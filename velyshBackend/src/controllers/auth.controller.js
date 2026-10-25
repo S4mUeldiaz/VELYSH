@@ -12,7 +12,8 @@ const opcionesCookie = {
 }
 
 export const registro = async (req, res) => {
-  const { numero_documento, id_tipo_documento, nombre, apellido, correo, telefono, password, id_rol } = req.body
+  // El registro público siempre crea un Cliente (id_rol 2); el rol no se toma del body.
+  const { numero_documento, id_tipo_documento, nombre, apellido, correo, telefono, password } = req.body
 
   const validacionDocumento = validarNumeroDocumento(numero_documento, Number(id_tipo_documento))
   if (!validacionDocumento.valido) {
@@ -29,7 +30,7 @@ export const registro = async (req, res) => {
 
   const { error: dbError } = await supabase
     .from('usuarios')
-    .insert({ numero_documento, id_tipo_documento, nombre, apellido, correo, telefono, password_hash: authData.user.id, id_rol: id_rol || 2 })
+    .insert({ numero_documento, id_tipo_documento, nombre, apellido, correo, telefono, password_hash: authData.user.id, id_rol: 2 })
 
   if (dbError) return res.status(400).json({ error: dbError.message })
 

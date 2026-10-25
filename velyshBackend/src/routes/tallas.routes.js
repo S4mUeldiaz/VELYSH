@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { verificarToken, verificarRol } from '../middlewares/auth.middleware.js'
 
 import {
   obtenerTallas,
@@ -59,7 +60,7 @@ router.get('/', obtenerTallas)
  *       400:
  *         description: Error al crear la talla
  */
-router.post('/', crearTalla)
+router.post('/', verificarToken, verificarRol('admin'), crearTalla)
 
 /**
  * @swagger
@@ -97,7 +98,7 @@ router.post('/', crearTalla)
  *       400:
  *         description: Error al actualizar la talla
  */
-router.put('/:id', actualizarTalla)
+router.put('/:id', verificarToken, verificarRol('admin'), actualizarTalla)
 
 /**
  * @swagger
@@ -119,6 +120,6 @@ router.put('/:id', actualizarTalla)
  *       400:
  *         description: Error al eliminar la talla
  */
-router.delete('/:id', eliminarTalla)
+router.delete('/:id', verificarToken, verificarRol('admin'), eliminarTalla)
 
 export default router

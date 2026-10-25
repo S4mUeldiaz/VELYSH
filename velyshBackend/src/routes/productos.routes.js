@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { verificarToken, verificarRol } from '../middlewares/auth.middleware.js'
 
 import {
   crearCategoria,
@@ -120,7 +121,7 @@ router.get('/:id', obtenerProductoPorId)
  *       400:
  *         description: Error al crear la categoría
  */
-router.post('/categoria', crearCategoria)
+router.post('/categoria', verificarToken, verificarRol('admin'), crearCategoria)
 
 /**
  * @swagger
@@ -168,7 +169,7 @@ router.post('/categoria', crearCategoria)
  *       400:
  *         description: Error al crear el producto
  */
-router.post('/', crearProducto)
+router.post('/', verificarToken, verificarRol('admin'), crearProducto)
 
 /**
  * @swagger
@@ -210,7 +211,7 @@ router.post('/', crearProducto)
  *       400:
  *         description: Error al actualizar la categoría
  */
-router.put('/categoria/:id', actualizarCategoria)
+router.put('/categoria/:id', verificarToken, verificarRol('admin'), actualizarCategoria)
 
 /**
  * @swagger
@@ -261,7 +262,7 @@ router.put('/categoria/:id', actualizarCategoria)
  *       400:
  *         description: Error al actualizar el producto
  */
-router.put('/:id', actualizarProducto)
+router.put('/:id', verificarToken, verificarRol('admin'), actualizarProducto)
 
 /**
  * @swagger
@@ -284,7 +285,7 @@ router.put('/:id', actualizarProducto)
  *       400:
  *         description: Error al desactivar la categoría
  */
-router.delete('/categoria/:id', eliminarCategoria)
+router.delete('/categoria/:id', verificarToken, verificarRol('admin'), eliminarCategoria)
 
 /**
  * @swagger
@@ -307,6 +308,6 @@ router.delete('/categoria/:id', eliminarCategoria)
  *       400:
  *         description: Error al eliminar el producto
  */
-router.delete('/:id', eliminarProducto)
+router.delete('/:id', verificarToken, verificarRol('admin'), eliminarProducto)
 
 export default router

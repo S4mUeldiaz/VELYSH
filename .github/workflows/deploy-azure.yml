@@ -1,0 +1,65 @@
+name: Deploy VELYSH web a Azure
+
+# Construye el frontend (Vite), lo copia dentro del backend (carpeta public)
+# y despliega todo como UNA sola App Service: web y API en el mismo origen.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'velyshBackend/**'
+      - 'velyshFrontend/**'
+      - '.github/workflows/deploy-azure.yml'
+  workflow_dispatch:   # también se puede lanzar a mano desde la pestaña Actions
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-azure
+  cancel-in-progress: false
+
+env:
+  AZURE_WEBAPP_NAME: velysh-web   # <-- cámbialo por el nombre real de tu App Service
+  NODE_VERSION: '22.x'
+  FRONTEND_DIR: velyshFrontend
+  BACKEND_DIR: velyshBackend
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Instalar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: |
+            ${{ env.FRONTEND_DIR }}/package-lock.json
+            ${{ env.BACKEND_DIR }}/package-lock.json
+
+      - name: Frontend - instalar y compilar
+        working-directory: ${{ env.FRONTEND_DIR }}
+        run: |
+          npm ci
+          npm run build
+
+      - name: Backend - instalar dependencias de producción
+        working-directory: ${{ env.BACKEND_DIR }}
+        run: npm ci --omit=dev
+
+      - name: Copiar el build del frontend dentro del backend
+        run: cp -r "${{ env.FRONTEND_DIR }}/dist" "${{ env.BACKEND_DIR }}/public"
+
+      - name: Empaquetar
+        working-directory: ${{ env.BACKEND_DIR }}
+        run: zip -qr "$GITHUB_WORKSPACE/release.zip" . -x ".env" "*.log"
+
+      - name: Desplegar en Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: release.zip

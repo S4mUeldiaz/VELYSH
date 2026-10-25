@@ -1,0 +1,54 @@
+# CI de VELYSH en Azure Pipelines (para aprender la plataforma).
+# Se ejecuta en cada push y en cada PR hacia develop y main.
+# Necesita el "free parallelism grant" de Microsoft en tu organización.
+
+trigger:
+  branches:
+    include: [develop, main]
+
+pr:
+  branches:
+    include: [develop, main]
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  frontendDir: velyshFrontend
+  backendDir: velyshBackend
+
+stages:
+  - stage: CI
+    displayName: Integración continua
+    jobs:
+      - job: Frontend
+        displayName: Frontend (React + Vite)
+        steps:
+          - task: NodeTool@0
+            displayName: Instalar Node 22
+            inputs:
+              versionSpec: '22.x'
+          - script: npm ci
+            displayName: Instalar dependencias
+            workingDirectory: $(frontendDir)
+          - script: npm run lint
+            displayName: ESLint (hoy falla con 13 errores; no bloquea hasta corregirlos)
+            workingDirectory: $(frontendDir)
+            continueOnError: true
+          - script: npm run build
+            displayName: Compilar con Vite
+            workingDirectory: $(frontendDir)
+
+      - job: Backend
+        displayName: Backend (Express)
+        steps:
+          - task: NodeTool@0
+            displayName: Instalar Node 22
+            inputs:
+              versionSpec: '22.x'
+          - script: npm ci
+            displayName: Instalar dependencias
+            workingDirectory: $(backendDir)
+          - script: node --check src/index.js
+            displayName: Revisión de sintaxis (aquí irán las pruebas con Supertest)
+            workingDirectory: $(backendDir)

@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { verificarToken, verificarRol } from '../middlewares/auth.middleware.js'
 
 import {
   obtenerTiposDocumento,
@@ -57,7 +58,7 @@ router.get('/', obtenerTiposDocumento)
  *       400:
  *         description: Error al crear el tipo de documento
  */
-router.post('/', crearTipoDocumento)
+router.post('/', verificarToken, verificarRol('admin'), crearTipoDocumento)
 
 /**
  * @swagger
@@ -90,7 +91,7 @@ router.post('/', crearTipoDocumento)
  *       400:
  *         description: Error al actualizar el tipo de documento
  */
-router.put('/:id', actualizarTipoDocumento)
+router.put('/:id', verificarToken, verificarRol('admin'), actualizarTipoDocumento)
 
 /**
  * @swagger
@@ -111,6 +112,6 @@ router.put('/:id', actualizarTipoDocumento)
  *       400:
  *         description: Error al eliminar el tipo de documento
  */
-router.delete('/:id', eliminarTipoDocumento)
+router.delete('/:id', verificarToken, verificarRol('admin'), eliminarTipoDocumento)
 
 export default router

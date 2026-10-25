@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const BASE_URL = 'http://localhost:3001/api'
+// En producción el frontend y el API comparten origen (/api); en desarrollo, localhost:3001
+const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3001/api'
 
 const api = axios.create({
   baseURL: BASE_URL,

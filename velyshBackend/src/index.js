@@ -2,6 +2,9 @@ import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import 'dotenv/config'
+import path from 'path'
+import fs from 'fs'
+import { fileURLToPath } from 'url'
 import { verificarToken, verificarRol } from './middlewares/auth.middleware.js'
 import authRoutes              from './routes/auth.routes.js'
 import productosRoutes         from './routes/productos.routes.js'
@@ -26,8 +29,14 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 const PORT = process.env.PORT || 3001
 
 
+// Orígenes permitidos por CORS, separados por coma (variable CORS_ORIGIN).
+// En producción el frontend se sirve desde este mismo servidor (mismo origen),
+// así que CORS solo hace falta en desarrollo (Vite en :5173).
+const origenesPermitidos = (process.env.CORS_ORIGIN || 'http://localhost:5173')
+  .split(',').map(o => o.trim()).filter(Boolean)
+
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: origenesPermitidos,
   credentials: true,
 }))
 app.use(express.json())
@@ -58,6 +67,20 @@ app.use('/api/perfil', verificarToken, perfilRoutes)
 app.use('/api/usuarios', verificarToken, usuariosRoutes)
 app.use('/api/roles', verificarToken, verificarRol('admin'), rolesRoutes)
 app.use('/api/movimiento-inventario', verificarToken, verificarRol('admin', 'operador'), movimientoInventarioRoutes)
+
+// ── FRONTEND (producción)
+// El pipeline copia el build de Vite en ./public. Si existe, se sirve desde
+// aquí: así web y API comparten origen (la cookie httpOnly SameSite=Lax sigue
+// funcionando y no hay problemas de CORS). En desarrollo la carpeta no existe.
+const carpetaFrontend = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'public')
+if (fs.existsSync(carpetaFrontend)) {
+  app.use(express.static(carpetaFrontend))
+  // BrowserRouter: cualquier GET que no sea /api ni /api-docs devuelve index.html
+  app.get(/^\/(?!api(?:-docs)?(?:\/|$)).*/, (req, res) => {
+    res.sendFile(path.join(carpetaFrontend, 'index.html'))
+  })
+}
+
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`)
 })
