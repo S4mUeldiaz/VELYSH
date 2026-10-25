@@ -4,7 +4,7 @@ name: Deploy VELYSH web a Azure
 # y despliega todo como UNA sola App Service: web y API en el mismo origen.
 on:
   push:
-    branches: [main]
+    branches: [samuel]
     paths:
       - 'velyshBackend/**'
       - 'velyshFrontend/**'
