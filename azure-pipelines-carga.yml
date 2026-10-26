@@ -1,0 +1,50 @@
+# Prueba de carga con k6 (RNF 01). Se lanza a mano: Pipelines > este pipeline > Run pipeline.
+# Primero ejecuta el perfil "humo" (5 usuarios, ~35 s) y, si todo responde, el perfil "carga50".
+trigger: none
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+parameters:
+  - name: perfil
+    displayName: Perfil de la prueba
+    type: string
+    default: humo
+    values:
+      - humo
+      - carga50
+  - name: baseUrl
+    displayName: URL a probar
+    type: string
+    default: https://velysh-web-ara2fmbnddayfha6.canadacentral-01.azurewebsites.net
+
+variables:
+  k6Version: v1.4.0
+
+steps:
+  - checkout: self
+
+  - script: |
+      curl -sSL "https://github.com/grafana/k6/releases/download/$(k6Version)/k6-$(k6Version)-linux-amd64.tar.gz" \
+        | tar xz --strip-components=1 -C "$(Agent.TempDirectory)"
+      "$(Agent.TempDirectory)/k6" version
+    displayName: Instalar k6 $(k6Version)
+
+  - script: |
+      mkdir -p resultados-k6
+      "$(Agent.TempDirectory)/k6" run \
+        --env BASE_URL="${{ parameters.baseUrl }}" \
+        --env PERFIL="${{ parameters.perfil }}" \
+        pruebas/carga/k6-consultas.js
+    displayName: Ejecutar prueba de carga (${{ parameters.perfil }})
+    env:
+      K6_NO_USAGE_REPORT: 'true'
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publicar reporte (reporte.html y resumen.json)
+    condition: always()
+    inputs:
+      targetPath: resultados-k6
+      artifact: resultados-k6
+      publishLocation: pipeline
